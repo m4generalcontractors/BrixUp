@@ -24,11 +24,11 @@ export default function Team() {
           <div className="rounded-2xl border border-gold/20 bg-charcoal/30 p-8 shadow-lg shadow-gold/5 sm:col-span-2 lg:col-span-1">
             {/* Avatar placeholder */}
             <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gold/10">
-              <span className="font-[var(--font-display)] text-3xl font-bold text-gold">MP</span>
+              <span className="font-[var(--font-display)] text-3xl font-bold text-gold">MHP</span>
             </div>
             <div className="mt-6 text-center">
               <h3 className="font-[var(--font-display)] text-xl font-semibold text-offwhite">
-                Miguel Perez
+                Miguel H. Peña
               </h3>
               <p className="mt-1 text-sm font-medium text-gold">Founder & CEO</p>
               <p className="mt-4 text-sm leading-relaxed text-offwhite/50">

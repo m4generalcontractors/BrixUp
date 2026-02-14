@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     description:
       "The first tokenized real estate marketplace. Invest in real estate starting at $500 with $BRIX.",
   },
+  other: {
+    "base:app_id": "698ffca2e0d5d2cf831b5b70",
+  },
 };
 
 export default function RootLayout({

@@ -113,7 +113,7 @@ export const sampleDeals: Deal[] = [
     description:
       "Classic NoDa area ranch needing full cosmetic rehab. New roof 2023. Strong comps support $310K ARV. Ideal flip with solid margins in one of Charlotte's hottest neighborhoods.",
     dealmaker: { name: "Carlos Reyes", brixScore: 920 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Jan 5, 2026",
     fundingDeadline: "Feb 15, 2026",
     estCompletion: "Jul 2026",
@@ -172,7 +172,7 @@ export const sampleDeals: Deal[] = [
     description:
       "Vacant lot in fast-growing SE Raleigh corridor. Plans approved for 2,400 sqft 4BR/3BA new construction. Strong rental demand if held. Recent sales at $560-600K within 0.5 miles.",
     dealmaker: { name: "Amanda Torres", brixScore: 875 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Jan 20, 2026",
     fundingDeadline: "Mar 15, 2026",
     estCompletion: "Mar 2027",
@@ -345,8 +345,8 @@ export const sampleDeals: Deal[] = [
     lotSize: "0.42 acres",
     description:
       "Premium lot in West Charlotte growth corridor. Approved plans for 2,800 sqft modern farmhouse. Walking distance to new light rail station. Strong pre-sale interest from buyers.",
-    dealmaker: { name: "Miguel Perez", brixScore: 950 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    dealmaker: { name: "Miguel H. Peña", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Feb 5, 2026",
     fundingDeadline: "Apr 1, 2026",
     estCompletion: "Apr 2027",
@@ -461,7 +461,7 @@ export const sampleDeals: Deal[] = [
     description:
       "Successfully completed flip in West Charlotte. Full rehab: new kitchen, baths, HVAC, electrical panel, roof repair, fresh landscaping. Sold for $278K — above ARV estimate.",
     dealmaker: { name: "Carlos Reyes", brixScore: 920 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Sep 1, 2025",
     fundingDeadline: "Oct 1, 2025",
     estCompletion: "Feb 2026",
@@ -512,8 +512,8 @@ export const sampleDeals: Deal[] = [
     lotSize: "0.55 acres",
     description:
       "Half-acre lot in booming Fort Mill, SC — just across the border from Charlotte. Zoned residential. Approved for 3,200 sqft custom home. Lake Wylie area with premium school district. Massive growth area.",
-    dealmaker: { name: "Miguel Perez", brixScore: 950 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    dealmaker: { name: "Miguel H. Peña", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Feb 12, 2026",
     fundingDeadline: "Apr 15, 2026",
     estCompletion: "Jun 2027",
@@ -628,8 +628,8 @@ export const sampleDeals: Deal[] = [
     lotSize: "0.75 acres",
     description:
       "Flex space conversion opportunity in NoDa/Plaza Midwood industrial corridor. Convert to mixed-use: coworking + 2 residential lofts upstairs. Zoning approved. Massive upside in Charlotte's hottest commercial corridor.",
-    dealmaker: { name: "Miguel Perez", brixScore: 950 },
-    gc: { name: "Miguel Perez (M4 GC)", brixScore: 950 },
+    dealmaker: { name: "Miguel H. Peña", brixScore: 950 },
+    gc: { name: "Miguel H. Peña (M4 GC)", brixScore: 950 },
     listedDate: "Feb 14, 2026",
     fundingDeadline: "Apr 30, 2026",
     estCompletion: "Dec 2026",
