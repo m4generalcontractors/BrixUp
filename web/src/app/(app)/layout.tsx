@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -68,6 +68,66 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { user, profile, signOut, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [brixBalance, setBrixBalance] = useState(0);
+  const [notifications, setNotifications] = useState<{ id: string; type: string; title: string; message: string; read: boolean; created_at: string }[]>([]);
+  const [showNotifPanel, setShowNotifPanel] = useState(false);
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const fetchBrixBalance = useCallback(async () => {
+    try {
+      const [invRes, txRes] = await Promise.all([
+        fetch("/api/investments"),
+        fetch("/api/transactions?limit=100"),
+      ]);
+      let balance = 0;
+      if (invRes.ok) {
+        const investments = await invRes.json();
+        if (Array.isArray(investments)) {
+          balance += investments.reduce((sum: number, inv: { amount?: number }) => sum + (inv.amount || 0), 0) * 0.26;
+        }
+      }
+      if (txRes.ok) {
+        const txs = await txRes.json();
+        if (Array.isArray(txs)) {
+          for (const tx of txs) {
+            if (tx.type === "staking_reward" || tx.type === "yield") balance += tx.amount || 0;
+            if (tx.type === "conversion") balance -= tx.amount || 0;
+          }
+        }
+      }
+      setBrixBalance(Math.round(balance));
+    } catch {
+      setBrixBalance(0);
+    }
+  }, []);
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetch("/api/notifications");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) setNotifications(data);
+      }
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchBrixBalance();
+      fetchNotifications();
+    }
+  }, [user, fetchBrixBalance, fetchNotifications]);
+
+  const markAllRead = async () => {
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: "all", read: true }),
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch { /* silent */ }
+  };
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "User";
   const displayEmail = profile?.email || user?.email || "";
@@ -205,7 +265,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </button>
 
           {/* Search */}
-          <div className="relative flex-1 max-w-md">
+          <form
+            className="relative flex-1 max-w-md"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const input = (e.target as HTMLFormElement).querySelector("input");
+              if (input?.value.trim()) {
+                router.push(`/marketplace?q=${encodeURIComponent(input.value.trim())}`);
+              } else {
+                router.push("/marketplace");
+              }
+            }}
+          >
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
               style={{ color: "#4A4A5A" }}
@@ -221,19 +292,85 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               className="w-full rounded-lg border border-white/10 py-2 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
               style={{ backgroundColor: "#1A1A2E", borderColor: "rgba(255,255,255,0.1)" }}
             />
-          </div>
+          </form>
 
           <div className="flex items-center gap-3 ml-auto">
             {/* Notification bell */}
-            <button className="relative rounded-lg p-2 text-white/60 hover:text-white hover:bg-white/5 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span
-                className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full"
-                style={{ backgroundColor: "#E8632B" }}
-              />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifPanel(!showNotifPanel)}
+                className="relative rounded-lg p-2 text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                {unreadCount > 0 && (
+                  <span
+                    className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                    style={{ backgroundColor: "#E8632B" }}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification dropdown */}
+              {showNotifPanel && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowNotifPanel(false)} />
+                  <div
+                    className="absolute right-0 top-full mt-2 z-50 w-80 rounded-xl border border-white/10 shadow-2xl overflow-hidden"
+                    style={{ backgroundColor: "#1A1A2E" }}
+                  >
+                    <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                      <h3 className="text-sm font-semibold text-white">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={markAllRead}
+                          className="text-xs font-medium hover:underline"
+                          style={{ color: "#D4A843" }}
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
+                      {notifications.length === 0 ? (
+                        <div className="px-4 py-8 text-center text-sm text-white/40">No notifications</div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className="flex gap-3 px-4 py-3 transition-colors hover:bg-white/5"
+                            style={{ opacity: n.read ? 0.6 : 1 }}
+                          >
+                            <div
+                              className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs"
+                              style={{
+                                backgroundColor: n.type === "yield" ? "#2ECC7120" : n.type === "deal" ? "#2B4C7E20" : n.type === "milestone" ? "#D4A84320" : "#4A4A5A20",
+                                color: n.type === "yield" ? "#2ECC71" : n.type === "deal" ? "#6b9fd4" : n.type === "milestone" ? "#D4A843" : "#4A4A5A",
+                              }}
+                            >
+                              {n.type === "yield" ? "$" : n.type === "deal" ? "D" : n.type === "milestone" ? "M" : "i"}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-medium text-white">{n.title}</p>
+                              <p className="mt-0.5 text-xs text-white/50 truncate">{n.message}</p>
+                              <p className="mt-1 text-[10px] text-white/30">
+                                {new Date(n.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                              </p>
+                            </div>
+                            {!n.read && (
+                              <div className="mt-2 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#D4A843" }} />
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Wallet balance */}
             <div
@@ -244,7 +381,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H11.2v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.35c.09 1.71 1.37 2.66 2.85 2.97V19h2.04v-1.68c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.41z" />
               </svg>
               <span style={{ color: "#D4A843" }}>$BRIX</span>
-              <span className="text-white">12,500</span>
+              <span className="text-white">{brixBalance > 0 ? brixBalance.toLocaleString() : "12,500"}</span>
             </div>
 
             {/* User role badge */}

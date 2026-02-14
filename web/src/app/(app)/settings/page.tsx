@@ -18,8 +18,33 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [kycStatus, setKycStatus] = useState<string>("pending");
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const walletAddress = profile?.wallet_address || user?.id?.slice(0, 20) + "..." || "Not connected";
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("File too large. Max 2MB.");
+      return;
+    }
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (ev) => setAvatarPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+
+    // Upload as base64 to profile (in production, use Supabase Storage)
+    setUploading(true);
+    const dataUrl = await new Promise<string>((resolve) => {
+      const r = new FileReader();
+      r.onload = (ev) => resolve(ev.target?.result as string);
+      r.readAsDataURL(file);
+    });
+    await updateProfile({ avatar_url: dataUrl });
+    setUploading(false);
+  };
 
   useEffect(() => {
     if (profile) {
@@ -108,19 +133,33 @@ export default function SettingsPage() {
           <h2 className="mb-4 text-lg font-semibold text-white">Profile</h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold"
-                style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
-              >
-                {initials}
-              </div>
+              {avatarPreview || profile?.avatar_url ? (
+                <img
+                  src={avatarPreview || profile?.avatar_url || ""}
+                  alt="Avatar"
+                  className="h-16 w-16 rounded-full object-cover"
+                />
+              ) : (
+                <div
+                  className="flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold"
+                  style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
+                >
+                  {initials}
+                </div>
+              )}
               <div>
-                <button
-                  className="rounded-lg px-4 py-2 text-sm font-medium border transition-colors hover:bg-white/5"
+                <label
+                  className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium border transition-colors hover:bg-white/5 inline-block"
                   style={{ borderColor: "#D4A843", color: "#D4A843" }}
                 >
-                  Upload Photo
-                </button>
+                  {uploading ? "Uploading..." : "Upload Photo"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+                </label>
                 <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>JPG, PNG or GIF. Max 2MB.</p>
               </div>
             </div>

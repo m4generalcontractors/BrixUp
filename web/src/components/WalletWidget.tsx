@@ -6,15 +6,19 @@ interface WalletWidgetProps {
   brixBalance: number;
   usdcBalance: number;
   stakedAmount?: number;
+  onConvert?: (amount: number) => void;
 }
 
 export default function WalletWidget({
   brixBalance,
   usdcBalance,
   stakedAmount = 0,
+  onConvert,
 }: WalletWidgetProps) {
   const [convertAmount, setConvertAmount] = useState("");
   const [showConvert, setShowConvert] = useState(false);
+  const [converting, setConverting] = useState(false);
+  const [convertSuccess, setConvertSuccess] = useState(false);
 
   const usdEquivalent = brixBalance * 1.0; // 1 BRIX ≈ $1 at launch
 
@@ -108,10 +112,30 @@ export default function WalletWidget({
               style={{ borderColor: "rgba(255,255,255,0.1)" }}
             />
             <button
-              className="rounded-lg px-4 py-2 text-xs font-semibold transition-colors hover:opacity-80"
+              disabled={converting || !convertAmount || Number(convertAmount) <= 0 || Number(convertAmount) > brixBalance}
+              onClick={async () => {
+                const amt = Number(convertAmount);
+                if (amt <= 0 || amt > brixBalance) return;
+                setConverting(true);
+                try {
+                  const res = await fetch("/api/transactions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ type: "conversion", amount: amt, description: `Converted ${amt} $BRIX to USDC` }),
+                  });
+                  if (res.ok) {
+                    setConvertSuccess(true);
+                    setConvertAmount("");
+                    if (onConvert) onConvert(amt);
+                    setTimeout(() => { setConvertSuccess(false); setShowConvert(false); }, 2000);
+                  }
+                } catch { /* silent */ }
+                setConverting(false);
+              }}
+              className="rounded-lg px-4 py-2 text-xs font-semibold transition-colors hover:opacity-80 disabled:opacity-50"
               style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
             >
-              Convert
+              {converting ? "..." : convertSuccess ? "Done!" : "Convert"}
             </button>
           </div>
           {convertAmount && (

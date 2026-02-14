@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import DealCard from "@/components/marketplace/DealCard";
 
@@ -255,7 +256,14 @@ type SortOption = "newest" | "roi" | "funded" | "price-low" | "price-high";
 type ViewMode = "split" | "map" | "grid";
 
 export default function MarketplacePage() {
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Read initial search query from URL
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) setSearchQuery(q);
+  }, [searchParams]);
   const [propertyType, setPropertyType] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
   const [bedsFilter, setBedsFilter] = useState("All");

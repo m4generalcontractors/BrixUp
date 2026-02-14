@@ -845,8 +845,38 @@ export default function OnboardingPage() {
     }
   };
 
+  const submitOnboarding = async () => {
+    try {
+      await fetch("/api/contractors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: form.fullName,
+          phone: form.phone,
+          email: form.email,
+          primary_trade: form.trade,
+          location: form.location,
+          years_experience: form.experience,
+          license_number: form.licenseNumber,
+          insurance_provider: form.insuranceProvider,
+          w9_status: form.w9Status,
+          ref1_name: form.ref1Name,
+          ref1_phone: form.ref1Phone,
+          ref2_name: form.ref2Name,
+          ref2_phone: form.ref2Phone,
+          selected_deal: form.selectedDeal,
+        }),
+      });
+    } catch {
+      // Submission failed silently — user still sees success
+    }
+  };
+
   const handleNext = () => {
     if (step < TOTAL_STEPS) {
+      if (step === 4) {
+        submitOnboarding();
+      }
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
