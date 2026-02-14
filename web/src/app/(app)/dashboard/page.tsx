@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import WalletWidget from "@/components/WalletWidget";
 
 const stats = [
   {
@@ -225,6 +226,11 @@ export default function DashboardPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Wallet Widget */}
+      <div className="mb-6">
+        <WalletWidget brixBalance={12500} usdcBalance={3200} stakedAmount={2000} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
