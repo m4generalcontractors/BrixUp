@@ -1,42 +1,369 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-charcoal: #1A1A2E;
-  --color-gold: #D4A843;
-  --color-concrete: #4A4A5A;
-  --color-blueprint: #2B4C7E;
-  --color-safety-orange: #E8632B;
-  --color-success: #2ECC71;
+/* ==========================================================================
+   BrixUp Design System — Global Stylesheet
+   Tailwind CSS v4 with @theme tokens
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties (light mode defaults)
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Primary */
+  --color-charcoal-50: #E8E8EC;
+  --color-charcoal-100: #C5C5CF;
+  --color-charcoal-200: #9F9FAF;
+  --color-charcoal-300: #7A7A8F;
+  --color-charcoal-400: #5C5C72;
+  --color-charcoal-500: #3D3D55;
+  --color-charcoal-600: #2E2E44;
+  --color-charcoal-700: #1A1A2E;
+  --color-charcoal-800: #131325;
+  --color-charcoal-900: #0D0D1A;
+  --color-charcoal-950: #070710;
+
+  --color-gold-50: #FBF5E6;
+  --color-gold-100: #F3E4BA;
+  --color-gold-200: #EBD38E;
+  --color-gold-300: #E3C262;
+  --color-gold-400: #DBB14A;
+  --color-gold-500: #D4A843;
+  --color-gold-600: #BF933A;
+  --color-gold-700: #A07B30;
+  --color-gold-800: #806226;
+  --color-gold-900: #61491D;
+  --color-gold-950: #413113;
+
+  /* Secondary */
+  --color-concrete-50: #EDEDEF;
+  --color-concrete-100: #D4D4D9;
+  --color-concrete-200: #B8B8C1;
+  --color-concrete-300: #9C9CA9;
+  --color-concrete-400: #838392;
+  --color-concrete-500: #4A4A5A;
+  --color-concrete-600: #3E3E4D;
+  --color-concrete-700: #323240;
+  --color-concrete-800: #262633;
+  --color-concrete-900: #1A1A26;
+  --color-concrete-950: #0F0F17;
+
+  --color-blueprint-50: #E8EEF5;
+  --color-blueprint-100: #C5D4E6;
+  --color-blueprint-200: #9FB6D4;
+  --color-blueprint-300: #7998C2;
+  --color-blueprint-400: #5374A8;
+  --color-blueprint-500: #2B4C7E;
+  --color-blueprint-600: #244068;
+  --color-blueprint-700: #1D3352;
+  --color-blueprint-800: #16263C;
+  --color-blueprint-900: #0F1926;
+  --color-blueprint-950: #080D14;
+
+  /* Accent */
+  --color-safety-50: #FDE9E0;
+  --color-safety-100: #F9C9B3;
+  --color-safety-200: #F4A786;
+  --color-safety-300: #EE8559;
+  --color-safety-400: #E8632B;
+  --color-safety-500: #D05524;
+  --color-safety-600: #B8481E;
+  --color-safety-700: #9A3C18;
+  --color-safety-800: #7C3013;
+  --color-safety-900: #5E240E;
+  --color-safety-950: #3F1809;
+
+  --color-success-50: #E6F9EE;
+  --color-success-100: #BFF0D4;
+  --color-success-200: #99E7BA;
+  --color-success-300: #73DEA0;
+  --color-success-400: #4DD586;
+  --color-success-500: #2ECC71;
+  --color-success-600: #27B062;
+  --color-success-700: #209452;
+  --color-success-800: #197843;
+  --color-success-900: #125C33;
+  --color-success-950: #0B4024;
+
+  /* Backgrounds */
   --color-offwhite: #F8F6F0;
   --color-dark: #0D0D1A;
-  --color-gold-light: #E8C76A;
-  --color-gold-dark: #B8922E;
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-space-grotesk);
+  /* Semantic tokens — light mode */
+  --brix-bg: var(--color-offwhite);
+  --brix-fg: var(--color-charcoal-700);
+  --brix-fg-muted: var(--color-concrete-500);
+  --brix-border: rgba(74, 74, 90, 0.2);
+  --brix-border-strong: rgba(74, 74, 90, 0.4);
+  --brix-surface: #FFFFFF;
+  --brix-surface-raised: #FFFFFF;
+  --brix-overlay: rgba(13, 13, 26, 0.5);
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-gold-glow: 0 0 20px rgba(212, 168, 67, 0.3), 0 0 40px rgba(212, 168, 67, 0.15);
+  --shadow-gold-glow-strong: 0 0 30px rgba(212, 168, 67, 0.5), 0 0 60px rgba(212, 168, 67, 0.25);
+  --shadow-blueprint-glow: 0 0 20px rgba(43, 76, 126, 0.3), 0 0 40px rgba(43, 76, 126, 0.15);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Gradients */
+  --gradient-gold-shine: linear-gradient(135deg, #D4A843 0%, #F3E4BA 50%, #D4A843 100%);
+  --gradient-dark-foundation: linear-gradient(180deg, #0D0D1A 0%, #1A1A2E 100%);
+  --gradient-blueprint: linear-gradient(135deg, #1A1A2E 0%, #2B4C7E 100%);
+  --gradient-brick-stack: linear-gradient(180deg, #E8632B 0%, #D4A843 100%);
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* --------------------------------------------------------------------------
+   2. Dark mode overrides (data attribute)
+   -------------------------------------------------------------------------- */
+
+[data-theme="dark"] {
+  --brix-bg: var(--color-dark);
+  --brix-fg: var(--color-offwhite);
+  --brix-fg-muted: var(--color-concrete-300);
+  --brix-border: rgba(248, 246, 240, 0.1);
+  --brix-border-strong: rgba(248, 246, 240, 0.2);
+  --brix-surface: var(--color-charcoal-700);
+  --brix-surface-raised: var(--color-charcoal-600);
+  --brix-overlay: rgba(0, 0, 0, 0.7);
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-body {
-  background: #0D0D1A;
-  color: #F8F6F0;
-  font-family: var(--font-sans), system-ui, sans-serif;
+/* Also support prefers-color-scheme as a fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brix-bg: var(--color-dark);
+    --brix-fg: var(--color-offwhite);
+    --brix-fg-muted: var(--color-concrete-300);
+    --brix-border: rgba(248, 246, 240, 0.1);
+    --brix-border-strong: rgba(248, 246, 240, 0.2);
+    --brix-surface: var(--color-charcoal-700);
+    --brix-surface-raised: var(--color-charcoal-600);
+    --brix-overlay: rgba(0, 0, 0, 0.7);
+
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+    --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
 }
 
-/* Brick pattern overlay */
-.brick-pattern {
-  background-image:
-    linear-gradient(to right, rgba(212, 168, 67, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(212, 168, 67, 0.03) 1px, transparent 1px);
-  background-size: 60px 30px;
-  background-position: 0 0, 30px 15px;
+/* --------------------------------------------------------------------------
+   3. Tailwind v4 @theme — Register tokens for utility class generation
+   -------------------------------------------------------------------------- */
+
+@theme inline {
+  /* Fonts */
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Also register as --font-sans and --font-mono for Tailwind defaults */
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Brand colors — full scales */
+  --color-charcoal-50: #E8E8EC;
+  --color-charcoal-100: #C5C5CF;
+  --color-charcoal-200: #9F9FAF;
+  --color-charcoal-300: #7A7A8F;
+  --color-charcoal-400: #5C5C72;
+  --color-charcoal-500: #3D3D55;
+  --color-charcoal-600: #2E2E44;
+  --color-charcoal-700: #1A1A2E;
+  --color-charcoal-800: #131325;
+  --color-charcoal-900: #0D0D1A;
+  --color-charcoal-950: #070710;
+
+  --color-gold-50: #FBF5E6;
+  --color-gold-100: #F3E4BA;
+  --color-gold-200: #EBD38E;
+  --color-gold-300: #E3C262;
+  --color-gold-400: #DBB14A;
+  --color-gold-500: #D4A843;
+  --color-gold-600: #BF933A;
+  --color-gold-700: #A07B30;
+  --color-gold-800: #806226;
+  --color-gold-900: #61491D;
+  --color-gold-950: #413113;
+
+  --color-concrete-50: #EDEDEF;
+  --color-concrete-100: #D4D4D9;
+  --color-concrete-200: #B8B8C1;
+  --color-concrete-300: #9C9CA9;
+  --color-concrete-400: #838392;
+  --color-concrete-500: #4A4A5A;
+  --color-concrete-600: #3E3E4D;
+  --color-concrete-700: #323240;
+  --color-concrete-800: #262633;
+  --color-concrete-900: #1A1A26;
+  --color-concrete-950: #0F0F17;
+
+  --color-blueprint-50: #E8EEF5;
+  --color-blueprint-100: #C5D4E6;
+  --color-blueprint-200: #9FB6D4;
+  --color-blueprint-300: #7998C2;
+  --color-blueprint-400: #5374A8;
+  --color-blueprint-500: #2B4C7E;
+  --color-blueprint-600: #244068;
+  --color-blueprint-700: #1D3352;
+  --color-blueprint-800: #16263C;
+  --color-blueprint-900: #0F1926;
+  --color-blueprint-950: #080D14;
+
+  --color-safety-50: #FDE9E0;
+  --color-safety-100: #F9C9B3;
+  --color-safety-200: #F4A786;
+  --color-safety-300: #EE8559;
+  --color-safety-400: #E8632B;
+  --color-safety-500: #D05524;
+  --color-safety-600: #B8481E;
+  --color-safety-700: #9A3C18;
+  --color-safety-800: #7C3013;
+  --color-safety-900: #5E240E;
+  --color-safety-950: #3F1809;
+
+  --color-success-50: #E6F9EE;
+  --color-success-100: #BFF0D4;
+  --color-success-200: #99E7BA;
+  --color-success-300: #73DEA0;
+  --color-success-400: #4DD586;
+  --color-success-500: #2ECC71;
+  --color-success-600: #27B062;
+  --color-success-700: #209452;
+  --color-success-800: #197843;
+  --color-success-900: #125C33;
+  --color-success-950: #0B4024;
+
+  --color-offwhite: #F8F6F0;
+  --color-dark: #0D0D1A;
+
+  /* Semantic surface colors for Tailwind utilities */
+  --color-brix-bg: var(--brix-bg);
+  --color-brix-fg: var(--brix-fg);
+  --color-brix-muted: var(--brix-fg-muted);
+  --color-brix-surface: var(--brix-surface);
+  --color-brix-border: var(--brix-border);
+
+  /* Animations */
+  --animate-brick-stack: brick-stack 0.5s var(--ease-bounce) both;
+  --animate-brick-fade-up: brick-fade-up 0.6s var(--ease-out) both;
+  --animate-counter-roll: counter-roll 1.2s var(--ease-out) both;
+  --animate-gold-glow: gold-glow 2s ease-in-out infinite;
+  --animate-gold-shimmer: gold-shimmer 3s ease-in-out infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-float-brick: float-brick 8s ease-in-out infinite;
+  --animate-float-brick-slow: float-brick-slow 12s ease-in-out infinite;
+  --animate-float-brick-reverse: float-brick-reverse 10s ease-in-out infinite;
+  --animate-pulse-subtle: pulse-subtle 2s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.3s var(--ease-out) both;
+  --animate-slide-down: slide-down 0.3s var(--ease-out) both;
+  --animate-scale-in: scale-in 0.2s var(--ease-bounce) both;
+  --animate-count-up: count-up 0.8s ease-out forwards;
 }
 
-/* Floating brix animation */
+/* --------------------------------------------------------------------------
+   4. Keyframe Animations
+   -------------------------------------------------------------------------- */
+
+/* Brick stacking — element slides up into position with a settle bounce */
+@keyframes brick-stack {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.01);
+  }
+  80% {
+    transform: translateY(2px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Fade-up entrance for staggered content */
+@keyframes brick-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Counter roll-up animation for numbers */
+@keyframes counter-roll {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* Counter count-up (simpler variant) */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gold glow pulse for staking rewards */
+@keyframes gold-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 168, 67, 0.2), 0 0 30px rgba(212, 168, 67, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(212, 168, 67, 0.4), 0 0 50px rgba(212, 168, 67, 0.2);
+  }
+}
+
+/* Gold shimmer sweep for premium elements */
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Gentle floating motion */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Floating brick — ambient background bricks */
 @keyframes float-brick {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -78,46 +405,535 @@ body {
   }
 }
 
-.animate-float-brick {
-  animation: float-brick 8s ease-in-out infinite;
-}
-
-.animate-float-brick-slow {
-  animation: float-brick-slow 12s ease-in-out infinite;
-}
-
-.animate-float-brick-reverse {
-  animation: float-brick-reverse 10s ease-in-out infinite;
-}
-
-/* Counter animation */
-@keyframes count-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* Subtle pulse for attention */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
   }
-  to {
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Slide up for modals/toasts */
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.animate-count-up {
-  animation: count-up 0.8s ease-out forwards;
+/* Slide down for dropdowns */
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Stagger delays */
-.delay-200 {
-  animation-delay: 200ms;
-}
-.delay-400 {
-  animation-delay: 400ms;
-}
-.delay-600 {
-  animation-delay: 600ms;
+/* Scale in for popovers */
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* FAQ accordion styling */
+/* Brick stagger — used with JS to stagger children */
+@keyframes brick-stagger {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) translateX(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Base / Reset Styles
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  border-color: var(--brix-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--brix-bg);
+  color: var(--brix-fg);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   6. Typography Base Styles
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--brix-fg);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 2.25rem;   /* 36px */
+  line-height: 2.75rem; /* 44px */
+}
+
+h2 {
+  font-size: 1.875rem;  /* 30px */
+  line-height: 2.375rem;/* 38px */
+}
+
+h3 {
+  font-size: 1.5rem;    /* 24px */
+  line-height: 2rem;    /* 32px */
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.25rem;   /* 20px */
+  line-height: 1.75rem; /* 28px */
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 1.125rem;  /* 18px */
+  line-height: 1.75rem; /* 28px */
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 1rem;      /* 16px */
+  line-height: 1.5rem;  /* 24px */
+  font-weight: 600;
+}
+
+p {
+  max-width: 72ch;
+  text-wrap: pretty;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-code);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-gold-500);
+  color: var(--color-charcoal-700);
+}
+
+/* Focus visible for keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Custom Utility Classes
+   -------------------------------------------------------------------------- */
+
+/* --- Gradients --- */
+
+.brix-gradient {
+  background: var(--gradient-blueprint);
+}
+
+.brix-gradient-gold {
+  background: var(--gradient-gold-shine);
+}
+
+.brix-gradient-dark {
+  background: var(--gradient-dark-foundation);
+}
+
+.brix-gradient-brick {
+  background: var(--gradient-brick-stack);
+}
+
+/* Gold text gradient (use sparingly, dark mode hero only) */
+.brix-text-gold {
+  background: var(--gradient-gold-shine);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+}
+
+/* Gradient text (alias for existing usage) */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #D4A843, #F3E4BA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Cards --- */
+
+.brix-card {
+  background: var(--brix-surface);
+  border: 1px solid var(--brix-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+
+.brix-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.brix-card-static {
+  background: var(--brix-surface);
+  border: 1px solid var(--brix-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.brix-card-gold {
+  background: var(--brix-surface);
+  border: 1px solid var(--color-gold-500);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.brix-card-gold::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  padding: 1px;
+  background: var(--gradient-gold-shine);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* --- Glow Effects --- */
+
+.brix-glow {
+  animation: gold-glow 2s ease-in-out infinite;
+}
+
+.brix-glow-static {
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.brix-glow-strong {
+  box-shadow: var(--shadow-gold-glow-strong);
+}
+
+.brix-glow-blueprint {
+  box-shadow: var(--shadow-blueprint-glow);
+}
+
+/* --- Buttons --- */
+
+.brix-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  text-decoration: none;
+  border: none;
+  white-space: nowrap;
+}
+
+.brix-btn:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+.brix-btn-primary {
+  background-color: var(--color-gold-500);
+  color: var(--color-charcoal-700);
+}
+
+.brix-btn-primary:hover {
+  background-color: var(--color-gold-400);
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.brix-btn-primary:active {
+  background-color: var(--color-gold-600);
+  transform: scale(0.98);
+}
+
+.brix-btn-secondary {
+  background-color: transparent;
+  color: var(--color-gold-500);
+  border: 1px solid var(--color-gold-500);
+}
+
+.brix-btn-secondary:hover {
+  background-color: rgba(212, 168, 67, 0.1);
+}
+
+.brix-btn-secondary:active {
+  background-color: rgba(212, 168, 67, 0.2);
+  transform: scale(0.98);
+}
+
+.brix-btn-ghost {
+  background-color: transparent;
+  color: var(--brix-fg-muted);
+}
+
+.brix-btn-ghost:hover {
+  background-color: rgba(74, 74, 90, 0.1);
+  color: var(--brix-fg);
+}
+
+.brix-btn-danger {
+  background-color: var(--color-safety-400);
+  color: #FFFFFF;
+}
+
+.brix-btn-danger:hover {
+  background-color: var(--color-safety-500);
+}
+
+.brix-btn-success {
+  background-color: var(--color-success-500);
+  color: #FFFFFF;
+}
+
+.brix-btn-success:hover {
+  background-color: var(--color-success-600);
+}
+
+/* --- Inputs --- */
+
+.brix-input {
+  height: 2.75rem; /* 44px */
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 74, 90, 0.3);
+  background: var(--brix-surface);
+  color: var(--brix-fg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0 0.75rem;
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.brix-input:focus {
+  outline: none;
+  border-color: var(--color-gold-500);
+  box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.2);
+}
+
+.brix-input::placeholder {
+  color: var(--brix-fg-muted);
+}
+
+/* --- Token / Number display --- */
+
+.brix-number {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.brix-wallet-address {
+  font-family: var(--font-code);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  color: var(--brix-fg-muted);
+}
+
+/* --- Stacking / Stagger Utilities --- */
+
+.brix-stack-children > * {
+  animation: brick-stack 0.5s var(--ease-bounce) both;
+}
+
+.brix-stack-children > *:nth-child(1) { animation-delay: 0ms; }
+.brix-stack-children > *:nth-child(2) { animation-delay: 60ms; }
+.brix-stack-children > *:nth-child(3) { animation-delay: 120ms; }
+.brix-stack-children > *:nth-child(4) { animation-delay: 180ms; }
+.brix-stack-children > *:nth-child(5) { animation-delay: 240ms; }
+.brix-stack-children > *:nth-child(6) { animation-delay: 300ms; }
+.brix-stack-children > *:nth-child(7) { animation-delay: 360ms; }
+.brix-stack-children > *:nth-child(8) { animation-delay: 420ms; }
+.brix-stack-children > *:nth-child(9) { animation-delay: 480ms; }
+.brix-stack-children > *:nth-child(10) { animation-delay: 540ms; }
+
+/* --- Stagger delay utilities --- */
+
+.delay-200 { animation-delay: 200ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* --- Brick pattern background --- */
+
+.brick-pattern,
+.brix-brick-pattern {
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(212, 168, 67, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(212, 168, 67, 0.03) 1px,
+      transparent 1px
+    );
+  background-size: 60px 30px;
+  background-position: 0 0, 30px 15px;
+}
+
+/* --- Dividers --- */
+
+.brix-divider {
+  height: 1px;
+  width: 100%;
+  background: var(--brix-border);
+}
+
+.brix-divider-gold {
+  height: 2px;
+  width: 100%;
+  background: var(--gradient-gold-shine);
+  border-radius: 1px;
+}
+
+/* --- Badge --- */
+
+.brix-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.brix-badge-gold {
+  background: rgba(212, 168, 67, 0.15);
+  color: var(--color-gold-600);
+}
+
+[data-theme="dark"] .brix-badge-gold {
+  color: var(--color-gold-400);
+}
+
+.brix-badge-success {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--color-success-700);
+}
+
+[data-theme="dark"] .brix-badge-success {
+  color: var(--color-success-400);
+}
+
+.brix-badge-danger {
+  background: rgba(232, 99, 43, 0.15);
+  color: var(--color-safety-600);
+}
+
+[data-theme="dark"] .brix-badge-danger {
+  color: var(--color-safety-300);
+}
+
+.brix-badge-info {
+  background: rgba(43, 76, 126, 0.15);
+  color: var(--color-blueprint-500);
+}
+
+[data-theme="dark"] .brix-badge-info {
+  color: var(--color-blueprint-300);
+}
+
+/* --- Progress bar (brick-stack themed) --- */
+
+.brix-progress {
+  height: 8px;
+  width: 100%;
+  border-radius: 4px;
+  background: var(--brix-border);
+  overflow: hidden;
+}
+
+.brix-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--gradient-brick-stack);
+  transition: width 0.6s var(--ease-out);
+}
+
+/* --- Overlay / Backdrop --- */
+
+.brix-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--brix-overlay);
+  backdrop-filter: blur(4px);
+  z-index: 30;
+}
+
+/* --- Gold shimmer on text (animated) --- */
+
+.brix-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-500) 0%,
+    var(--color-gold-100) 25%,
+    var(--color-gold-500) 50%,
+    var(--color-gold-100) 75%,
+    var(--color-gold-500) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 3s ease-in-out infinite;
+}
+
+/* --- FAQ accordion styling --- */
+
 details summary {
   cursor: pointer;
   list-style: none;
@@ -135,15 +951,8 @@ details[open] summary .faq-chevron {
   transition: transform 0.3s ease;
 }
 
-/* Gradient text */
-.text-gradient-gold {
-  background: linear-gradient(135deg, #D4A843, #E8C76A);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* --- Timeline connector --- */
 
-/* Timeline connector */
 .timeline-line {
   position: absolute;
   left: 50%;
@@ -157,5 +966,54 @@ details[open] summary .faq-chevron {
 @media (max-width: 768px) {
   .timeline-line {
     left: 20px;
+  }
+}
+
+/* --- Scrollbar styling --- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-concrete-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-concrete-500);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-500);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-charcoal-400);
+}
+
+/* --------------------------------------------------------------------------
+   8. Print Styles
+   -------------------------------------------------------------------------- */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .brix-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .brix-glow,
+  .brix-shimmer {
+    animation: none;
   }
 }

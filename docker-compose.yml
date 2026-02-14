@@ -1,0 +1,131 @@
+# =============================================================================
+# BrixUp — Local Development Stack
+# =============================================================================
+# Usage:
+#   docker compose up -d          Start all services
+#   docker compose down           Stop all services
+#   docker compose logs -f web    Follow logs for the web service
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  #  PostgreSQL (local substitute for Supabase)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: brixup-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: brixup
+      POSTGRES_PASSWORD: brixup_local
+      POSTGRES_DB: brixup
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brixup"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  #  Supabase Studio (optional — local Supabase dashboard)
+  # ---------------------------------------------------------------------------
+  supabase-studio:
+    image: supabase/studio:latest
+    container_name: brixup-supabase-studio
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    environment:
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+      SUPABASE_URL: http://supabase-kong:8000
+      SUPABASE_REST_URL: http://supabase-kong:8000/rest/v1/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - supabase
+
+  # ---------------------------------------------------------------------------
+  #  Hardhat Node (local EVM)
+  # ---------------------------------------------------------------------------
+  hardhat:
+    image: node:20-alpine
+    container_name: brixup-hardhat
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./contracts:/app
+      - hardhat_node_modules:/app/node_modules
+    command: >
+      sh -c "npm ci && npx hardhat node --hostname 0.0.0.0"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8545 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  #  Next.js Web App (optional — use npm run dev locally for HMR)
+  # ---------------------------------------------------------------------------
+  web:
+    image: node:20-alpine
+    container_name: brixup-web
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: http://localhost:5432
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: local_anon_key
+      NEXT_PUBLIC_CHAIN_ID: "31337"
+      NEXT_PUBLIC_BRIX_TOKEN_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      NEXT_PUBLIC_BRIX_FACTORY_ADDRESS: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      NEXT_PUBLIC_BRIX_STAKING_ADDRESS: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    command: >
+      sh -c "npm ci && npm run dev"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      hardhat:
+        condition: service_healthy
+    profiles:
+      - full
+
+  # ---------------------------------------------------------------------------
+  #  Redis (caching layer for API routes)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: brixup-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+    driver: local
+  hardhat_node_modules:
+    driver: local
+  web_node_modules:
+    driver: local
+  redis_data:
+    driver: local
