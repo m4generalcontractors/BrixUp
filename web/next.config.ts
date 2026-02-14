@@ -81,10 +81,14 @@ const nextConfig: NextConfig = {
   //  Rewrites — clean API proxy routes
   // ---------------------------------------------------------------------------
   async rewrites() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl) {
+      return [];
+    }
     return [
       {
         source: "/api/supabase/:path*",
-        destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/:path*`,
+        destination: `${supabaseUrl}/rest/v1/:path*`,
       },
     ];
   },

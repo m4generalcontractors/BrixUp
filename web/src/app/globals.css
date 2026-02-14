@@ -244,6 +244,19 @@
   --color-offwhite: #F8F6F0;
   --color-dark: #0D0D1A;
 
+  /* Shorthand aliases for brand colors (used by components) */
+  --color-charcoal: #1A1A2E;
+  --color-gold: #D4A843;
+  --color-gold-light: #E8C76A;
+  --color-gold-dark: #B8922E;
+  --color-concrete: #4A4A5A;
+  --color-blueprint: #2B4C7E;
+  --color-safety-orange: #E8632B;
+  --color-success: #2ECC71;
+
+  /* Display font alias */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
   /* Semantic surface colors for Tailwind utilities */
   --color-brix-bg: var(--brix-bg);
   --color-brix-fg: var(--brix-fg);
