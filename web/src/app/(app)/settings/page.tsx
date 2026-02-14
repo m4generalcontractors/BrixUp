@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SettingsPage() {
   const { user, profile, updateProfile, signOut } = useAuth();
@@ -25,24 +26,38 @@ export default function SettingsPage() {
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user) return;
     if (file.size > 2 * 1024 * 1024) {
       alert("File too large. Max 2MB.");
       return;
     }
-    // Show preview
+    // Show local preview immediately
     const reader = new FileReader();
     reader.onload = (ev) => setAvatarPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
 
-    // Upload as base64 to profile (in production, use Supabase Storage)
+    // Upload to Supabase Storage
     setUploading(true);
-    const dataUrl = await new Promise<string>((resolve) => {
-      const r = new FileReader();
-      r.onload = (ev) => resolve(ev.target?.result as string);
-      r.readAsDataURL(file);
-    });
-    await updateProfile({ avatar_url: dataUrl });
+    try {
+      const supabase = createClient();
+      const ext = file.name.split(".").pop() || "jpg";
+      const filePath = `avatars/${user.id}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        // Storage bucket may not exist — save a short placeholder URL instead
+        await updateProfile({ avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2B4C7E&color=F8F6F0&size=128` });
+      } else {
+        const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
+        await updateProfile({ avatar_url: urlData.publicUrl });
+      }
+    } catch {
+      // Fallback to generated avatar URL
+      await updateProfile({ avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2B4C7E&color=F8F6F0&size=128` });
+    }
     setUploading(false);
   };
 
