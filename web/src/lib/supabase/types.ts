@@ -120,6 +120,32 @@ export interface Database {
         Insert: Omit<Database["public"]["Tables"]["transactions"]["Row"], "id" | "created_at">;
         Update: Partial<Database["public"]["Tables"]["transactions"]["Insert"]>;
       };
+      waitlist: {
+        Row: {
+          id: string;
+          email: string;
+          signed_up_at: string;
+          created_at: string;
+        };
+        Insert: {
+          email: string;
+          signed_up_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["waitlist"]["Insert"]>;
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: string;
+          title: string;
+          message: string;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["notifications"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["notifications"]["Insert"]>;
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

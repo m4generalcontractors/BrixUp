@@ -5,13 +5,31 @@ import { useState, type FormEvent } from "react";
 export default function CTA() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setSubmitted(true);
-      setEmail("");
+    if (!email) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        setEmail("");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Something went wrong");
+      }
+    } catch {
+      setError("Network error. Please try again.");
     }
+    setSubmitting(false);
   };
 
   return (
@@ -60,11 +78,15 @@ export default function CTA() {
               />
               <button
                 type="submit"
-                className="rounded-lg bg-dark px-6 py-3 font-semibold text-gold transition-all hover:bg-dark/90 hover:shadow-lg"
+                disabled={submitting}
+                className="rounded-lg bg-dark px-6 py-3 font-semibold text-gold transition-all hover:bg-dark/90 hover:shadow-lg disabled:opacity-70"
               >
-                Join Waitlist
+                {submitting ? "Joining..." : "Join Waitlist"}
               </button>
             </div>
+            {error && (
+              <p className="mt-2 text-sm text-red-600">{error}</p>
+            )}
           </form>
         )}
 
