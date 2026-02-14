@@ -14,8 +14,8 @@ const footerLinks = {
     { label: "Careers", href: "/login?mode=signup" },
   ],
   Legal: [
-    { label: "Terms", href: "#" },
-    { label: "Privacy", href: "#" },
+    { label: "Terms", href: "/terms" },
+    { label: "Privacy", href: "/privacy" },
     { label: "Token Disclaimer", href: "#tokenomics" },
   ],
   Connect: [
