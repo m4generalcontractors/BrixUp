@@ -10,7 +10,9 @@ interface Investment {
   amount: number;
   status: string;
   created_at: string;
+  deal_id?: string;
   deals?: {
+    id?: string;
     address: string;
     city: string;
     state: string;
@@ -156,7 +158,7 @@ export default function DashboardPage() {
                     <td className="py-3"><span className="rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ backgroundColor: deal.status === "Active" ? "#D4A84330" : "#2B4C7E30", color: deal.status === "Active" ? "#D4A843" : "#2B4C7E" }}>{deal.status}</span></td>
                     <td className="py-3"><div className="flex items-center gap-2"><div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div><span className="text-xs text-white/60">{progress}%</span></div></td>
                     <td className="py-3 font-semibold" style={{ color: "#2ECC71" }}>{deal.projected_roi}%</td>
-                    <td className="py-3"><Link href="/marketplace/deal-001" className="text-xs font-medium" style={{ color: "#D4A843" }}>View</Link></td>
+                    <td className="py-3"><Link href={`/marketplace/${inv.deals?.id || inv.deal_id || "deal-001"}`} className="text-xs font-medium" style={{ color: "#D4A843" }}>View</Link></td>
                   </tr>
                 );
               })}

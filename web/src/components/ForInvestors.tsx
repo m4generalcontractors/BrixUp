@@ -107,7 +107,7 @@ export default function ForInvestors() {
               ))}
             </ul>
             <a
-              href="#"
+              href="/login"
               className="mt-8 inline-flex items-center rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light hover:shadow-lg hover:shadow-gold/20"
             >
               View Active Deals

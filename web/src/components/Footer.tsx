@@ -1,20 +1,22 @@
+import Link from "next/link";
+
 const footerLinks = {
   Platform: [
-    { label: "Deals", href: "#" },
-    { label: "Invest", href: "#for-investors" },
-    { label: "Build", href: "#for-builders" },
-    { label: "Stake", href: "#" },
+    { label: "Deals", href: "/marketplace" },
+    { label: "Invest", href: "/login" },
+    { label: "Build", href: "/login?mode=signup" },
+    { label: "Stake", href: "/wallet" },
   ],
   Company: [
-    { label: "About", href: "#" },
+    { label: "About", href: "#team" },
     { label: "Team", href: "#team" },
     { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
+    { label: "Careers", href: "/login?mode=signup" },
   ],
   Legal: [
     { label: "Terms", href: "#" },
     { label: "Privacy", href: "#" },
-    { label: "Token Disclaimer", href: "#" },
+    { label: "Token Disclaimer", href: "#tokenomics" },
   ],
   Connect: [
     { label: "Twitter", href: "#" },
@@ -30,11 +32,11 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-6">
           {/* Brand */}
           <div className="col-span-2">
-            <a href="#" className="inline-block">
+            <Link href="/" className="inline-block">
               <span className="font-[var(--font-display)] text-2xl font-bold text-offwhite">
                 Brix<span className="text-gold">Up</span>
               </span>
-            </a>
+            </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-offwhite/40">
               The tokenized real estate marketplace where investors, builders,
               and dealmakers build wealth together.
@@ -68,12 +70,21 @@ export default function Footer() {
               <ul className="mt-4 space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-offwhite/40 transition-colors hover:text-gold"
-                    >
-                      {link.label}
-                    </a>
+                    {link.href.startsWith("/") ? (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-offwhite/40 transition-colors hover:text-gold"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-sm text-offwhite/40 transition-colors hover:text-gold"
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

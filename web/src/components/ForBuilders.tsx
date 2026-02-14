@@ -74,7 +74,7 @@ export default function ForBuilders() {
         {/* CTA */}
         <div className="mt-12 text-center">
           <a
-            href="#"
+            href="/login?mode=signup"
             className="inline-flex items-center rounded-lg bg-safety-orange px-8 py-4 text-base font-semibold text-white transition-all hover:bg-safety-orange/90 hover:shadow-lg hover:shadow-safety-orange/20"
           >
             Join the Builder Army

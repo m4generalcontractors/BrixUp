@@ -74,7 +74,7 @@ export default function Team() {
         {/* Join CTA */}
         <div className="mt-12 text-center">
           <a
-            href="#"
+            href="/login?mode=signup"
             className="inline-flex items-center gap-2 text-sm font-medium text-gold transition-colors hover:text-gold-light"
           >
             Join Our Team

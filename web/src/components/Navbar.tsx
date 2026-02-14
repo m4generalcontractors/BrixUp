@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
@@ -33,11 +34,11 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <span className="font-[var(--font-display)] text-2xl font-bold tracking-tight text-offwhite">
               Brix<span className="text-gold">Up</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav Links */}
           <div className="hidden items-center gap-8 md:flex">
@@ -53,13 +54,19 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
-            <a
-              href="#"
+          <div className="hidden items-center gap-4 md:flex">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-offwhite/70 transition-colors hover:text-white"
+            >
+              Log In
+            </Link>
+            <Link
+              href="/login?mode=signup"
               className="inline-flex items-center rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-dark transition-all hover:bg-gold-light hover:shadow-lg hover:shadow-gold/20"
             >
-              Launch App
-            </a>
+              Get Started
+            </Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -104,12 +111,22 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#"
-            className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light"
-          >
-            Launch App
-          </a>
+          <div className="mt-4 flex flex-col gap-3">
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex w-full items-center justify-center rounded-lg border border-offwhite/20 px-5 py-3 text-sm font-semibold text-offwhite transition-all hover:border-gold hover:text-gold"
+            >
+              Log In
+            </Link>
+            <Link
+              href="/login?mode=signup"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light"
+            >
+              Get Started
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
