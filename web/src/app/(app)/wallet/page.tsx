@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 const transactions = [
   {
@@ -86,11 +87,36 @@ const typeColors: Record<string, string> = {
 };
 
 export default function WalletPage() {
+  const { user } = useAuth();
   const [convertAmount, setConvertAmount] = useState("1000");
   const [filterType, setFilterType] = useState("All");
   const [activeAction, setActiveAction] = useState<string | null>(null);
+  const [converting, setConverting] = useState(false);
+  const [convertSuccess, setConvertSuccess] = useState(false);
+  const [staking, setStaking] = useState(false);
+  const [stakeSuccess, setStakeSuccess] = useState(false);
 
   const usdcEquivalent = (parseFloat(convertAmount.replace(/,/g, "")) || 0).toFixed(2);
+
+  const handleConvert = async () => {
+    setConverting(true);
+    setConvertSuccess(false);
+    // In production: call Circle API / smart contract
+    await new Promise((r) => setTimeout(r, 1500));
+    setConverting(false);
+    setConvertSuccess(true);
+    setTimeout(() => setConvertSuccess(false), 3000);
+  };
+
+  const handleStake = async () => {
+    setStaking(true);
+    setStakeSuccess(false);
+    // In production: call BrixStaking contract
+    await new Promise((r) => setTimeout(r, 1500));
+    setStaking(false);
+    setStakeSuccess(true);
+    setTimeout(() => setStakeSuccess(false), 3000);
+  };
 
   const filteredTx = transactions.filter(
     (tx) => filterType === "All" || tx.type === filterType
@@ -214,11 +240,18 @@ export default function WalletPage() {
               </div>
             </div>
 
+            {convertSuccess && (
+              <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
+                Conversion submitted! Funds arrive in 1-2 business days.
+              </div>
+            )}
             <button
-              className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90"
+              onClick={handleConvert}
+              disabled={converting || !convertAmount}
+              className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
             >
-              Convert
+              {converting ? "Converting..." : "Convert"}
             </button>
             <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>
               Funds arrive via ACH in 1-2 business days
@@ -284,15 +317,24 @@ export default function WalletPage() {
               </div>
             </div>
 
+            {stakeSuccess && (
+              <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
+                Staking transaction submitted!
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <button
-                className="rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90"
+                onClick={handleStake}
+                disabled={staking}
+                className="rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50"
                 style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}
               >
-                Stake
+                {staking ? "Staking..." : "Stake"}
               </button>
               <button
-                className="rounded-lg border py-3 text-sm font-bold transition-colors hover:bg-white/5"
+                onClick={handleStake}
+                disabled={staking}
+                className="rounded-lg border py-3 text-sm font-bold transition-colors hover:bg-white/5 disabled:opacity-50"
                 style={{ borderColor: "#4A4A5A", color: "#F8F6F0" }}
               >
                 Unstake

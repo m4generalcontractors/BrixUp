@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import WalletWidget from "@/components/WalletWidget";
+import { useAuth } from "@/lib/auth-context";
 
 const stats = [
   {
@@ -84,6 +85,8 @@ const typeColors: Record<string, string> = {
 };
 
 export default function DashboardPage() {
+  const { profile } = useAuth();
+  const displayName = profile?.full_name?.split(" ")[0] || "Investor";
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -95,7 +98,7 @@ export default function DashboardPage() {
     <div>
       {/* Welcome header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Welcome back, Investor</h1>
+        <h1 className="text-2xl font-bold text-white">Welcome back, {displayName}</h1>
         <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>
           {today}
         </p>

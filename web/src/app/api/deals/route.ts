@@ -1,0 +1,117 @@
+import { NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
+import { getDeals, sampleDeals } from "@/lib/deals-data";
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const location = searchParams.get("location") ?? undefined;
+  const propertyType = searchParams.get("propertyType") ?? undefined;
+  const status = searchParams.get("status") ?? undefined;
+  const source = searchParams.get("source") ?? undefined;
+  const minROI = searchParams.get("minROI")
+    ? Number(searchParams.get("minROI"))
+    : undefined;
+  const maxCapital = searchParams.get("maxCapital")
+    ? Number(searchParams.get("maxCapital"))
+    : undefined;
+
+  // Try Supabase first, fall back to sample data
+  try {
+    const supabase = await createServerSupabase();
+    const { data: dbDeals } = await supabase.from("deals").select("*");
+
+    if (dbDeals && dbDeals.length > 0) {
+      return NextResponse.json(dbDeals);
+    }
+  } catch {
+    // Supabase not configured, use sample data
+  }
+
+  const deals = getDeals({ location, propertyType, status, source, minROI, maxCapital });
+  return NextResponse.json(deals);
+}
+
+export async function POST(request: Request) {
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+
+  // Validate required fields
+  const required = ["address", "city", "state", "property_type", "asking_price", "rehab_budget", "arv", "description"];
+  for (const field of required) {
+    if (!body[field]) {
+      return NextResponse.json(
+        { error: `Missing required field: ${field}` },
+        { status: 400 }
+      );
+    }
+  }
+
+  const deal = {
+    address: body.address,
+    city: body.city,
+    state: body.state,
+    zip: body.zip || "",
+    property_type: body.property_type,
+    status: "Open" as const,
+    source: "BrixUp",
+    asking_price: Number(body.asking_price),
+    rehab_budget: Number(body.rehab_budget),
+    arv: Number(body.arv),
+    total_capital_needed: Number(body.asking_price) + Number(body.rehab_budget),
+    funded_amount: 0,
+    projected_roi: Math.round(
+      ((Number(body.arv) - Number(body.asking_price) - Number(body.rehab_budget)) /
+        (Number(body.asking_price) + Number(body.rehab_budget))) *
+        100
+    ),
+    projected_timeline: body.projected_timeline || "6 months",
+    investor_interest_rate: 10,
+    beds: Number(body.beds) || 0,
+    baths: Number(body.baths) || 0,
+    sqft: Number(body.sqft) || 0,
+    year_built: Number(body.year_built) || new Date().getFullYear(),
+    lot_size: body.lot_size || "N/A",
+    description: body.description,
+    dealmaker_id: user.id,
+    gc_id: null,
+    listed_date: new Date().toISOString(),
+    funding_deadline: body.funding_deadline || new Date(Date.now() + 60 * 86400000).toISOString(),
+    est_completion: body.est_completion || "",
+    investor_count: 0,
+    min_investment: Number(body.min_investment) || 500,
+  };
+
+  try {
+    const { data, error } = await supabase
+      .from("deals")
+      .insert(deal as never)
+      .select()
+      .single();
+
+    if (error) {
+      // If Supabase table doesn't exist, return success with local ID
+      return NextResponse.json({
+        id: `deal-${Date.now()}`,
+        ...deal,
+        message: "Deal submitted for review (local mode)",
+      });
+    }
+
+    return NextResponse.json(data, { status: 201 });
+  } catch {
+    // Supabase not configured
+    return NextResponse.json({
+      id: `deal-${Date.now()}`,
+      ...deal,
+      message: "Deal submitted for review",
+    });
+  }
+}

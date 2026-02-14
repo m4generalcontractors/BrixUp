@@ -1,18 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("john.doe@example.com");
-  const [phone, setPhone] = useState("+1 (704) 555-0123");
+  const { user, profile, updateProfile, signOut } = useAuth();
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [emailNotif, setEmailNotif] = useState(true);
   const [smsNotif, setSmsNotif] = useState(true);
   const [pushNotif, setPushNotif] = useState(false);
   const [language, setLanguage] = useState<"en" | "es">("en");
   const [copied, setCopied] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [kycStatus, setKycStatus] = useState<string>("pending");
 
-  const walletAddress = "0x7a3B4c8D9E2f1A6b5C0d3E4F7a8B9c0D1e2F9f2E";
+  const walletAddress = profile?.wallet_address || user?.id?.slice(0, 20) + "..." || "Not connected";
+
+  useEffect(() => {
+    if (profile) {
+      setName(profile.full_name || "");
+      setEmail(profile.email || "");
+      setPhone(profile.phone || "");
+      setEmailNotif(profile.email_notifications ?? true);
+      setSmsNotif(profile.sms_notifications ?? true);
+      setPushNotif(profile.push_notifications ?? false);
+      setLanguage(profile.language || "en");
+      setKycStatus(profile.kyc_status || "pending");
+    }
+  }, [profile]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaved(false);
+    const result = await updateProfile({
+      full_name: name,
+      phone,
+      email_notifications: emailNotif,
+      sms_notifications: smsNotif,
+      push_notifications: pushNotif,
+      language,
+    });
+    setSaving(false);
+    if (!result.error) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    }
+  };
+
+  const handleNotifToggle = async (type: "email" | "sms" | "push", value: boolean) => {
+    if (type === "email") setEmailNotif(value);
+    if (type === "sms") setSmsNotif(value);
+    if (type === "push") setPushNotif(value);
+    await updateProfile({ [`${type}_notifications`]: value });
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress);
@@ -20,9 +65,27 @@ export default function SettingsPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDisconnect = async () => {
+    await signOut();
+    router.push("/login");
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      await signOut();
+      router.push("/");
+    }
+  };
+
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) || "?";
+
   return (
     <div className="max-w-3xl">
-      {/* Page header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Settings</h1>
         <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>
@@ -30,21 +93,26 @@ export default function SettingsPage() {
         </p>
       </div>
 
+      {saved && (
+        <div
+          className="mb-4 rounded-lg border px-4 py-3 text-sm"
+          style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}
+        >
+          Changes saved successfully!
+        </div>
+      )}
+
       <div className="space-y-6">
         {/* Profile Section */}
-        <section
-          className="rounded-xl border border-white/10 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Profile</h2>
           <div className="space-y-4">
-            {/* Avatar upload */}
             <div className="flex items-center gap-4">
               <div
                 className="flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold"
                 style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
               >
-                JD
+                {initials}
               </div>
               <div>
                 <button
@@ -53,175 +121,125 @@ export default function SettingsPage() {
                 >
                   Upload Photo
                 </button>
-                <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>
-                  JPG, PNG or GIF. Max 2MB.
-                </p>
+                <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>JPG, PNG or GIF. Max 2MB.</p>
               </div>
             </div>
 
-            {/* Name */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>
-                Full Name
-              </label>
+              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Full Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                style={{ backgroundColor: "#0D0D1A" }}
               />
             </div>
 
-            {/* Email */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>
-                Email Address
-              </label>
+              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Email Address</label>
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                disabled
+                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white/50 cursor-not-allowed"
+                style={{ backgroundColor: "#0D0D1A" }}
               />
+              <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>Email cannot be changed</p>
             </div>
 
-            {/* Phone */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>
-                Phone Number
-              </label>
+              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Phone Number</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                style={{ backgroundColor: "#0D0D1A" }}
               />
             </div>
 
             <button
-              className="rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors hover:opacity-90"
+              onClick={handleSave}
+              disabled={saving}
+              className="rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
             >
-              Save Changes
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </section>
 
         {/* KYC Status */}
-        <section
-          className="rounded-xl border border-white/10 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">KYC Verification</h2>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
                 className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ backgroundColor: "#2ECC7120" }}
+                style={{ backgroundColor: kycStatus === "verified" ? "#2ECC7120" : "#E8632B20" }}
               >
-                <svg className="w-5 h-5" style={{ color: "#2ECC71" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5"
+                  style={{ color: kycStatus === "verified" ? "#2ECC71" : "#E8632B" }}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
               <div>
                 <p className="text-sm font-medium text-white">Identity Verification</p>
                 <p className="text-xs" style={{ color: "#4A4A5A" }}>
-                  Your identity has been verified
+                  {kycStatus === "verified" ? "Your identity has been verified" : "Verification pending"}
                 </p>
               </div>
             </div>
-            <span
-              className="rounded-full px-3 py-1 text-xs font-semibold"
-              style={{ backgroundColor: "#2ECC7130", color: "#2ECC71" }}
-            >
-              Verified
-            </span>
+            {kycStatus === "verified" ? (
+              <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#2ECC7130", color: "#2ECC71" }}>
+                Verified
+              </span>
+            ) : (
+              <button
+                className="rounded-lg px-4 py-2 text-xs font-semibold hover:opacity-90"
+                style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
+              >
+                Start Verification
+              </button>
+            )}
           </div>
         </section>
 
         {/* Notification Preferences */}
-        <section
-          className="rounded-xl border border-white/10 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Notification Preferences</h2>
           <div className="space-y-4">
-            {/* Email toggle */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-white">Email Notifications</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>
-                  Deal updates, yield payouts, and account alerts
-                </p>
+            {[
+              { key: "email" as const, label: "Email Notifications", desc: "Deal updates, yield payouts, and account alerts", value: emailNotif },
+              { key: "sms" as const, label: "SMS Notifications", desc: "Security alerts and important transaction confirmations", value: smsNotif },
+              { key: "push" as const, label: "Push Notifications", desc: "Real-time updates on milestones and draw schedules", value: pushNotif },
+            ].map((notif, i) => (
+              <div key={notif.key} className={`flex items-center justify-between ${i > 0 ? "border-t border-white/10 pt-4" : ""}`}>
+                <div>
+                  <p className="text-sm font-medium text-white">{notif.label}</p>
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{notif.desc}</p>
+                </div>
+                <button
+                  onClick={() => handleNotifToggle(notif.key, !notif.value)}
+                  className="relative h-6 w-11 rounded-full transition-colors"
+                  style={{ backgroundColor: notif.value ? "#2ECC71" : "#4A4A5A" }}
+                >
+                  <span
+                    className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
+                    style={{ left: notif.value ? "calc(100% - 1.375rem)" : "0.125rem" }}
+                  />
+                </button>
               </div>
-              <button
-                onClick={() => setEmailNotif(!emailNotif)}
-                className="relative h-6 w-11 rounded-full transition-colors"
-                style={{ backgroundColor: emailNotif ? "#2ECC71" : "#4A4A5A" }}
-              >
-                <span
-                  className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
-                  style={{
-                    left: emailNotif ? "calc(100% - 1.375rem)" : "0.125rem",
-                  }}
-                />
-              </button>
-            </div>
-
-            {/* SMS toggle */}
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
-              <div>
-                <p className="text-sm font-medium text-white">SMS Notifications</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>
-                  Security alerts and important transaction confirmations
-                </p>
-              </div>
-              <button
-                onClick={() => setSmsNotif(!smsNotif)}
-                className="relative h-6 w-11 rounded-full transition-colors"
-                style={{ backgroundColor: smsNotif ? "#2ECC71" : "#4A4A5A" }}
-              >
-                <span
-                  className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
-                  style={{
-                    left: smsNotif ? "calc(100% - 1.375rem)" : "0.125rem",
-                  }}
-                />
-              </button>
-            </div>
-
-            {/* Push toggle */}
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
-              <div>
-                <p className="text-sm font-medium text-white">Push Notifications</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>
-                  Real-time updates on milestones and draw schedules
-                </p>
-              </div>
-              <button
-                onClick={() => setPushNotif(!pushNotif)}
-                className="relative h-6 w-11 rounded-full transition-colors"
-                style={{ backgroundColor: pushNotif ? "#2ECC71" : "#4A4A5A" }}
-              >
-                <span
-                  className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
-                  style={{
-                    left: pushNotif ? "calc(100% - 1.375rem)" : "0.125rem",
-                  }}
-                />
-              </button>
-            </div>
+            ))}
           </div>
         </section>
 
         {/* Connected Wallet */}
-        <section
-          className="rounded-xl border border-white/10 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Connected Wallet</h2>
           <div className="flex items-center gap-3">
             <div
@@ -254,56 +272,38 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Language Preference */}
-        <section
-          className="rounded-xl border border-white/10 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        {/* Language */}
+        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Language</h2>
           <div className="flex gap-3">
-            <button
-              onClick={() => setLanguage("en")}
-              className={`flex-1 rounded-lg border py-3 text-sm font-medium transition-colors ${
-                language === "en" ? "" : "hover:bg-white/5"
-              }`}
-              style={{
-                borderColor: language === "en" ? "#D4A843" : "rgba(255,255,255,0.1)",
-                backgroundColor: language === "en" ? "#D4A84320" : "transparent",
-                color: language === "en" ? "#D4A843" : "#F8F6F0",
-              }}
-            >
-              English
-            </button>
-            <button
-              onClick={() => setLanguage("es")}
-              className={`flex-1 rounded-lg border py-3 text-sm font-medium transition-colors ${
-                language === "es" ? "" : "hover:bg-white/5"
-              }`}
-              style={{
-                borderColor: language === "es" ? "#D4A843" : "rgba(255,255,255,0.1)",
-                backgroundColor: language === "es" ? "#D4A84320" : "transparent",
-                color: language === "es" ? "#D4A843" : "#F8F6F0",
-              }}
-            >
-              Espanol
-            </button>
+            {(["en", "es"] as const).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => { setLanguage(lang); updateProfile({ language: lang }); }}
+                className="flex-1 rounded-lg border py-3 text-sm font-medium transition-colors hover:bg-white/5"
+                style={{
+                  borderColor: language === lang ? "#D4A843" : "rgba(255,255,255,0.1)",
+                  backgroundColor: language === lang ? "#D4A84320" : "transparent",
+                  color: language === lang ? "#D4A843" : "#F8F6F0",
+                }}
+              >
+                {lang === "en" ? "English" : "Espanol"}
+              </button>
+            ))}
           </div>
         </section>
 
         {/* Danger Zone */}
-        <section
-          className="rounded-xl border border-red-500/30 p-5"
-          style={{ backgroundColor: "#1A1A2E" }}
-        >
+        <section className="rounded-xl border border-red-500/30 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-2 text-lg font-semibold text-red-400">Danger Zone</h2>
           <p className="mb-4 text-xs" style={{ color: "#4A4A5A" }}>
             These actions are irreversible. Please proceed with caution.
           </p>
           <div className="flex flex-wrap gap-3">
-            <button className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10">
+            <button onClick={handleDisconnect} className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10">
               Disconnect Wallet
             </button>
-            <button className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10">
+            <button onClick={handleDeleteAccount} className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10">
               Delete Account
             </button>
           </div>

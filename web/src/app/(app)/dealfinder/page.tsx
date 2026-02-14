@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import WalletWidget from "@/components/WalletWidget";
 
 const myListings = [
@@ -51,6 +52,57 @@ const recentActivity = [
 ];
 
 export default function DealFinderDashboard() {
+  const [dealForm, setDealForm] = useState({
+    address: "",
+    cityState: "",
+    propertyType: "Flip",
+    askingPrice: "",
+    rehabBudget: "",
+    arv: "",
+    description: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const handleDealSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    const [city, state] = dealForm.cityState.split(",").map((s) => s.trim());
+
+    try {
+      const res = await fetch("/api/deals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address: dealForm.address,
+          city: city || dealForm.cityState,
+          state: state || "",
+          property_type: dealForm.propertyType,
+          asking_price: dealForm.askingPrice.replace(/[$,]/g, ""),
+          rehab_budget: dealForm.rehabBudget.replace(/[$,]/g, ""),
+          arv: dealForm.arv.replace(/[$,]/g, ""),
+          description: dealForm.description,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to submit deal");
+      }
+
+      setSubmitSuccess(true);
+      setDealForm({ address: "", cityState: "", propertyType: "Flip", askingPrice: "", rehabBudget: "", arv: "", description: "" });
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to submit");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div>
       {/* Header */}
@@ -181,34 +233,44 @@ export default function DealFinderDashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">
               Submit a New Deal
             </h2>
+            {submitSuccess && (
+              <div className="mb-4 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
+                Deal submitted successfully! It will appear after review.
+              </div>
+            )}
+            {submitError && (
+              <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                {submitError}
+              </div>
+            )}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  Property Address
-                </label>
+                <label className="mb-1 block text-xs text-white/50">Property Address</label>
                 <input
                   type="text"
                   placeholder="123 Main St"
+                  value={dealForm.address}
+                  onChange={(e) => setDealForm({ ...dealForm, address: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  City, State
-                </label>
+                <label className="mb-1 block text-xs text-white/50">City, State</label>
                 <input
                   type="text"
                   placeholder="Charlotte, NC"
+                  value={dealForm.cityState}
+                  onChange={(e) => setDealForm({ ...dealForm, cityState: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  Property Type
-                </label>
+                <label className="mb-1 block text-xs text-white/50">Property Type</label>
                 <select
+                  value={dealForm.propertyType}
+                  onChange={(e) => setDealForm({ ...dealForm, propertyType: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 >
@@ -219,55 +281,57 @@ export default function DealFinderDashboard() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  Asking Price
-                </label>
+                <label className="mb-1 block text-xs text-white/50">Asking Price</label>
                 <input
                   type="text"
                   placeholder="$150,000"
+                  value={dealForm.askingPrice}
+                  onChange={(e) => setDealForm({ ...dealForm, askingPrice: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  Estimated Rehab
-                </label>
+                <label className="mb-1 block text-xs text-white/50">Estimated Rehab</label>
                 <input
                   type="text"
                   placeholder="$80,000"
+                  value={dealForm.rehabBudget}
+                  onChange={(e) => setDealForm({ ...dealForm, rehabBudget: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/50">
-                  ARV (After Repair Value)
-                </label>
+                <label className="mb-1 block text-xs text-white/50">ARV (After Repair Value)</label>
                 <input
                   type="text"
                   placeholder="$310,000"
+                  value={dealForm.arv}
+                  onChange={(e) => setDealForm({ ...dealForm, arv: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-xs text-white/50">
-                  Deal Description
-                </label>
+                <label className="mb-1 block text-xs text-white/50">Deal Description</label>
                 <textarea
                   rows={3}
                   placeholder="Describe the opportunity, property condition, neighborhood..."
+                  value={dealForm.description}
+                  onChange={(e) => setDealForm({ ...dealForm, description: e.target.value })}
                   className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A" }}
                 />
               </div>
               <div className="sm:col-span-2">
                 <button
-                  className="w-full rounded-lg py-3 text-sm font-semibold transition-colors hover:opacity-80"
+                  onClick={handleDealSubmit}
+                  disabled={submitting || !dealForm.address || !dealForm.cityState}
+                  className="w-full rounded-lg py-3 text-sm font-semibold transition-colors hover:opacity-80 disabled:opacity-50"
                   style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
                 >
-                  Submit Deal for Review
+                  {submitting ? "Submitting..." : "Submit Deal for Review"}
                 </button>
               </div>
             </div>

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
   {
@@ -64,7 +65,42 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, profile, signOut, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "User";
+  const displayEmail = profile?.email || user?.email || "";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
+  };
+
+  if (loading) {
+    return (
+      <div
+        className="flex h-screen items-center justify-center"
+        style={{ backgroundColor: "#0D0D1A" }}
+      >
+        <div className="text-center">
+          <div
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl font-bold"
+            style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
+          >
+            BU
+          </div>
+          <p className="mt-4 text-sm text-white/50">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
@@ -94,7 +130,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <span className="text-xl font-bold text-white tracking-tight">
             Brix<span style={{ color: "#D4A843" }}>Up</span>
           </span>
-          {/* Close button on mobile */}
           <button
             className="ml-auto lg:hidden text-white/60 hover:text-white"
             onClick={() => setSidebarOpen(false)}
@@ -132,14 +167,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="border-t border-white/10 p-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-sm font-medium text-white">
-              JD
+              {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">John Doe</p>
+              <p className="text-sm font-medium text-white truncate">{displayName}</p>
               <p className="text-xs truncate" style={{ color: "#4A4A5A" }}>
-                john@example.com
+                {displayEmail}
               </p>
             </div>
+            <button
+              onClick={handleLogout}
+              className="shrink-0 rounded-lg p-1.5 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+              title="Sign out"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </div>
       </aside>
@@ -151,7 +195,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           className="flex h-16 items-center gap-4 border-b border-white/10 px-4 lg:px-6"
           style={{ backgroundColor: "#0D0D1A" }}
         >
-          {/* Mobile hamburger */}
           <button
             className="lg:hidden text-white/60 hover:text-white"
             onClick={() => setSidebarOpen(true)}
@@ -204,13 +247,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="text-white">12,500</span>
             </div>
 
-            {/* Connect wallet button */}
-            <button
-              className="rounded-lg px-4 py-2 text-sm font-semibold transition-colors hover:opacity-90"
-              style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
-            >
-              Connect Wallet
-            </button>
+            {/* User role badge */}
+            {profile?.user_role && (
+              <span
+                className="hidden sm:inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize"
+                style={{ backgroundColor: "#D4A84320", color: "#D4A843" }}
+              >
+                {profile.user_role}
+              </span>
+            )}
           </div>
         </header>
 

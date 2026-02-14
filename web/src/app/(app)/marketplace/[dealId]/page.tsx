@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 const drawSchedule = [
   { milestone: "Foundation", status: "Completed", amount: 18000, date: "Jan 15, 2026" },
@@ -25,7 +26,28 @@ const statusColors: Record<string, { bg: string; text: string }> = {
 };
 
 export default function DealDetailPage() {
+  const { user } = useAuth();
   const [investAmount, setInvestAmount] = useState("5000");
+  const [investing, setInvesting] = useState(false);
+  const [investSuccess, setInvestSuccess] = useState(false);
+  const [investError, setInvestError] = useState<string | null>(null);
+
+  const handleInvest = async () => {
+    if (!user) return;
+    setInvesting(true);
+    setInvestError(null);
+    setInvestSuccess(false);
+    try {
+      // In production this would call the smart contract
+      await new Promise((r) => setTimeout(r, 1500));
+      setInvestSuccess(true);
+      setTimeout(() => setInvestSuccess(false), 5000);
+    } catch {
+      setInvestError("Investment failed. Please try again.");
+    } finally {
+      setInvesting(false);
+    }
+  };
 
   return (
     <div>
@@ -318,11 +340,23 @@ export default function DealDetailPage() {
                   />
                 </div>
               </div>
+              {investSuccess && (
+                <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
+                  Investment submitted successfully!
+                </div>
+              )}
+              {investError && (
+                <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+                  {investError}
+                </div>
+              )}
               <button
-                className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90"
+                onClick={handleInvest}
+                disabled={investing || !investAmount}
+                className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50"
                 style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
               >
-                Invest $BRIX
+                {investing ? "Processing..." : "Invest $BRIX"}
               </button>
               <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>
                 By investing, you agree to the Terms & Conditions
