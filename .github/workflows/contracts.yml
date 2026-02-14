@@ -1,0 +1,150 @@
+# =============================================================================
+# BrixUp — Smart Contracts CI
+# =============================================================================
+# Triggered only when files in the contracts/ directory change.
+# Steps: compile, test, coverage report, optional Slither static analysis.
+# =============================================================================
+
+name: Smart Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "contracts/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "contracts/**"
+
+concurrency:
+  group: contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ===========================================================================
+  #  Compile, Test & Coverage
+  # ===========================================================================
+  test:
+    name: Compile, Test & Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run tests
+        run: npx hardhat test
+
+      - name: Generate coverage report
+        run: npx hardhat coverage
+        continue-on-error: true
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: solidity-coverage
+          path: contracts/coverage/
+          retention-days: 14
+
+  # ===========================================================================
+  #  Gas Report
+  # ===========================================================================
+  gas-report:
+    name: Gas Report
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with gas reporting
+        run: REPORT_GAS=true npx hardhat test
+
+  # ===========================================================================
+  #  Slither Static Analysis (optional — runs but does not block merges)
+  # ===========================================================================
+  slither:
+    name: Slither Analysis
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: contracts
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Slither
+        run: pip3 install slither-analyzer
+
+      - name: Install solc-select
+        run: |
+          pip3 install solc-select
+          solc-select install 0.8.24
+          solc-select use 0.8.24
+
+      - name: Run Slither
+        run: |
+          slither . \
+            --filter-paths "node_modules" \
+            --exclude naming-convention,solc-version \
+            --sarif results.sarif \
+            || true
+
+      - name: Upload Slither SARIF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-sarif
+          path: contracts/results.sarif
+          retention-days: 14
