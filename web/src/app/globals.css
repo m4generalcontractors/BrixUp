@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-charcoal: #1A1A2E;
+  --color-gold: #D4A843;
+  --color-concrete: #4A4A5A;
+  --color-blueprint: #2B4C7E;
+  --color-safety-orange: #E8632B;
+  --color-success: #2ECC71;
+  --color-offwhite: #F8F6F0;
+  --color-dark: #0D0D1A;
+  --color-gold-light: #E8C76A;
+  --color-gold-dark: #B8922E;
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0D0D1A;
+  color: #F8F6F0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Brick pattern overlay */
+.brick-pattern {
+  background-image:
+    linear-gradient(to right, rgba(212, 168, 67, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(212, 168, 67, 0.03) 1px, transparent 1px);
+  background-size: 60px 30px;
+  background-position: 0 0, 30px 15px;
+}
+
+/* Floating brix animation */
+@keyframes float-brick {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.06;
+  }
+  25% {
+    transform: translateY(-20px) rotate(2deg);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translateY(-40px) rotate(-1deg);
+    opacity: 0.06;
+  }
+  75% {
+    transform: translateY(-20px) rotate(1deg);
+    opacity: 0.08;
+  }
+}
+
+@keyframes float-brick-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.04;
+  }
+  50% {
+    transform: translateY(-60px) rotate(-2deg);
+    opacity: 0.08;
+  }
+}
+
+@keyframes float-brick-reverse {
+  0%, 100% {
+    transform: translateY(-30px) rotate(1deg);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translateY(10px) rotate(-1deg);
+    opacity: 0.09;
+  }
+}
+
+.animate-float-brick {
+  animation: float-brick 8s ease-in-out infinite;
+}
+
+.animate-float-brick-slow {
+  animation: float-brick-slow 12s ease-in-out infinite;
+}
+
+.animate-float-brick-reverse {
+  animation: float-brick-reverse 10s ease-in-out infinite;
+}
+
+/* Counter animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count-up {
+  animation: count-up 0.8s ease-out forwards;
+}
+
+/* Stagger delays */
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-600 {
+  animation-delay: 600ms;
+}
+
+/* FAQ accordion styling */
+details summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] summary .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+}
+
+/* Gradient text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #D4A843, #E8C76A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Timeline connector */
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #D4A843, #2B4C7E, #D4A843);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+  .timeline-line {
+    left: 20px;
+  }
+}
