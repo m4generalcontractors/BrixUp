@@ -251,10 +251,17 @@ export default function WalletPage() {
           <h1 className="text-2xl font-bold text-white">Wallet</h1>
           <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Manage your $BRIX tokens</p>
         </div>
-        {/* Coinbase Smart Wallet Connect */}
-        <Wallet>
-          <ConnectWallet />
-        </Wallet>
+        {/* Coinbase Smart Wallet Connect — only show when not connected */}
+        {!isConnected ? (
+          <Wallet>
+            <ConnectWallet />
+          </Wallet>
+        ) : (
+          <div className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
+            <span className="font-mono text-xs text-white/60">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          </div>
+        )}
       </div>
 
       {/* On-chain status banner */}

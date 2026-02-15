@@ -76,62 +76,95 @@ function createClusterIcon(count: number) {
 export default function MapView({ deals, onDealSelect, selectedDealId }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const markersRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // Store callbacks in refs to avoid re-creating the map on every render
+  const onDealSelectRef = useRef(onDealSelect);
+  onDealSelectRef.current = onDealSelect;
+
+  // Initialize map once
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
     let cancelled = false;
 
     async function initMap() {
-      const L = (await import("leaflet")).default;
-      await import("leaflet.markercluster");
+      try {
+        const L = (await import("leaflet")).default;
+        await import("leaflet.markercluster");
 
-      // Load Leaflet CSS via link tags (avoids TS module resolution issues)
-      if (!document.getElementById("leaflet-css")) {
-        const link = document.createElement("link");
-        link.id = "leaflet-css";
-        link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        document.head.appendChild(link);
-      }
-      if (!document.getElementById("leaflet-mc-css")) {
-        const link = document.createElement("link");
-        link.id = "leaflet-mc-css";
-        link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css";
-        document.head.appendChild(link);
-
-        const link2 = document.createElement("link");
-        link2.id = "leaflet-mc-default-css";
-        link2.rel = "stylesheet";
-        link2.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css";
-        document.head.appendChild(link2);
-      }
-
-      if (cancelled || !mapRef.current) return;
-
-      // Center on US Southeast (Charlotte, NC area)
-      const map = L.map(mapRef.current, {
-        center: [35.2, -80.8],
-        zoom: 7,
-        zoomControl: false,
-        attributionControl: false,
-      });
-
-      // Dark map tiles
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          maxZoom: 19,
-          subdomains: "abcd",
+        // Load Leaflet CSS via link tags
+        if (!document.getElementById("leaflet-css")) {
+          const link = document.createElement("link");
+          link.id = "leaflet-css";
+          link.rel = "stylesheet";
+          link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+          document.head.appendChild(link);
         }
-      ).addTo(map);
+        if (!document.getElementById("leaflet-mc-css")) {
+          const link = document.createElement("link");
+          link.id = "leaflet-mc-css";
+          link.rel = "stylesheet";
+          link.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css";
+          document.head.appendChild(link);
 
-      // Zoom control on the right
-      L.control.zoom({ position: "bottomright" }).addTo(map);
+          const link2 = document.createElement("link");
+          link2.id = "leaflet-mc-default-css";
+          link2.rel = "stylesheet";
+          link2.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css";
+          document.head.appendChild(link2);
+        }
 
-      // Marker cluster group
+        if (cancelled || !mapRef.current) return;
+
+        const map = L.map(mapRef.current, {
+          center: [35.2, -80.8],
+          zoom: 7,
+          zoomControl: false,
+          attributionControl: false,
+        });
+
+        L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          { maxZoom: 19, subdomains: "abcd" }
+        ).addTo(map);
+
+        L.control.zoom({ position: "bottomright" }).addTo(map);
+
+        mapInstanceRef.current = map;
+        setReady(true);
+      } catch (err) {
+        console.error("Map init failed:", err);
+        if (!cancelled) setError("Map failed to load. Check your connection and refresh.");
+      }
+    }
+
+    initMap();
+
+    return () => {
+      cancelled = true;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
+  // Update markers when deals or selectedDealId change
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !ready) return;
+
+    // Dynamically import leaflet for icon creation
+    import("leaflet").then(({ default: L }) => {
+      // Remove existing markers
+      if (markersRef.current) {
+        map.removeLayer(markersRef.current);
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const markers = (L as any).markerClusterGroup({
         maxClusterRadius: 50,
@@ -159,7 +192,6 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
 
         const marker = L.marker([deal.lat, deal.lng], { icon });
 
-        // Popup
         marker.bindPopup(
           `<div style="
             font-family: 'Inter', sans-serif;
@@ -177,46 +209,40 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
             </div>
             <div style="color: #D4A843; font-weight: 700; font-size: 14px;">$${deal.capitalNeeded.toLocaleString()}</div>
           </div>`,
-          {
-            className: "dark-popup",
-            closeButton: false,
-          }
+          { className: "dark-popup", closeButton: false }
         );
 
         marker.on("click", () => {
-          onDealSelect?.(deal.id);
+          onDealSelectRef.current?.(deal.id);
         });
 
         markers.addLayer(marker);
       });
 
       map.addLayer(markers);
+      markersRef.current = markers;
 
-      // Fit bounds to deal markers if any
       if (deals.length > 0) {
         const bounds = L.latLngBounds(deals.map((d) => [d.lat, d.lng]));
         map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
       }
-
-      mapInstanceRef.current = map;
-      setReady(true);
-    }
-
-    initMap();
-
-    return () => {
-      cancelled = true;
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-    };
-  }, [deals, onDealSelect, selectedDealId]);
+    });
+  }, [deals, selectedDealId, ready]);
 
   return (
     <div className="relative h-full w-full">
       <div ref={mapRef} className="h-full w-full" />
-      {!ready && (
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex flex-col items-center gap-3 text-center px-6">
+            <svg className="h-10 w-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+            <span className="text-sm text-white/50">{error}</span>
+          </div>
+        </div>
+      )}
+      {!ready && !error && (
         <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
           <div className="flex flex-col items-center gap-3">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />

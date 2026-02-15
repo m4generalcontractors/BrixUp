@@ -46,6 +46,8 @@ export async function middleware(request: NextRequest) {
     "/dealfinder",
     "/wallet",
     "/settings",
+    "/verify",
+    "/agreements",
     "/admin",
   ];
 

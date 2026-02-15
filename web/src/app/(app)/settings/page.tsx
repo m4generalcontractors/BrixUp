@@ -253,12 +253,13 @@ export default function SettingsPage() {
                 Verified
               </span>
             ) : (
-              <button
-                className="rounded-lg px-4 py-2 text-xs font-semibold hover:opacity-90"
+              <a
+                href="/verify"
+                className="rounded-lg px-4 py-2 text-xs font-semibold hover:opacity-90 inline-block"
                 style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
               >
                 Start Verification
-              </button>
+              </a>
             )}
           </div>
         </section>
