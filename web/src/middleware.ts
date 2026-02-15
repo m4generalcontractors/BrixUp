@@ -66,10 +66,38 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith(path + "/")
   );
 
+  // Allow /admin/login without authentication
+  if (request.nextUrl.pathname === "/admin/login") {
+    // If already logged in as admin, redirect to /admin
+    if (user) {
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("user_role")
+          .eq("id", user.id)
+          .single();
+        const role = (profile as { user_role?: string } | null)?.user_role || "investor";
+        if (role === "admin" || role === "manager") {
+          const url = request.nextUrl.clone();
+          url.pathname = "/admin";
+          return NextResponse.redirect(url);
+        }
+      } catch {
+        // Profile table may not exist — allow through
+      }
+    }
+    return supabaseResponse;
+  }
+
   if (isProtected && !user) {
+    // Redirect admin routes to admin login, others to regular login
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", request.nextUrl.pathname);
+    if (request.nextUrl.pathname.startsWith("/admin")) {
+      url.pathname = "/admin/login";
+    } else {
+      url.pathname = "/login";
+      url.searchParams.set("next", request.nextUrl.pathname);
+    }
     return NextResponse.redirect(url);
   }
 

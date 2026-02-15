@@ -44,6 +44,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { profile, signOut, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Allow the admin login page to render without the sidebar chrome
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   const userRole = profile?.user_role;
   const isAdmin = userRole === "admin" || userRole === "manager";
 
@@ -65,10 +70,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </svg>
           </div>
           <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-sm mb-6" style={{ color: "#4A4A5A" }}>You need admin or manager privileges to access this area.</p>
-          <Link href="/dashboard" className="rounded-lg px-6 py-2.5 text-sm font-semibold" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
-            Back to Dashboard
-          </Link>
+          <p className="text-sm mb-4" style={{ color: "#4A4A5A" }}>You need admin or manager privileges to access this area.</p>
+          <div className="flex flex-col items-center gap-3">
+            <Link href="/admin/login" className="rounded-lg px-6 py-2.5 text-sm font-semibold" style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}>
+              Admin Login
+            </Link>
+            <Link href="/dashboard" className="text-sm font-medium" style={{ color: "#D4A843" }}>
+              Back to Dashboard
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -139,7 +149,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Back to App
           </Link>
           <button
-            onClick={async () => { await signOut(); router.push("/login"); }}
+            onClick={async () => { await signOut(); router.push("/admin/login"); }}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/40 hover:text-white hover:bg-white/10 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
