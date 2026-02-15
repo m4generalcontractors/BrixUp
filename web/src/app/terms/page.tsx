@@ -59,7 +59,7 @@ export default function TermsOfServicePage() {
               The $BRIX token is a utility token issued on the Base blockchain (Coinbase L2). The $BRIX token:
             </p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Is a utility token and does <strong className="text-white">not</strong> constitute a security, equity, or ownership stake in BrixUp Technologies LLC or any property</li>
+              <li>Is a utility token and does <strong className="text-white underline">NOT</strong> constitute a security, equity, or ownership stake in BrixUp Technologies LLC or any property</li>
               <li>May be used within the Platform for staking, governance, and accessing platform features</li>
               <li>Has no guaranteed value and its price may fluctuate based on market conditions</li>
               <li>Is not redeemable for cash or cash equivalents from BrixUp Technologies LLC</li>

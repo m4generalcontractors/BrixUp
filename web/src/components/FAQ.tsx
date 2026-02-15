@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 const faqs = [
   {
     question: "What is $BRIX?",
@@ -37,6 +41,12 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggle = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <section id="faq" className="bg-charcoal py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -52,38 +62,57 @@ export default function FAQ() {
 
         {/* FAQ Accordion */}
         <div className="mt-12 space-y-4">
-          {faqs.map((faq) => (
-            <details
-              key={faq.question}
-              className="group rounded-xl border border-offwhite/10 bg-dark/50 transition-all hover:border-offwhite/20"
-            >
-              <summary className="flex items-center justify-between p-6">
-                <span className="pr-4 text-base font-medium text-offwhite">
-                  {faq.question}
-                </span>
-                <span className="faq-chevron shrink-0 text-offwhite/60">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div
+                key={faq.question}
+                className={`rounded-xl border bg-dark/50 transition-all ${
+                  isOpen ? "border-gold/30" : "border-offwhite/10 hover:border-offwhite/20"
+                }`}
+              >
+                <button
+                  onClick={() => toggle(index)}
+                  className="flex w-full items-center justify-between p-6 text-left"
+                  aria-expanded={isOpen}
+                >
+                  <span className="pr-4 text-base font-medium text-offwhite">
+                    {faq.question}
+                  </span>
+                  <span
+                    className={`shrink-0 text-offwhite/60 transition-transform duration-300 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                    />
-                  </svg>
-                </span>
-              </summary>
-              <div className="px-6 pb-6">
-                <p className="text-sm leading-relaxed text-offwhite/70">
-                  {faq.answer}
-                </p>
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="px-6 pb-6">
+                    <p className="text-sm leading-relaxed text-offwhite/70">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </details>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

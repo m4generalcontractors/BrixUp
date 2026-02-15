@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
@@ -14,6 +15,25 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  let user = null;
+  let profile = null;
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    profile = auth.profile;
+  } catch {
+    // Not within AuthProvider (shouldn't happen, but safe fallback)
+  }
+
+  const isAuthenticated = !!user;
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "User";
+  const initials = displayName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,18 +75,40 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden items-center gap-4 md:flex">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-offwhite/70 transition-colors hover:text-white"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/login?mode=signup"
-              className="inline-flex items-center rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-dark transition-all hover:bg-gold-light hover:shadow-lg hover:shadow-gold/20"
-            >
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-offwhite/70 transition-colors hover:text-white"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-sm font-semibold text-dark transition-all hover:bg-gold-light hover:shadow-lg hover:shadow-gold/20"
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-dark/20 text-xs font-bold">
+                    {initials}
+                  </span>
+                  {displayName.split(" ")[0]}
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-offwhite/70 transition-colors hover:text-white"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/login?mode=signup"
+                  className="inline-flex items-center rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-dark transition-all hover:bg-gold-light hover:shadow-lg hover:shadow-gold/20"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Hamburger */}
@@ -112,20 +154,32 @@ export default function Navbar() {
             </a>
           ))}
           <div className="mt-4 flex flex-col gap-3">
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex w-full items-center justify-center rounded-lg border border-offwhite/20 px-5 py-3 text-sm font-semibold text-offwhite transition-all hover:border-gold hover:text-gold"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/login?mode=signup"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light"
-            >
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex w-full items-center justify-center rounded-lg border border-offwhite/20 px-5 py-3 text-sm font-semibold text-offwhite transition-all hover:border-gold hover:text-gold"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/login?mode=signup"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-dark transition-all hover:bg-gold-light"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
+import { activeChain } from "@/lib/contracts/config";
+import "@coinbase/onchainkit/styles.css";
 
 import type { UserRole } from "@/lib/supabase/types";
 
@@ -198,6 +201,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
+    <OnchainKitProvider
+      apiKey={process.env.NEXT_PUBLIC_COINBASE_APP_ID}
+      chain={activeChain}
+      config={{
+        appearance: {
+          name: "BrixUp",
+          logo: "https://brixups.com/logo.png",
+          mode: "dark",
+          theme: "cyberpunk",
+        },
+      }}
+    >
     <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -437,5 +452,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
       </div>
     </div>
+    </OnchainKitProvider>
   );
 }

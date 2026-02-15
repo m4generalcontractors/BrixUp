@@ -277,9 +277,9 @@ function LoginForm() {
 
         <p className="mt-6 text-center text-xs" style={{ color: "#4A4A5A" }}>
           By continuing, you agree to the BrixUp{" "}
-          <Link href="/terms" className="underline hover:text-white/60">Terms of Service</Link>
+          <Link href="/terms" className="underline" style={{ color: "#D4A843" }}>Terms of Service</Link>
           {" "}and{" "}
-          <Link href="/privacy" className="underline hover:text-white/60">Privacy Policy</Link>.
+          <Link href="/privacy" className="underline" style={{ color: "#D4A843" }}>Privacy Policy</Link>.
         </p>
       </div>
     </div>

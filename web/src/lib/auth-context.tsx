@@ -52,11 +52,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, fetchProfile]);
 
   useEffect(() => {
+    let mounted = true;
+
     const init = async () => {
       try {
         const {
           data: { session: currentSession },
         } = await supabase.auth.getSession();
+        if (!mounted) return;
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         if (currentSession?.user) {
@@ -65,10 +68,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch {
         // Auth not available
       }
-      setLoading(false);
+      if (mounted) setLoading(false);
     };
 
     init();
+
+    // Safety timeout: never stay loading more than 3 seconds
+    const timeout = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 3000);
 
     const {
       data: { subscription },
@@ -82,7 +90,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [supabase, fetchProfile]);
 
   const signUp = async (

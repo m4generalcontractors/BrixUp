@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
               <li><strong className="text-white">Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
             </ul>
             <p className="mt-3">
-              We do <strong className="text-white">not</strong> sell your personal information to third parties for marketing purposes.
+              We do <strong className="text-white underline">NOT</strong> sell your personal information to third parties for marketing purposes.
             </p>
           </section>
 
