@@ -201,6 +201,43 @@ After deployment, the deployer wallet (`PRIVATE_KEY` owner) has these admin capa
 
 ---
 
+## Part 3b: Configure Google OAuth (Login with Google)
+
+### Step 1 — Create Google OAuth Client
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials
+2. Click **Create Credentials** → **OAuth client ID**
+3. Application type: **Web application**
+4. Name: `BrixUp`
+5. **Authorized JavaScript origins:**
+   - `https://brixups.com`
+   - `http://localhost:3000` (for local development)
+6. **Authorized redirect URIs:**
+   - `https://dxvdnyqnnttofpvjcjzy.supabase.co/auth/v1/callback`
+7. Click **Create** and save the **Client ID** and **Client Secret**
+
+### Step 2 — Enable Google Provider in Supabase
+
+1. Go to [Supabase Dashboard](https://supabase.com/dashboard) → your project
+2. Navigate to **Authentication** → **Providers** → **Google**
+3. Toggle **Enable Google provider** ON
+4. Paste your **Client ID** and **Client Secret** from Step 1
+5. Click **Save**
+
+### How It Works
+
+```
+User clicks "Continue with Google"
+  → Supabase redirects to Google
+  → Google authenticates the user
+  → Google redirects to: https://<project-ref>.supabase.co/auth/v1/callback
+  → Supabase exchanges code for session
+  → Supabase redirects to: https://brixups.com/api/auth/callback
+  → App creates session and redirects to /dashboard
+```
+
+---
+
 ## Part 4: Set Up Supabase Backend
 
 ### Create Supabase Project
