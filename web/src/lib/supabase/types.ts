@@ -1,5 +1,5 @@
-export type UserRole = "investor" | "builder" | "dealmaker";
-export type DealStatus = "Open" | "Funding" | "Funded" | "Active" | "Completed";
+export type UserRole = "investor" | "builder" | "dealmaker" | "admin" | "manager";
+export type DealStatus = "Open" | "Funding" | "Funded" | "Active" | "Completed" | "Pending Review" | "Rejected";
 export type PropertyType = "Flip" | "New Build" | "Value-Add" | "Wholesale" | "Land";
 export type KycStatus = "pending" | "verified" | "rejected";
 

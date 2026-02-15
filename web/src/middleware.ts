@@ -46,6 +46,7 @@ export async function middleware(request: NextRequest) {
     "/dealfinder",
     "/wallet",
     "/settings",
+    "/admin",
   ];
 
   const isProtected = protectedPaths.some(
@@ -72,13 +73,20 @@ export async function middleware(request: NextRequest) {
 
       const role = (profile as { user_role?: string } | null)?.user_role || "investor";
 
-      if (request.nextUrl.pathname.startsWith("/builder") && role !== "builder") {
+      // Admin routes — only admin/manager can access
+      if (request.nextUrl.pathname.startsWith("/admin") && role !== "admin" && role !== "manager") {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         return NextResponse.redirect(url);
       }
 
-      if (request.nextUrl.pathname.startsWith("/dealfinder") && role !== "dealmaker") {
+      if (request.nextUrl.pathname.startsWith("/builder") && role !== "builder" && role !== "admin" && role !== "manager") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        return NextResponse.redirect(url);
+      }
+
+      if (request.nextUrl.pathname.startsWith("/dealfinder") && role !== "dealmaker" && role !== "admin" && role !== "manager") {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         return NextResponse.redirect(url);

@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     state: body.state.slice(0, 50),
     zip: body.zip || "",
     property_type: body.property_type,
-    status: "Open" as const,
+    status: "Pending Review",
     source: "BrixUp",
     asking_price: Number(body.asking_price),
     rehab_budget: Number(body.rehab_budget),
