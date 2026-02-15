@@ -7,16 +7,26 @@ import { useAuth } from "@/lib/auth-context";
 
 function AdminLoginForm() {
   const router = useRouter();
-  const { signIn, signOut } = useAuth();
+  const { signIn, signOut, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // If user arrived here while logged in as non-admin, show notice
+  const isAlreadyLoggedIn = !!user;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
+    // Sign out any existing session first to avoid conflicts
+    if (isAlreadyLoggedIn) {
+      await signOut();
+      // Brief pause to let Supabase clear the session
+      await new Promise((r) => setTimeout(r, 300));
+    }
 
     const result = await signIn(email, password);
 
@@ -83,6 +93,12 @@ function AdminLoginForm() {
               Secure admin access — requires admin or manager role
             </span>
           </div>
+
+          {isAlreadyLoggedIn && !error && (
+            <div className="mb-4 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: "#D4A84330", backgroundColor: "#D4A84310", color: "#D4A843" }}>
+              You are currently logged in as a regular user. Enter admin credentials below — your current session will be signed out automatically.
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">

@@ -8,6 +8,10 @@ export async function middleware(request: NextRequest) {
 
   // Block access to protected routes if Supabase is not configured
   if (!supabaseUrl || !supabaseKey || supabaseUrl === "https://your-project.supabase.co") {
+    // Always allow /admin/login (it handles its own auth)
+    if (request.nextUrl.pathname === "/admin/login") {
+      return NextResponse.next();
+    }
     const protectedPrefixes = ["/dashboard", "/marketplace", "/builder", "/dealfinder", "/wallet", "/settings", "/verify", "/agreements", "/admin"];
     const isProtectedRoute = protectedPrefixes.some(
       (prefix) => request.nextUrl.pathname === prefix || request.nextUrl.pathname.startsWith(prefix + "/")
@@ -112,10 +116,10 @@ export async function middleware(request: NextRequest) {
 
       const role = (profile as { user_role?: string } | null)?.user_role || "investor";
 
-      // Admin routes — only admin/manager can access
+      // Admin routes — only admin/manager can access; send others to admin login
       if (request.nextUrl.pathname.startsWith("/admin") && role !== "admin" && role !== "manager") {
         const url = request.nextUrl.clone();
-        url.pathname = "/dashboard";
+        url.pathname = "/admin/login";
         return NextResponse.redirect(url);
       }
 
