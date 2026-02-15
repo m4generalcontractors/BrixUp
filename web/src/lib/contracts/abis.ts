@@ -116,6 +116,17 @@ export const BrxuStakingABI = [
     outputs: [{ type: "uint256" }],
     stateMutability: "view",
   },
+  {
+    type: "function", name: "stakers",
+    inputs: [{ name: "account", type: "address" }],
+    outputs: [
+      { name: "amount", type: "uint256" },
+      { name: "rewardDebt", type: "uint256" },
+      { name: "stakedAt", type: "uint256" },
+      { name: "pendingClaim", type: "uint256" },
+    ],
+    stateMutability: "view",
+  },
   { type: "function", name: "stakerCount", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   // Write — no lock period, instant stake/unstake
   {
