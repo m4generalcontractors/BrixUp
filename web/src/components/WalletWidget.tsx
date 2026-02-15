@@ -1,24 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import { useAccount } from "wagmi";
+import {
+  Wallet,
+  ConnectWallet,
+} from "@coinbase/onchainkit/wallet";
+import {
+  useBrixBalance,
+  useStakedBalance,
+  usePendingRewards,
+  formatBrix,
+} from "@/lib/contracts";
+import { CONTRACTS_DEPLOYED } from "@/lib/contracts/config";
 
 interface WalletWidgetProps {
+  /** Fallback BRIX balance when contracts not deployed. */
   brixBalance: number;
+  /** Fallback USDC balance. */
   usdcBalance: number;
+  /** Fallback staked amount. */
   stakedAmount?: number;
+  /** Callback after a conversion. */
   onConvert?: (amount: number) => void;
 }
 
 export default function WalletWidget({
-  brixBalance,
+  brixBalance: fallbackBrix,
   usdcBalance,
-  stakedAmount = 0,
+  stakedAmount: fallbackStaked = 0,
   onConvert,
 }: WalletWidgetProps) {
+  const { address, isConnected } = useAccount();
+  const { data: onChainBalance } = useBrixBalance(address);
+  const { data: onChainStaked } = useStakedBalance(address);
+  const { data: onChainRewards } = usePendingRewards(address);
+
   const [convertAmount, setConvertAmount] = useState("");
   const [showConvert, setShowConvert] = useState(false);
   const [converting, setConverting] = useState(false);
   const [convertSuccess, setConvertSuccess] = useState(false);
+
+  // Prefer on-chain data when available
+  const brixBalance = CONTRACTS_DEPLOYED && onChainBalance
+    ? parseFloat(formatBrix(onChainBalance as bigint))
+    : fallbackBrix;
+  const stakedAmount = CONTRACTS_DEPLOYED && onChainStaked
+    ? parseFloat(formatBrix(onChainStaked as bigint))
+    : fallbackStaked;
+  const pendingRewards = CONTRACTS_DEPLOYED && onChainRewards
+    ? parseFloat(formatBrix(onChainRewards as bigint))
+    : 0;
 
   const usdEquivalent = brixBalance * 1.0; // 1 BRIX ≈ $1 at launch
 
@@ -30,14 +62,31 @@ export default function WalletWidget({
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-white/60">My Wallet</h3>
-        <a
-          href="/wallet"
-          className="text-xs font-medium hover:underline"
-          style={{ color: "#D4A843" }}
-        >
-          Full Wallet →
-        </a>
+        <div className="flex items-center gap-3">
+          {!isConnected && (
+            <Wallet>
+              <ConnectWallet />
+            </Wallet>
+          )}
+          <a
+            href="/wallet"
+            className="text-xs font-medium hover:underline"
+            style={{ color: "#D4A843" }}
+          >
+            Full Wallet →
+          </a>
+        </div>
       </div>
+
+      {/* Connection status */}
+      {isConnected && address && (
+        <div className="mb-3 flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
+          <span className="font-mono text-xs text-white/40">
+            {address.slice(0, 6)}...{address.slice(-4)}
+          </span>
+        </div>
+      )}
 
       {/* Main Balance */}
       <div className="mb-4">
@@ -67,6 +116,14 @@ export default function WalletWidget({
             <span className="text-xs text-white/50">Staked $BRIX</span>
             <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>
               {stakedAmount.toLocaleString()}
+            </span>
+          </div>
+        )}
+        {pendingRewards > 0 && (
+          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+            <span className="text-xs text-white/50">Pending Rewards</span>
+            <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>
+              +{pendingRewards.toLocaleString()}
             </span>
           </div>
         )}
