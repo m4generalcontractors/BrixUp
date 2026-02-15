@@ -158,6 +158,20 @@ export default function WalletPage() {
 
   const usdcEquivalent = (parseFloat(convertAmount.replace(/,/g, "")) || 0).toFixed(2);
 
+  // Real-time validation on Stake input change
+  useEffect(() => {
+    if (!stakeAmount) { setStakeError(null); return; }
+    const { error } = validateAmount(stakeAmount, brixBalance, 1);
+    setStakeError(error);
+  }, [stakeAmount, brixBalance]);
+
+  // Real-time validation on Unstake input change
+  useEffect(() => {
+    if (!unstakeAmount) { setUnstakeError(null); return; }
+    const { error } = validateAmount(unstakeAmount, stakedAmount, 1);
+    setUnstakeError(error);
+  }, [unstakeAmount, stakedAmount]);
+
   // ---- Handlers (on-chain when deployed, DB fallback otherwise) -----------
 
   const handleStake = async () => {

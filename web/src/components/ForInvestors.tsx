@@ -96,7 +96,7 @@ export default function ForInvestors() {
     // Outside AuthProvider
   }
 
-  const dealsHref = isAuthenticated ? "/marketplace" : "/login";
+  const dealsHref = "/marketplace";
 
   return (
     <section id="for-investors" className="bg-dark py-20 sm:py-28">

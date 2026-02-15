@@ -491,10 +491,13 @@ export default function DashboardPage() {
         const txData = await txRes.json();
         // Only replace sample transactions when API returns at least as many
         if (Array.isArray(txData) && txData.length >= sampleTransactions.length) {
-          // Deduplicate by id, then by description+date+amount to prevent repeated entries
+          // Deduplicate by composite key (description + date-only + amount).
+          // Entries that share the same description, day, and amount are treated
+          // as duplicates even when they have different database IDs.
           const seen = new Set<string>();
           const deduped = txData.filter((tx: Transaction) => {
-            const key = tx.id || `${tx.description}-${tx.created_at}-${tx.amount}`;
+            const day = tx.created_at?.slice(0, 10) || "";
+            const key = `${tx.description}-${day}-${tx.amount}`;
             if (seen.has(key)) return false;
             seen.add(key);
             return true;

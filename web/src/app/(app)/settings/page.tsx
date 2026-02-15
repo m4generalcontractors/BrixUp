@@ -357,7 +357,7 @@ export default function SettingsPage() {
             {(["en", "es"] as const).map((lang) => (
               <button
                 key={lang}
-                onClick={() => { setLanguage(lang); updateProfile({ language: lang }); }}
+                onClick={() => { setLanguage(lang); updateProfile({ language: lang }).then(() => { setSaved(true); setTimeout(() => setSaved(false), 2000); }); }}
                 className="flex-1 rounded-lg border py-3 text-sm font-medium transition-colors hover:bg-white/5"
                 style={{
                   borderColor: language === lang ? "#D4A843" : "rgba(255,255,255,0.1)",
@@ -365,7 +365,7 @@ export default function SettingsPage() {
                   color: language === lang ? "#D4A843" : "#F8F6F0",
                 }}
               >
-                {lang === "en" ? "English" : "Espanol"}
+                {lang === "en" ? "English" : "Español"}
               </button>
             ))}
           </div>

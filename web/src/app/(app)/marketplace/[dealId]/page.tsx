@@ -6,7 +6,8 @@ import { useAuth } from "@/lib/auth-context";
 import { useAccount } from "wagmi";
 import { useBrixApprove, useInvestInDeal, parseBrix } from "@/lib/contracts/hooks";
 import { CONTRACTS_DEPLOYED, BRIX_TOKEN_ADDRESS } from "@/lib/contracts/config";
-import { validate, createAmountSchema, parseAmount, sanitizeAmountInput } from "@/lib/validation";
+import { validate, createAmountSchema, parseAmount, sanitizeAmountInput, validateAmount } from "@/lib/validation";
+import { useBalance } from "@/lib/wallet/useBalance";
 
 interface Deal {
   address: string; city: string; state: string; zip: string; type: string;
@@ -67,6 +68,10 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   const [investSuccess, setInvestSuccess] = useState(false);
   const [investError, setInvestError] = useState<string | null>(null);
 
+  // Shared balance for validation
+  const balanceData = useBalance();
+  const userBalance = balanceData.availableBalance;
+
   // Contract hooks for on-chain invest flow
   const { approve, isPending: isApproving, isSuccess: approveSuccess } = useBrixApprove();
   const { invest: contractInvest, isPending: isInvesting, isConfirming, isSuccess: investTxSuccess } = useInvestInDeal();
@@ -76,6 +81,15 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   const [currentInvestors, setCurrentInvestors] = useState(deal?.investorCount || 0);
 
   useEffect(() => { if (deal) { setCurrentFunded(deal.fundedAmount); setCurrentInvestors(deal.investorCount); } }, [deal]);
+
+  // Real-time validation on invest amount change
+  useEffect(() => {
+    if (!investAmount || !deal) { setInvestError(null); return; }
+    const amt = parseAmount(investAmount);
+    if (amt < deal.minInvestment) { setInvestError(`Minimum investment is ${deal.minInvestment.toLocaleString()} BRIX`); return; }
+    if (amt > userBalance) { setInvestError(`Insufficient balance (${Math.floor(userBalance).toLocaleString()} BRIX available)`); return; }
+    setInvestError(null);
+  }, [investAmount, deal, userBalance]);
 
   if (!deal) return <div className="flex flex-col items-center justify-center py-20"><p className="text-lg font-semibold text-white mb-2">Deal not found</p><Link href="/marketplace" className="text-sm font-medium" style={{ color: "#D4A843" }}>Back to Marketplace</Link></div>;
 
@@ -219,7 +233,7 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
               <div><label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label><div className="relative mt-1"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "#D4A843" }}>$BRIX</span><input type="text" inputMode="decimal" value={investAmount} onChange={(e) => { setInvestAmount(sanitizeAmountInput(e.target.value)); setInvestError(null); }} className="w-full rounded-lg border py-2.5 pl-16 pr-4 text-sm text-white text-right focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A", borderColor: investError ? "#E8632B" : "rgba(255,255,255,0.1)" }} /></div></div>
               {investSuccess && <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>Investment submitted successfully!</div>}
               {investError && <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">{investError}</div>}
-              <button onClick={handleInvest} disabled={investing || isApproving || isInvesting || isConfirming || !investAmount} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{isApproving ? "Approving..." : isInvesting ? "Submitting..." : isConfirming ? "Confirming..." : investing ? "Processing..." : "Invest $BRIX"}</button>
+              <button onClick={handleInvest} disabled={investing || isApproving || isInvesting || isConfirming || !investAmount || !!investError} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{isApproving ? "Approving..." : isInvesting ? "Submitting..." : isConfirming ? "Confirming..." : investing ? "Processing..." : "Invest $BRIX"}</button>
               <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>By investing, you agree to the Terms & Conditions</p>
             </div>
           </div>
