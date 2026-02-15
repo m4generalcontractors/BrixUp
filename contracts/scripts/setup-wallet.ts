@@ -119,6 +119,20 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("Setup failed:", error);
+  console.error("\nSetup failed!\n");
+
+  if (error?.statusCode === 401) {
+    console.error("ERROR: 401 Unauthorized — CDP rejected the API credentials.\n");
+    console.error("Troubleshooting:");
+    console.error("  1. Go to https://portal.cdp.coinbase.com/projects/api-keys");
+    console.error("  2. Verify your API key is ACTIVE (not revoked/disabled)");
+    console.error("  3. If the key was regenerated, update CDP_API_KEY_SECRET in .env");
+    console.error("     (CDP only shows the secret once when the key is created)");
+    console.error("  4. Make sure CDP_API_KEY_ID matches the key ID on the portal");
+    console.error(`\n  Current CDP_API_KEY_ID: ${process.env.CDP_API_KEY_ID || "(not set)"}`);
+  } else {
+    console.error(error);
+  }
+
   process.exit(1);
 });
