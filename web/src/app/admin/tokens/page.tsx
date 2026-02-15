@@ -65,7 +65,7 @@ export default function TokenManagementPage() {
 
       {/* Contract Addresses */}
       <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-        <h2 className="mb-4 text-lg font-semibold text-white">Deployed Contracts (Base Sepolia)</h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">Deployed Contracts (Base Mainnet)</h2>
         <div className="space-y-3">
           {Object.entries(CONTRACT_ADDRESSES).map(([name, addr]) => (
             <div key={name} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between rounded-lg border border-white/5 px-4 py-3">
@@ -74,7 +74,7 @@ export default function TokenManagementPage() {
                 <p className="text-xs font-mono text-white/40">{addr}</p>
               </div>
               <a
-                href={`https://sepolia.basescan.org/address/${addr}`}
+                href={`https://basescan.org/address/${addr}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-medium hover:opacity-80"
