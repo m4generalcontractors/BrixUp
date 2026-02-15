@@ -159,6 +159,45 @@ export const BrixStakingABI = [
 //  BrixFactory
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+//  BrixDeal (per-deal escrow contract)
+// ---------------------------------------------------------------------------
+
+export const BrixDealABI = [
+  // Read
+  { type: "function", name: "dealId", inputs: [], outputs: [{ type: "bytes32" }], stateMutability: "view" },
+  { type: "function", name: "totalCapitalNeeded", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "totalCapitalRaised", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "state", inputs: [], outputs: [{ type: "uint8" }], stateMutability: "view" },
+  {
+    type: "function", name: "investments",
+    inputs: [{ name: "investor", type: "address" }],
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+  },
+  { type: "function", name: "investorCount", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  // Write
+  {
+    type: "function", name: "investInDeal",
+    inputs: [{ name: "amount", type: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  // Events
+  {
+    type: "event", name: "InvestmentMade",
+    inputs: [
+      { name: "investor", type: "address", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "totalRaised", type: "uint256", indexed: false },
+    ],
+  },
+] as const;
+
+// ---------------------------------------------------------------------------
+//  BrixFactory
+// ---------------------------------------------------------------------------
+
 export const BrixFactoryABI = [
   // Read
   { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },

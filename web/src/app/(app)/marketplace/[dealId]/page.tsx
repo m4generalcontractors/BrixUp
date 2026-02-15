@@ -3,6 +3,10 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import { useAccount } from "wagmi";
+import { useBrixApprove, useInvestInDeal, parseBrix } from "@/lib/contracts/hooks";
+import { CONTRACTS_DEPLOYED, BRIX_TOKEN_ADDRESS } from "@/lib/contracts/config";
+import { validate, createAmountSchema, parseAmount } from "@/lib/validation";
 
 interface Deal {
   address: string; city: string; state: string; zip: string; type: string;
@@ -57,10 +61,15 @@ const typeBadgeColors: Record<string, { bg: string; text: string }> = {
 export default function DealDetailPage({ params }: { params: Promise<{ dealId: string }> }) {
   const { dealId } = use(params);
   const { user } = useAuth();
+  const { address, isConnected } = useAccount();
   const [investAmount, setInvestAmount] = useState("5000");
   const [investing, setInvesting] = useState(false);
   const [investSuccess, setInvestSuccess] = useState(false);
   const [investError, setInvestError] = useState<string | null>(null);
+
+  // Contract hooks for on-chain invest flow
+  const { approve, isPending: isApproving, isSuccess: approveSuccess } = useBrixApprove();
+  const { invest: contractInvest, isPending: isInvesting, isConfirming, isSuccess: investTxSuccess } = useInvestInDeal();
 
   const deal = allDeals[dealId];
   const [currentFunded, setCurrentFunded] = useState(deal?.fundedAmount || 0);
@@ -78,11 +87,51 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   const totalAllIn = deal.askingPrice + deal.rehabBudget + closingBuy + holdingCosts + closingSell;
   const projectedProfit = deal.arv - totalAllIn;
 
+  // Watch for on-chain invest tx success
+  useEffect(() => {
+    if (investTxSuccess) {
+      const amount = parseAmount(investAmount);
+      setInvestSuccess(true);
+      setCurrentFunded((prev) => prev + amount);
+      setCurrentInvestors((prev) => prev + 1);
+      setInvesting(false);
+      setTimeout(() => setInvestSuccess(false), 5000);
+    }
+  }, [investTxSuccess]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleInvest = async () => {
     if (!user) return;
-    const amount = parseFloat(investAmount.replace(/,/g, ""));
-    if (!amount || amount < deal.minInvestment) { setInvestError(`Minimum investment is $${deal.minInvestment.toLocaleString()}`); return; }
+    const amount = parseAmount(investAmount);
+
+    // Validate amount
+    const remaining = deal.capitalNeeded - currentFunded;
+    const amountError = validate(createAmountSchema({ min: deal.minInvestment, max: remaining, minLabel: `Minimum investment is $${deal.minInvestment.toLocaleString()}`, maxLabel: `Maximum investment is $${remaining.toLocaleString()} (remaining capacity)` }), amount);
+    if (amountError) { setInvestError(amountError); return; }
+
     setInvesting(true); setInvestError(null); setInvestSuccess(false);
+
+    // On-chain path: approve + investInDeal when contracts are deployed and wallet connected
+    if (CONTRACTS_DEPLOYED && isConnected && address) {
+      try {
+        const amountWei = parseBrix(String(amount));
+        // The deal would have an on-chain address from the factory.
+        // For now, we use the API path as fallback until deals are deployed on-chain.
+        // When a dealContractAddress is available, uncomment the on-chain flow:
+        // approve(dealContractAddress, amountWei);
+        // Then after approval: contractInvest(dealContractAddress, amountWei);
+
+        // API path (works alongside on-chain for record-keeping)
+        const res = await fetch("/api/investments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ deal_id: dealId, amount }) });
+        if (!res.ok) { const data = await res.json(); throw new Error(data.error || "Investment failed"); }
+        setInvestSuccess(true);
+        setCurrentFunded((prev) => prev + amount);
+        setCurrentInvestors((prev) => prev + 1);
+        setTimeout(() => setInvestSuccess(false), 5000);
+      } catch (err) { setInvestError(err instanceof Error ? err.message : "Investment failed."); } finally { setInvesting(false); }
+      return;
+    }
+
+    // Fallback: API-only path
     try {
       const res = await fetch("/api/investments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ deal_id: dealId, amount }) });
       if (!res.ok) { const data = await res.json(); throw new Error(data.error || "Investment failed"); }
@@ -170,7 +219,7 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
               <div><label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label><div className="relative mt-1"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "#D4A843" }}>$BRIX</span><input type="text" value={investAmount} onChange={(e) => setInvestAmount(e.target.value)} className="w-full rounded-lg border border-white/10 py-2.5 pl-16 pr-4 text-sm text-white text-right focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} /></div></div>
               {investSuccess && <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>Investment submitted successfully!</div>}
               {investError && <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">{investError}</div>}
-              <button onClick={handleInvest} disabled={investing || !investAmount} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{investing ? "Processing..." : "Invest $BRIX"}</button>
+              <button onClick={handleInvest} disabled={investing || isApproving || isInvesting || isConfirming || !investAmount} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{isApproving ? "Approving..." : isInvesting ? "Submitting..." : isConfirming ? "Confirming..." : investing ? "Processing..." : "Invest $BRIX"}</button>
               <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>By investing, you agree to the Terms & Conditions</p>
             </div>
           </div>

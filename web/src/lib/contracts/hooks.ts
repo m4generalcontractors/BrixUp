@@ -9,7 +9,7 @@
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
-import { BrixTokenABI, BrixStakingABI, BrixFactoryABI } from "./abis";
+import { BrixTokenABI, BrixStakingABI, BrixDealABI, BrixFactoryABI } from "./abis";
 import {
   BRIX_TOKEN_ADDRESS,
   BRIX_STAKING_ADDRESS,
@@ -203,6 +203,65 @@ export function useClaimRewards() {
   };
 
   return { claim, hash, isPending, isConfirming, isSuccess, error };
+}
+
+// ---------------------------------------------------------------------------
+//  BrixDeal Reads
+// ---------------------------------------------------------------------------
+
+/** Get total capital raised for a deal. */
+export function useDealCapitalRaised(dealAddress: `0x${string}` | undefined) {
+  return useReadContract({
+    address: dealAddress,
+    abi: BrixDealABI,
+    functionName: "totalCapitalRaised",
+    query: { enabled: !!dealAddress },
+  });
+}
+
+/** Get investor count for a deal. */
+export function useDealInvestorCount(dealAddress: `0x${string}` | undefined) {
+  return useReadContract({
+    address: dealAddress,
+    abi: BrixDealABI,
+    functionName: "investorCount",
+    query: { enabled: !!dealAddress },
+  });
+}
+
+/** Get a user's investment in a specific deal. */
+export function useDealInvestment(
+  dealAddress: `0x${string}` | undefined,
+  investor: `0x${string}` | undefined
+) {
+  return useReadContract({
+    address: dealAddress,
+    abi: BrixDealABI,
+    functionName: "investments",
+    args: investor ? [investor] : undefined,
+    query: { enabled: !!dealAddress && !!investor },
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  BrixDeal Writes
+// ---------------------------------------------------------------------------
+
+/** Invest BRIX tokens into a deal (requires prior approve to deal contract). */
+export function useInvestInDeal() {
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const invest = (dealAddress: `0x${string}`, amount: bigint) => {
+    writeContract({
+      address: dealAddress,
+      abi: BrixDealABI,
+      functionName: "investInDeal",
+      args: [amount],
+    });
+  };
+
+  return { invest, hash, isPending, isConfirming, isSuccess, error };
 }
 
 // ---------------------------------------------------------------------------
