@@ -12,7 +12,7 @@
  *        CDP_WALLET_SECRET=your_wallet_secret
  *
  * Usage:
- *   npx ts-node scripts/setup-wallet.ts
+ *   npx tsx scripts/setup-wallet.ts
  */
 
 import { CdpClient } from "@coinbase/cdp-sdk";
@@ -34,7 +34,7 @@ async function main() {
   // Convert raw base64 DER key to PEM format if needed
   let apiKeySecret = process.env.CDP_API_KEY_SECRET || "";
   if (apiKeySecret && !apiKeySecret.includes("-----BEGIN")) {
-    apiKeySecret = `-----BEGIN EC PRIVATE KEY-----\n${apiKeySecret}\n-----END EC PRIVATE KEY-----`;
+    apiKeySecret = `-----BEGIN PRIVATE KEY-----\n${apiKeySecret}\n-----END PRIVATE KEY-----`;
   }
 
   // Initialize CDP client
