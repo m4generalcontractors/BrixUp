@@ -5,17 +5,21 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || "";
-const BASE_SEPOLIA_RPC = process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org";
-const BASE_MAINNET_RPC = process.env.BASE_MAINNET_RPC_URL || "https://mainnet.base.org";
+const BASE_SEPOLIA_RPC =
+  process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org";
+const BASE_MAINNET_RPC =
+  process.env.BASE_MAINNET_RPC_URL || "https://mainnet.base.org";
 const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY || "";
 
 // Only use the private key if it looks like a valid 32-byte hex string
 const isValidKey = /^(0x)?[0-9a-fA-F]{64}$/.test(PRIVATE_KEY);
-const accounts = isValidKey ? [PRIVATE_KEY.startsWith("0x") ? PRIVATE_KEY : `0x${PRIVATE_KEY}`] : [];
+const accounts = isValidKey
+  ? [PRIVATE_KEY.startsWith("0x") ? PRIVATE_KEY : `0x${PRIVATE_KEY}`]
+  : [];
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.24",
+    version: "0.8.26",
     settings: {
       optimizer: {
         enabled: true,
@@ -33,11 +37,13 @@ const config: HardhatUserConfig = {
       url: BASE_SEPOLIA_RPC,
       chainId: 84532,
       accounts,
+      gasPrice: "auto",
     },
     base: {
       url: BASE_MAINNET_RPC,
       chainId: 8453,
       accounts,
+      gasPrice: "auto",
     },
   },
 
@@ -61,6 +67,12 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+  },
+
+  gasReporter: {
+    enabled: process.env.REPORT_GAS === "true",
+    currency: "USD",
+    gasPrice: 21,
   },
 
   paths: {

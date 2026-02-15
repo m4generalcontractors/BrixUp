@@ -57,6 +57,17 @@ export const BrixTokenABI = [
   { type: "function", name: "paused", inputs: [], outputs: [{ type: "bool" }], stateMutability: "view" },
   // Ownable
   { type: "function", name: "owner", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
+  // BRIX production — fee & anti-bot
+  { type: "function", name: "feeBps", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "treasury", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
+  { type: "function", name: "antiBotEnabled", inputs: [], outputs: [{ type: "bool" }], stateMutability: "view" },
+  { type: "function", name: "launchTime", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  {
+    type: "function", name: "feeExempt",
+    inputs: [{ name: "account", type: "address" }],
+    outputs: [{ type: "bool" }],
+    stateMutability: "view",
+  },
   // Events
   {
     type: "event", name: "Transfer",
@@ -84,33 +95,29 @@ export const BrixStakingABI = [
   // Read
   { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
   { type: "function", name: "totalStaked", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
-  { type: "function", name: "totalRewardsDistributed", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
-  { type: "function", name: "LOCK_PERIOD", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "rewardRate", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "rewardsDuration", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "periodFinish", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   {
-    type: "function", name: "stakers",
-    inputs: [{ name: "user", type: "address" }],
-    outputs: [
-      { name: "amount", type: "uint256" },
-      { name: "rewardDebt", type: "uint256" },
-      { name: "stakedAt", type: "uint256" },
-      { name: "pendingClaim", type: "uint256" },
-    ],
+    type: "function", name: "earned",
+    inputs: [{ name: "account", type: "address" }],
+    outputs: [{ type: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function", name: "pendingRewards",
-    inputs: [{ name: "user", type: "address" }],
+    inputs: [{ name: "account", type: "address" }],
     outputs: [{ type: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function", name: "stakedBalance",
-    inputs: [{ name: "user", type: "address" }],
+    inputs: [{ name: "account", type: "address" }],
     outputs: [{ type: "uint256" }],
     stateMutability: "view",
   },
   { type: "function", name: "stakerCount", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
-  // Write
+  // Write — no lock period, instant stake/unstake
   {
     type: "function", name: "stake",
     inputs: [{ name: "amount", type: "uint256" }],
@@ -135,7 +142,6 @@ export const BrixStakingABI = [
     inputs: [
       { name: "user", type: "address", indexed: true },
       { name: "amount", type: "uint256", indexed: false },
-      { name: "totalStaked", type: "uint256", indexed: false },
     ],
   },
   {
@@ -143,7 +149,6 @@ export const BrixStakingABI = [
     inputs: [
       { name: "user", type: "address", indexed: true },
       { name: "amount", type: "uint256", indexed: false },
-      { name: "totalStaked", type: "uint256", indexed: false },
     ],
   },
   {
@@ -151,6 +156,13 @@ export const BrixStakingABI = [
     inputs: [
       { name: "user", type: "address", indexed: true },
       { name: "amount", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    type: "event", name: "RewardsFunded",
+    inputs: [
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "duration", type: "uint256", indexed: false },
     ],
   },
 ] as const;
@@ -190,6 +202,64 @@ export const BrixDealABI = [
       { name: "investor", type: "address", indexed: true },
       { name: "amount", type: "uint256", indexed: false },
       { name: "totalRaised", type: "uint256", indexed: false },
+    ],
+  },
+] as const;
+
+// ---------------------------------------------------------------------------
+//  BrixFactory
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+//  BRIXVesting
+// ---------------------------------------------------------------------------
+
+export const BrixVestingABI = [
+  // Read
+  { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
+  { type: "function", name: "DEFAULT_CLIFF", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  { type: "function", name: "DEFAULT_DURATION", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  {
+    type: "function", name: "schedules",
+    inputs: [{ name: "beneficiary", type: "address" }],
+    outputs: [
+      { name: "totalAmount", type: "uint256" },
+      { name: "released", type: "uint256" },
+      { name: "startTime", type: "uint256" },
+      { name: "cliffDuration", type: "uint256" },
+      { name: "vestingDuration", type: "uint256" },
+      { name: "revoked", type: "bool" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function", name: "vestedAmount",
+    inputs: [{ name: "beneficiary", type: "address" }],
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function", name: "releasableAmount",
+    inputs: [{ name: "beneficiary", type: "address" }],
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+  },
+  { type: "function", name: "beneficiaryCount", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
+  // Write
+  { type: "function", name: "release", inputs: [], outputs: [], stateMutability: "nonpayable" },
+  // Events
+  {
+    type: "event", name: "TokensReleased",
+    inputs: [
+      { name: "beneficiary", type: "address", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    type: "event", name: "VestingRevoked",
+    inputs: [
+      { name: "beneficiary", type: "address", indexed: true },
+      { name: "unvested", type: "uint256", indexed: false },
     ],
   },
 ] as const;

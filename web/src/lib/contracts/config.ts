@@ -29,6 +29,9 @@ export const BRIX_FACTORY_ADDRESS =
 export const BRIX_STAKING_ADDRESS =
   (process.env.NEXT_PUBLIC_BRIX_STAKING_ADDRESS as `0x${string}`) || undefined;
 
+export const BRIX_VESTING_ADDRESS =
+  (process.env.NEXT_PUBLIC_BRIX_VESTING_ADDRESS as `0x${string}`) || undefined;
+
 /** True when all three core contracts have been deployed and configured. */
 export const CONTRACTS_DEPLOYED =
   !!BRIX_TOKEN_ADDRESS && !!BRIX_FACTORY_ADDRESS && !!BRIX_STAKING_ADDRESS;

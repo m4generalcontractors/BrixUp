@@ -1,9 +1,10 @@
-export { BrixTokenABI, BrixStakingABI, BrixFactoryABI } from "./abis";
+export { BrixTokenABI, BrixStakingABI, BrixFactoryABI, BrixVestingABI } from "./abis";
 export {
   activeChain,
   BRIX_TOKEN_ADDRESS,
   BRIX_FACTORY_ADDRESS,
   BRIX_STAKING_ADDRESS,
+  BRIX_VESTING_ADDRESS,
   CONTRACTS_DEPLOYED,
 } from "./config";
 export {
@@ -22,4 +23,8 @@ export {
   useClaimRewards,
   useAllDeals,
   useDealCount,
+  useVestingSchedule,
+  useReleasableAmount,
+  useVestedAmount,
+  useReleaseVested,
 } from "./hooks";

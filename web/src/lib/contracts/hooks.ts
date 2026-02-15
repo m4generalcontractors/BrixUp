@@ -9,11 +9,12 @@
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
-import { BrixTokenABI, BrixStakingABI, BrixDealABI, BrixFactoryABI } from "./abis";
+import { BrixTokenABI, BrixStakingABI, BrixDealABI, BrixFactoryABI, BrixVestingABI } from "./abis";
 import {
   BRIX_TOKEN_ADDRESS,
   BRIX_STAKING_ADDRESS,
   BRIX_FACTORY_ADDRESS,
+  BRIX_VESTING_ADDRESS,
   CONTRACTS_DEPLOYED,
 } from "./config";
 
@@ -170,7 +171,7 @@ export function useStake() {
   return { stake, hash, isPending, isConfirming, isSuccess, error };
 }
 
-/** Unstake BRIX tokens (after 7-day lock). */
+/** Unstake BRIX tokens (no lock period). */
 export function useUnstake() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
@@ -286,4 +287,62 @@ export function useDealCount() {
     functionName: "dealCount",
     query: { enabled: CONTRACTS_DEPLOYED },
   });
+}
+
+// ---------------------------------------------------------------------------
+//  BRIXVesting Reads
+// ---------------------------------------------------------------------------
+
+/** Get vesting schedule for a beneficiary. */
+export function useVestingSchedule(beneficiary: `0x${string}` | undefined) {
+  return useReadContract({
+    address: BRIX_VESTING_ADDRESS,
+    abi: BrixVestingABI,
+    functionName: "schedules",
+    args: beneficiary ? [beneficiary] : undefined,
+    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+  });
+}
+
+/** Get releasable vested tokens for a beneficiary. */
+export function useReleasableAmount(beneficiary: `0x${string}` | undefined) {
+  return useReadContract({
+    address: BRIX_VESTING_ADDRESS,
+    abi: BrixVestingABI,
+    functionName: "releasableAmount",
+    args: beneficiary ? [beneficiary] : undefined,
+    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+  });
+}
+
+/** Get total vested amount for a beneficiary. */
+export function useVestedAmount(beneficiary: `0x${string}` | undefined) {
+  return useReadContract({
+    address: BRIX_VESTING_ADDRESS,
+    abi: BrixVestingABI,
+    functionName: "vestedAmount",
+    args: beneficiary ? [beneficiary] : undefined,
+    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  BRIXVesting Writes
+// ---------------------------------------------------------------------------
+
+/** Release vested tokens to caller. */
+export function useReleaseVested() {
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const release = () => {
+    if (!BRIX_VESTING_ADDRESS) return;
+    writeContract({
+      address: BRIX_VESTING_ADDRESS,
+      abi: BrixVestingABI,
+      functionName: "release",
+    });
+  };
+
+  return { release, hash, isPending, isConfirming, isSuccess, error };
 }
