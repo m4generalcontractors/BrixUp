@@ -59,6 +59,34 @@ export function parseAmount(val: string): number {
   return parseFloat(val.replace(/,/g, "")) || 0;
 }
 
+/** Simple imperative validation for amount inputs. */
+export function validateAmount(
+  value: string,
+  balance: number,
+  min: number = 1
+): { valid: boolean; error: string | null } {
+  const num = Number(value.replace(/,/g, ""));
+  if (value.trim() === "" || isNaN(num))
+    return { valid: false, error: "Please enter a valid number" };
+  if (num <= 0)
+    return { valid: false, error: "Amount must be greater than 0" };
+  if (num < min)
+    return { valid: false, error: `Minimum amount is ${min.toLocaleString()} BRIX` };
+  if (num > balance)
+    return { valid: false, error: `Insufficient balance (${balance.toLocaleString()} BRIX available)` };
+  return { valid: true, error: null };
+}
+
+/** Strip non-numeric characters (keep digits + one decimal point). */
+export function sanitizeAmountInput(value: string): string {
+  // Allow digits, commas, and at most one decimal point
+  const cleaned = value.replace(/[^0-9.,]/g, "");
+  // Remove extra decimal points (keep only the first)
+  const parts = cleaned.split(".");
+  if (parts.length > 2) return parts[0] + "." + parts.slice(1).join("");
+  return cleaned;
+}
+
 // ---------------------------------------------------------------------------
 //  Ethereum address validation
 // ---------------------------------------------------------------------------

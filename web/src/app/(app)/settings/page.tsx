@@ -4,10 +4,14 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useAccount, useConnect } from "wagmi";
+import { coinbaseWallet } from "wagmi/connectors";
 
 export default function SettingsPage() {
   const { user, profile, updateProfile, signOut } = useAuth();
   const router = useRouter();
+  const { address: wagmiAddress, isConnected: walletConnected } = useAccount();
+  const { connect, isPending: isWalletConnecting } = useConnect();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,7 +26,11 @@ export default function SettingsPage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const walletAddress = profile?.wallet_address || user?.id?.slice(0, 20) + "..." || "Not connected";
+  const walletAddress = walletConnected && wagmiAddress
+    ? wagmiAddress
+    : profile?.wallet_address && profile.wallet_address.startsWith("0x")
+    ? profile.wallet_address
+    : "";
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -296,11 +304,10 @@ export default function SettingsPage() {
         {/* Connected Wallet */}
         <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Connected Wallet</h2>
+          {walletAddress ? (
           <div className="flex items-center gap-3">
-            <div
-              className="flex-1 rounded-lg px-4 py-3 font-mono text-sm text-white/80 overflow-hidden text-ellipsis whitespace-nowrap"
-              style={{ backgroundColor: "#0D0D1A" }}
-            >
+            <div className="flex items-center gap-2 flex-1 rounded-lg px-4 py-3 font-mono text-sm text-white/80 overflow-hidden text-ellipsis whitespace-nowrap" style={{ backgroundColor: "#0D0D1A" }}>
+              <div className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
               {walletAddress}
             </div>
             <button
@@ -325,6 +332,22 @@ export default function SettingsPage() {
               )}
             </button>
           </div>
+          ) : (
+          <div className="flex items-center justify-between rounded-lg px-4 py-4" style={{ backgroundColor: "#0D0D1A" }}>
+            <div>
+              <p className="text-sm text-white/60">No wallet connected</p>
+              <p className="mt-0.5 text-xs" style={{ color: "#4A4A5A" }}>Connect your wallet to see your on-chain address</p>
+            </div>
+            <button
+              onClick={() => connect({ connector: coinbaseWallet({ appName: "BrixUp" }) })}
+              disabled={isWalletConnecting}
+              className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
+              style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
+            >
+              {isWalletConnecting ? "Connecting..." : "Connect Wallet"}
+            </button>
+          </div>
+          )}
         </section>
 
         {/* Language */}

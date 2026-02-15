@@ -14,7 +14,7 @@ import {
   useClaimRewards as useContractClaim,
   parseBrix,
 } from "@/lib/contracts";
-import { validate, amountSchema, createAmountSchema, createAddressSchema, parseAmount } from "@/lib/validation";
+import { validate, amountSchema, createAmountSchema, createAddressSchema, parseAmount, validateAmount, sanitizeAmountInput } from "@/lib/validation";
 
 // ---------------------------------------------------------------------------
 //  Types & sample data (fallback when contracts not deployed)
@@ -108,6 +108,8 @@ export default function WalletPage() {
   const [stakeError, setStakeError] = useState<string | null>(null);
   const [convertError, setConvertError] = useState<string | null>(null);
   const [buyError, setBuyError] = useState<string | null>(null);
+  const [unstakeAmount, setUnstakeAmount] = useState("");
+  const [unstakeError, setUnstakeError] = useState<string | null>(null);
 
   // Refetch balance after on-chain operations
   useEffect(() => {
@@ -190,16 +192,28 @@ export default function WalletPage() {
   };
 
   const handleUnstake = async () => {
-    if (stakedAmount <= 0) return;
+    const { valid, error } = validateAmount(unstakeAmount || String(stakedAmount), stakedAmount, 1);
+    setUnstakeError(error);
+    if (!valid) return;
+    const amount = parseAmount(unstakeAmount || String(stakedAmount));
+
+    if (CONTRACTS_DEPLOYED && isConnected) {
+      const wei = parseBrix(amount.toString());
+      onChainUnstake(wei);
+      return;
+    }
+
     setIsUnstaking(true);
     try {
       await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "unstake", amount: stakedAmount, description: `Unstaked ${stakedAmount.toLocaleString()} BRIX` }),
+        body: JSON.stringify({ type: "unstake", amount, description: `Unstaked ${amount.toLocaleString()} BRIX` }),
       });
       setUnstakeSuccess(true);
+      balance.refetch();
       await fetchTransactions();
+      setUnstakeAmount("");
       setTimeout(() => setUnstakeSuccess(false), 3000);
     } catch { /* handled */ }
     setIsUnstaking(false);
@@ -265,8 +279,10 @@ export default function WalletPage() {
   };
 
   const handleConvert = async () => {
-    const amount = parseFloat(convertAmount.replace(/,/g, ""));
-    if (!amount || amount <= 0) return;
+    const { valid, error } = validateAmount(convertAmount, brixBalance, 1);
+    setConvertError(error);
+    if (!valid) return;
+    const amount = parseAmount(convertAmount);
     setConverting(true);
     setConvertSuccess(false);
     try {
@@ -289,8 +305,10 @@ export default function WalletPage() {
   };
 
   const handleBuy = async () => {
-    const usdAmount = parseFloat(buyAmount.replace(/,/g, ""));
-    if (!usdAmount || usdAmount <= 0) return;
+    const usdAmount = parseAmount(buyAmount);
+    if (!usdAmount || usdAmount <= 0) { setBuyError("Please enter a valid amount"); return; }
+    if (usdAmount < 10) { setBuyError("Minimum purchase is $10"); return; }
+    setBuyError(null);
     setBuying(true);
     setBuySuccess(false);
 
@@ -428,12 +446,14 @@ export default function WalletPage() {
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-white/40">$</span>
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={buyAmount}
-                  onChange={(e) => setBuyAmount(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 py-3 pl-8 pr-4 text-lg text-white focus:outline-none focus:ring-1 focus:ring-[#2ECC71]"
-                  style={{ backgroundColor: "#0D0D1A" }}
+                  onChange={(e) => { setBuyAmount(sanitizeAmountInput(e.target.value)); setBuyError(null); }}
+                  className="w-full rounded-lg border py-3 pl-8 pr-4 text-lg text-white focus:outline-none focus:ring-1 focus:ring-[#2ECC71]"
+                  style={{ backgroundColor: "#0D0D1A", borderColor: buyError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                 />
               </div>
+              {buyError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{buyError}</p>}
             </div>
 
             {/* Preset amounts */}
@@ -544,9 +564,9 @@ export default function WalletPage() {
               </div>
               <input
                 type="text"
-                inputMode="numeric"
+                inputMode="decimal"
                 value={sendAmount}
-                onChange={(e) => { setSendAmount(e.target.value); setSendAmountError(null); }}
+                onChange={(e) => { setSendAmount(sanitizeAmountInput(e.target.value)); setSendAmountError(null); }}
                 placeholder="1000"
                 className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
                 style={{ backgroundColor: "#0D0D1A", borderColor: sendAmountError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
@@ -680,17 +700,22 @@ export default function WalletPage() {
           <h2 className="mb-4 text-lg font-semibold text-white">Convert $BRIX to USDC</h2>
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label>
+                <button onClick={() => setConvertAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
+              </div>
               <div className="relative mt-1">
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={convertAmount}
-                  onChange={(e) => setConvertAmount(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 py-3 px-4 text-lg text-white focus:outline-none focus:ring-1"
-                  style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                  onChange={(e) => { setConvertAmount(sanitizeAmountInput(e.target.value)); setConvertError(null); }}
+                  className="w-full rounded-lg border py-3 px-4 text-lg text-white focus:outline-none focus:ring-1"
+                  style={{ backgroundColor: "#0D0D1A", borderColor: convertError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "#D4A843" }}>BRIX</span>
               </div>
+              {convertError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{convertError}</p>}
             </div>
             <div className="flex justify-center">
               <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
@@ -714,7 +739,7 @@ export default function WalletPage() {
                 Conversion submitted! Funds arrive in 1-2 business days.
               </div>
             )}
-            <button onClick={handleConvert} disabled={converting || !convertAmount} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
+            <button onClick={handleConvert} disabled={converting || !convertAmount || parseAmount(convertAmount) <= 0 || parseAmount(convertAmount) > brixBalance} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
               {converting ? "Converting..." : "Convert to USDC"}
             </button>
             <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>Funds arrive via ACH in 1-2 business days</p>
@@ -761,16 +786,45 @@ export default function WalletPage() {
               )}
             </div>
 
-            <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Stake Amount</label>
-              <input
-                type="text"
-                value={stakeAmount}
-                onChange={(e) => setStakeAmount(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A" }}
-                placeholder="Amount to stake"
-              />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Stake Amount</label>
+                  <button onClick={() => setStakeAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
+                </div>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={stakeAmount}
+                  onChange={(e) => { setStakeAmount(sanitizeAmountInput(e.target.value)); setStakeError(null); }}
+                  className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
+                  style={{ backgroundColor: "#0D0D1A", borderColor: stakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  placeholder="Amount to stake"
+                />
+                {stakeError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{stakeError}</p>}
+                <button onClick={handleStake} disabled={isStaking || isApproving || !stakeAmount || parseAmount(stakeAmount) <= 0 || parseAmount(stakeAmount) > brixBalance} className="mt-2 w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>
+                  {isApproving ? "Approving..." : isStaking ? "Staking..." : "Stake"}
+                </button>
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Unstake Amount</label>
+                  <button onClick={() => setUnstakeAmount(String(Math.floor(stakedAmount)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
+                </div>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={unstakeAmount}
+                  onChange={(e) => { setUnstakeAmount(sanitizeAmountInput(e.target.value)); setUnstakeError(null); }}
+                  className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
+                  style={{ backgroundColor: "#0D0D1A", borderColor: unstakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  placeholder="Amount to unstake"
+                />
+                {unstakeError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{unstakeError}</p>}
+                <button onClick={handleUnstake} disabled={isUnstaking || stakedAmount <= 0 || isLocked || !unstakeAmount || parseAmount(unstakeAmount) <= 0 || parseAmount(unstakeAmount) > stakedAmount} className="mt-2 w-full rounded-lg border py-3 text-sm font-bold transition-colors hover:bg-white/5 disabled:opacity-50" style={{ borderColor: "#4A4A5A", color: "#F8F6F0" }}>
+                  {isUnstaking ? "Unstaking..." : isLocked ? "Locked" : "Unstake"}
+                </button>
+              </div>
             </div>
 
             {(stakeSuccess || unstakeSuccess) && (
@@ -778,14 +832,6 @@ export default function WalletPage() {
                 Transaction confirmed on-chain!
               </div>
             )}
-            <div className="grid grid-cols-2 gap-3">
-              <button onClick={handleStake} disabled={isStaking || isApproving} className="rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>
-                {isApproving ? "Approving..." : isStaking ? "Staking..." : "Stake"}
-              </button>
-              <button onClick={handleUnstake} disabled={isUnstaking || stakedAmount <= 0 || isLocked} className="rounded-lg border py-3 text-sm font-bold transition-colors hover:bg-white/5 disabled:opacity-50" style={{ borderColor: "#4A4A5A", color: "#F8F6F0" }}>
-                {isUnstaking ? "Unstaking..." : isLocked ? "Locked" : "Unstake"}
-              </button>
-            </div>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import { useBalance } from "@/lib/wallet/useBalance";
 
 // ── Shared types ──
 
@@ -163,7 +164,7 @@ function DashboardWalletCard({ brixBalance, usdcBalance, stakedAmount = 0 }: { b
 //  INVESTOR DASHBOARD — memoized
 // ════════════════════════════════════════════════════════
 
-const InvestorDashboard = memo(function InvestorDashboard({ investments, transactions, brixBalance }: { investments: Investment[]; transactions: Transaction[]; brixBalance: number }) {
+const InvestorDashboard = memo(function InvestorDashboard({ investments, transactions, brixBalance, stakedBalance = 2000 }: { investments: Investment[]; transactions: Transaction[]; brixBalance: number; stakedBalance?: number }) {
   // Memoize expensive computations
   const totalInvested = useMemo(() => investments.reduce((sum, inv) => sum + inv.amount, 0), [investments]);
   const activeDeals = useMemo(() => investments.filter((inv) => inv.deals?.status !== "Completed").length, [investments]);
@@ -260,7 +261,7 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
         </div>
       </div>
 
-      <div className="mb-6"><DashboardWalletCard brixBalance={brixBalance} usdcBalance={3200} stakedAmount={2000} /></div>
+      <div className="mb-6"><DashboardWalletCard brixBalance={brixBalance} usdcBalance={3200} stakedAmount={stakedBalance} /></div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
@@ -490,7 +491,15 @@ export default function DashboardPage() {
         const txData = await txRes.json();
         // Only replace sample transactions when API returns at least as many
         if (Array.isArray(txData) && txData.length >= sampleTransactions.length) {
-          setTransactions(txData);
+          // Deduplicate by id, then by description+date+amount to prevent repeated entries
+          const seen = new Set<string>();
+          const deduped = txData.filter((tx: Transaction) => {
+            const key = tx.id || `${tx.description}-${tx.created_at}-${tx.amount}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
+          setTransactions(deduped.slice(0, 10));
         }
       }
     } catch { /* Use sample data on error */ }
@@ -499,8 +508,9 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Use consistent 12,500 base balance across all views (dashboard, header, wallet)
-  const brixBalance = 12500;
+  // Use shared balance hook — single source of truth across header, wallet, and dashboard
+  const balanceData = useBalance();
+  const brixBalance = balanceData.availableBalance;
 
   if (loading) return <DashboardSkeleton />;
 
@@ -514,7 +524,7 @@ export default function DashboardPage() {
       {userRole === "builder" && <BuilderDashboard />}
       {userRole === "dealmaker" && <DealmakerDashboard />}
       {(userRole === "investor" || (userRole !== "builder" && userRole !== "dealmaker")) && (
-        <InvestorDashboard investments={investments} transactions={transactions} brixBalance={brixBalance} />
+        <InvestorDashboard investments={investments} transactions={transactions} brixBalance={brixBalance} stakedBalance={balanceData.stakedBalance} />
       )}
     </div>
   );
