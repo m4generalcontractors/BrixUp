@@ -433,7 +433,7 @@ function Footer({ lang }: { lang: Lang }) {
             href="/contractors/learn"
             className="text-[#D4A843]/60 hover:text-[#D4A843] transition-colors"
           >
-            {lang === "en" ? "Learn about $BRIX" : "Aprende sobre $BRIX"}
+            {lang === "en" ? "Learn about $BRXU" : "Aprende sobre $BRXU"}
           </Link>
         </p>
       </div>

@@ -17,7 +17,7 @@ const utilities = [
 const metrics = [
   { value: "0.5%", label: "Transaction Fee" },
   { value: "2-3%", label: "Origination" },
-  { value: "$BRIX/USDC", label: "Trading Pair" },
+  { value: "$BRXU/USDC", label: "Trading Pair" },
 ];
 
 export default function Tokenomics() {
@@ -27,7 +27,7 @@ export default function Tokenomics() {
         {/* Section Header */}
         <div className="text-center">
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
-            The <span className="text-gradient-gold">$BRIX</span> Token
+            The <span className="text-gradient-gold">$BRXU</span> Token
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/90">
             ERC-20 on Base L2 &middot; 1B Total Supply

@@ -30,9 +30,9 @@ In Vercel Dashboard → Settings → Environment Variables, add:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key | All |
 | `NEXT_PUBLIC_APP_URL` | `https://brixups.com` | Production |
 | `NEXT_PUBLIC_APP_URL` | `https://staging.brixups.com` | Preview |
-| `NEXT_PUBLIC_BRIX_TOKEN_ADDRESS` | Deployed contract address | All |
-| `NEXT_PUBLIC_BRIX_FACTORY_ADDRESS` | Deployed contract address | All |
-| `NEXT_PUBLIC_BRIX_STAKING_ADDRESS` | Deployed contract address | All |
+| `NEXT_PUBLIC_BRXU_TOKEN_ADDRESS` | Deployed contract address | All |
+| `NEXT_PUBLIC_BRXU_FACTORY_ADDRESS` | Deployed contract address | All |
+| `NEXT_PUBLIC_BRXU_STAKING_ADDRESS` | Deployed contract address | All |
 | `NEXT_PUBLIC_CHAIN_ID` | `8453` (Base mainnet) | Production |
 | `NEXT_PUBLIC_CHAIN_ID` | `84532` (Base Sepolia) | Preview |
 | `NEXT_PUBLIC_COINBASE_APP_ID` | From Coinbase Developer Portal | All |
@@ -188,7 +188,7 @@ After deployment, the deployer wallet (`PRIVATE_KEY` owner) has these admin capa
 
 | Action | Contract | Function |
 |--------|----------|----------|
-| Mint new $BRIX | BrixToken | `mint(address to, uint256 amount)` |
+| Mint new $BRXU | BrixToken | `mint(address to, uint256 amount)` |
 | Pause/unpause token | BrixToken | `pause()` / `unpause()` |
 | Burn tokens | BrixToken | `burn(uint256 amount)` |
 | Create new deals | BrixFactory | `createDeal(...)` |
@@ -352,7 +352,7 @@ CREATE TABLE transactions (
   user_id UUID REFERENCES profiles(id),
   type TEXT CHECK (type IN ('investment', 'return', 'payment', 'reward', 'conversion', 'stake', 'unstake')),
   amount NUMERIC NOT NULL,
-  token TEXT DEFAULT 'BRIX' CHECK (token IN ('BRIX', 'USDC')),
+  token TEXT DEFAULT 'BRXU' CHECK (token IN ('BRXU', 'USDC')),
   description TEXT,
   tx_hash TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -400,8 +400,8 @@ CREATE POLICY "Anyone can read contractor commitments" ON contractor_commitments
 
 - [ ] Deploy smart contracts to Base mainnet
 - [ ] Update contract addresses in Vercel env vars
-- [ ] Mint initial $BRIX supply to treasury wallet
-- [ ] Seed liquidity pool ($BRIX/USDC)
+- [ ] Mint initial $BRXU supply to treasury wallet
+- [ ] Seed liquidity pool ($BRXU/USDC)
 - [ ] Verify all mainnet contracts on Basescan
 - [ ] Announce on social media
 - [ ] Send waitlist email blast

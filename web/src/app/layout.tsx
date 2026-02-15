@@ -5,7 +5,7 @@ import Providers from "./providers";
 export const metadata: Metadata = {
   title: "BrixUp — Stack Brix. Build Wealth. Together.",
   description:
-    "The first tokenized real estate marketplace where investors, builders, and dealmakers unite under smart contracts to develop property — and share the profits. Invest in real estate starting at $500 with $BRIX on Base L2.",
+    "The first tokenized real estate marketplace where investors, builders, and dealmakers unite under smart contracts to develop property — and share the profits. Invest in real estate starting at $500 with $BRXU on Base L2.",
   keywords: [
     "real estate",
     "tokenized",
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     "investment",
     "construction",
     "Base L2",
-    "BRIX token",
+    "BRXU token",
     "crowdfunding",
   ],
   openGraph: {
     title: "BrixUp — Stack Brix. Build Wealth. Together.",
     description:
-      "The first tokenized real estate marketplace. Invest in real estate starting at $500 with $BRIX.",
+      "The first tokenized real estate marketplace. Invest in real estate starting at $500 with $BRXU.",
     type: "website",
     locale: "en_US",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BrixUp — Stack Brix. Build Wealth. Together.",
     description:
-      "The first tokenized real estate marketplace. Invest in real estate starting at $500 with $BRIX.",
+      "The first tokenized real estate marketplace. Invest in real estate starting at $500 with $BRXU.",
   },
   other: {
     "base:app_id": "698ffca2e0d5d2cf831b5b70",

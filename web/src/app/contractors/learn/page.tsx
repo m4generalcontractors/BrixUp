@@ -48,7 +48,7 @@ function LangToggle({
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/*  Section 1: What is $BRIX?                                                */
+/*  Section 1: What is $BRXU?                                                */
 /* ────────────────────────────────────────────────────────────────────────── */
 function WhatIsBrix({ lang }: { lang: Lang }) {
   return (
@@ -80,7 +80,7 @@ function WhatIsBrix({ lang }: { lang: Lang }) {
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#D4A843] to-[#E8C76A] text-xl font-extrabold text-[#0D0D1A] shadow-[0_0_20px_rgba(212,168,67,0.3)]">
               B
             </div>
-            <span className="mt-2 text-xs font-medium text-[#D4A843]">$BRIX</span>
+            <span className="mt-2 text-xs font-medium text-[#D4A843]">$BRXU</span>
           </div>
           <svg className="h-6 w-6 text-[#F8F6F0]/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -218,7 +218,7 @@ function ProfitCalculator({ lang }: { lang: Lang }) {
   const brixRate = TRADE_RATES[trade] || 100;
   const totalHours = (parseInt(hours) || 0) * (parseInt(weeks) || 0);
   const totalBrix = totalHours * brixRate;
-  const cashValue = totalBrix * 0.1; // $0.10 per BRIX
+  const cashValue = totalBrix * 0.1; // $0.10 per BRXU
   const profitShareBonus = cashValue * 0.15; // 15% bonus estimate
   const totalEarnings = cashValue + profitShareBonus;
 
@@ -308,7 +308,7 @@ function ProfitCalculator({ lang }: { lang: Lang }) {
                 {t("learn.s3.baseRate", lang)}
               </span>
               <span className="font-bold text-[#D4A843]">
-                {brixRate} $BRIX {t("learn.s3.perHour", lang)}
+                {brixRate} $BRXU {t("learn.s3.perHour", lang)}
               </span>
             </div>
           </div>
@@ -329,7 +329,7 @@ function ProfitCalculator({ lang }: { lang: Lang }) {
                   {t("learn.s3.totalBrix", lang)}
                 </span>
                 <span className="text-lg font-bold text-[#D4A843]">
-                  {totalBrix.toLocaleString()} $BRIX
+                  {totalBrix.toLocaleString()} $BRXU
                 </span>
               </div>
 
@@ -509,8 +509,8 @@ export default function LearnPage() {
           </h2>
           <p className="mb-8 text-[#F8F6F0]/50">
             {lang === "en"
-              ? "Join thousands of builders who are earning $BRIX and building real wealth."
-              : "Únete a miles de constructores que están ganando $BRIX y construyendo riqueza real."}
+              ? "Join thousands of builders who are earning $BRXU and building real wealth."
+              : "Únete a miles de constructores que están ganando $BRXU y construyendo riqueza real."}
           </p>
           <Link
             href="/contractors/onboarding"

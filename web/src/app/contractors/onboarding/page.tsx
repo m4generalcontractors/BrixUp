@@ -733,7 +733,7 @@ function Step5({ lang }: { lang: Lang }) {
       {/* Airdrop confirmation */}
       <div className="mx-auto mb-8 max-w-sm rounded-xl border border-[#D4A843]/30 bg-gradient-to-br from-[#D4A843]/10 to-[#D4A843]/[0.03] p-5">
         <div className="mb-2 text-4xl font-extrabold text-[#D4A843]">
-          1,000 $BRIX
+          1,000 $BRXU
         </div>
         <p className="text-sm text-[#F8F6F0]/60">
           {t("onboarding.step5.airdrop", lang)}

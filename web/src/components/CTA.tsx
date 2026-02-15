@@ -47,7 +47,7 @@ export default function CTA() {
           Ready to Build Wealth Together?
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-lg text-dark/70">
-          Join the waitlist for early access to the BrixUp platform and $BRIX token pre-sale.
+          Join the waitlist for early access to the BrixUp platform and $BRXU token pre-sale.
         </p>
 
         {/* Email Form */}

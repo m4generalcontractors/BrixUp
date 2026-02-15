@@ -4,9 +4,9 @@ import { useState } from "react";
 
 const faqs = [
   {
-    question: "What is $BRIX?",
+    question: "What is $BRXU?",
     answer:
-      "$BRIX is the utility token powering the BrixUp marketplace. It is used for deal investment, contractor payments, staking rewards, and governance voting. Built as an ERC-20 token on Base (Ethereum L2 by Coinbase), it enables low-cost, fast transactions for real estate development.",
+      "$BRXU is the utility token powering the BrixUp marketplace. It is used for deal investment, contractor payments, staking rewards, and governance voting. Built as an ERC-20 token on Base (Ethereum L2 by Coinbase), it enables low-cost, fast transactions for real estate development.",
   },
   {
     question: "Do I need crypto experience?",
@@ -16,17 +16,17 @@ const faqs = [
   {
     question: "How do contractors get paid?",
     answer:
-      "Contractors are paid via a draw schedule in $BRIX, which is convertible to USDC at any time. Funds are released at each construction milestone, verified by on-site inspections and smart contract logic. Instant ACH transfers to your bank are available 24/7.",
+      "Contractors are paid via a draw schedule in $BRXU, which is convertible to USDC at any time. Funds are released at each construction milestone, verified by on-site inspections and smart contract logic. Instant ACH transfers to your bank are available 24/7.",
   },
   {
     question: "Is this a security?",
     answer:
-      "$BRIX is a utility token that provides access to platform features and services. Each real estate deal is structured as an SPV (Special Purpose Vehicle) LLC, with proper legal documentation and compliance. We work with securities attorneys to ensure full regulatory compliance.",
+      "$BRXU is a utility token that provides access to platform features and services. Each real estate deal is structured as an SPV (Special Purpose Vehicle) LLC, with proper legal documentation and compliance. We work with securities attorneys to ensure full regulatory compliance.",
   },
   {
     question: "What's the minimum investment?",
     answer:
-      "500 $BRIX (~$500 at launch price). This low minimum allows anyone to participate in real estate development deals that traditionally require $50,000+ to enter. Diversify across multiple properties and markets with small amounts.",
+      "500 $BRXU (~$500 at launch price). This low minimum allows anyone to participate in real estate development deals that traditionally require $50,000+ to enter. Diversify across multiple properties and markets with small amounts.",
   },
   {
     question: "How are deals vetted?",
@@ -34,7 +34,7 @@ const faqs = [
       "Licensed General Contractors perform due diligence on every property, including full pro forma analysis, scope of work, and risk assessment. The BrixUp platform team reviews every listing before it goes live. Only deals meeting our quality standards are published.",
   },
   {
-    question: "What blockchain is $BRIX on?",
+    question: "What blockchain is $BRXU on?",
     answer:
       "Base — the Ethereum L2 built by Coinbase. We chose Base for its low gas fees (typically under $0.01), fast transaction times (under 2 seconds), institutional-grade security, and growing ecosystem. It provides the reliability of Ethereum with the speed and cost efficiency needed for real estate transactions.",
   },
@@ -56,7 +56,7 @@ export default function FAQ() {
             Frequently Asked <span className="text-gradient-gold">Questions</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
-            Everything you need to know about BrixUp and $BRIX.
+            Everything you need to know about BrixUp and $BRXU.
           </p>
         </div>
 

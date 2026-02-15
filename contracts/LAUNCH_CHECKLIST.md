@@ -1,18 +1,18 @@
-# $BRIX Token Launch Checklist
+# $BRXU Token Launch Checklist
 
 ## Pre-Deployment
 
-- [ ] Final code review of BRIX.sol, BRIXStaking.sol, BRIXVesting.sol
+- [ ] Final code review of BRXU.sol, BRXUStaking.sol, BRXUVesting.sol
 - [ ] All 58 Hardhat tests passing (`npm test`)
 - [ ] Gas optimization review (enable `REPORT_GAS=true`)
 - [ ] Security audit (Slither, Mythril, or professional audit)
 - [ ] Confirm wallet addresses for all allocations:
-  - [ ] Treasury wallet (receives 40% = 400M BRIX)
-  - [ ] Community rewards wallet (20% = 200M BRIX)
-  - [ ] Team vesting wallet (15% = 150M BRIX)
-  - [ ] Liquidity wallet (10% = 100M BRIX)
-  - [ ] Marketing wallet (10% = 100M BRIX)
-  - [ ] Pre-sale wallet (5% = 50M BRIX)
+  - [ ] Treasury wallet (receives 40% = 400M BRXU)
+  - [ ] Community rewards wallet (20% = 200M BRXU)
+  - [ ] Team vesting wallet (15% = 150M BRXU)
+  - [ ] Liquidity wallet (10% = 100M BRXU)
+  - [ ] Marketing wallet (10% = 100M BRXU)
+  - [ ] Pre-sale wallet (5% = 50M BRXU)
 - [ ] Fund deployer wallet with ETH on Base (~0.01 ETH should suffice)
 - [ ] Set up `.env` file with all required variables:
   ```
@@ -29,40 +29,40 @@
 
 ## Deployment (Base Mainnet)
 
-- [ ] Deploy contracts: `npm run deploy:brix:mainnet`
+- [ ] Deploy contracts: `npm run deploy:brxu:mainnet`
 - [ ] Verify deployment output — check all 3 addresses logged
 - [ ] Confirm allocation balances on BaseScan:
-  - Treasury: 400,000,000 BRIX
-  - Rewards: 200,000,000 BRIX
-  - Vesting: 150,000,000 BRIX
-  - Liquidity: 100,000,000 BRIX
-  - Marketing: 100,000,000 BRIX
-  - Pre-sale: 50,000,000 BRIX
+  - Treasury: 400,000,000 BRXU
+  - Rewards: 200,000,000 BRXU
+  - Vesting: 150,000,000 BRXU
+  - Liquidity: 100,000,000 BRXU
+  - Marketing: 100,000,000 BRXU
+  - Pre-sale: 50,000,000 BRXU
 - [ ] Verify staking and vesting contracts are fee-exempt
 
 ## Contract Verification
 
-- [ ] Verify contracts on BaseScan: `npm run verify:brix`
+- [ ] Verify contracts on BaseScan: `npm run verify:brxu`
 - [ ] Confirm all 3 contracts show "Verified" on BaseScan
 - [ ] Check contract source code is visible and matches
 
 ## Post-Deployment Setup
 
 - [ ] Fund staking rewards from rewards wallet:
-  - Transfer 25M BRIX to deployer/owner
-  - Approve 25M to BRIXStaking contract
+  - Transfer 25M BRXU to deployer/owner
+  - Approve 25M to BRXUStaking contract
   - Call `fundRewards(25M, 365 days)` for 12.5% APY
-- [ ] Create team vesting schedules via BRIXVesting:
+- [ ] Create team vesting schedules via BRXUVesting:
   - Approve tokens to vesting contract
   - Call `createDefaultVesting(beneficiary, amount)` for each team member
 - [ ] Disable anti-bot after 24 hours (optional): `disableAntiBot()`
 
 ## Liquidity Setup
 
-- [ ] Ensure liquidity wallet has BRIX + USDC
+- [ ] Ensure liquidity wallet has BRXU + USDC
 - [ ] Run liquidity script: `npm run setup:liquidity`
-- [ ] Verify BRIX/USDC pool on Uniswap v3 (Base)
-- [ ] Confirm initial price: $0.01 per BRIX
+- [ ] Verify BRXU/USDC pool on Uniswap v3 (Base)
+- [ ] Confirm initial price: $0.01 per BRXU
 - [ ] Test small swap on Uniswap to verify pool works
 
 ## Frontend Integration
@@ -70,10 +70,10 @@
 - [ ] Update `web/.env.local` with contract addresses:
   ```
   NEXT_PUBLIC_CHAIN_ID=8453
-  NEXT_PUBLIC_BRIX_TOKEN_ADDRESS=0x...
-  NEXT_PUBLIC_BRIX_STAKING_ADDRESS=0x...
-  NEXT_PUBLIC_BRIX_FACTORY_ADDRESS=0x...
-  NEXT_PUBLIC_BRIX_VESTING_ADDRESS=0x...
+  NEXT_PUBLIC_BRXU_TOKEN_ADDRESS=0x...
+  NEXT_PUBLIC_BRXU_STAKING_ADDRESS=0x...
+  NEXT_PUBLIC_BRXU_FACTORY_ADDRESS=0x...
+  NEXT_PUBLIC_BRXU_VESTING_ADDRESS=0x...
   ```
 - [ ] Rebuild and redeploy frontend
 - [ ] Test wallet connection on mainnet
@@ -111,9 +111,9 @@
 
 | Contract | Address |
 |---|---|
-| BRIX Token | `TBD` |
-| BRIXStaking | `TBD` |
-| BRIXVesting | `TBD` |
+| BRXU Token | `TBD` |
+| BRXUStaking | `TBD` |
+| BRXUVesting | `TBD` |
 | Uniswap Pool | `TBD` |
 
-**Deployment saved to:** `deployments/brix-base-latest.json`
+**Deployment saved to:** `deployments/brxu-base-latest.json`

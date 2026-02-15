@@ -6,13 +6,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
- * @title BrixUp Token ($BRIX)
+ * @title BrixUp Token ($BRXU)
  * @notice Production ERC-20 token for the BrixUp tokenized real estate marketplace.
  *         Features: 0.5% transfer fee, pausable, anti-bot max transfer limit,
  *         fee-exempt addresses, and burn functionality.
  * @dev Deployed on Base L2 (Chain ID 8453).
  */
-contract BRIX is ERC20, Ownable, Pausable {
+contract BRXU is ERC20, Ownable, Pausable {
     // ─── Constants ───────────────────────────────────────────────────────
     uint256 public constant TOTAL_SUPPLY = 1_000_000_000 * 1e18; // 1 billion
     uint256 public constant MAX_FEE_BPS = 200; // 2% max fee
@@ -49,13 +49,13 @@ contract BRIX is ERC20, Ownable, Pausable {
         address _liquidity,
         address _marketing,
         address _presale
-    ) ERC20("BrixUp Token", "BRIX") Ownable(msg.sender) {
-        require(_treasury != address(0), "BRIX: zero treasury");
-        require(_rewards != address(0), "BRIX: zero rewards");
-        require(_vesting != address(0), "BRIX: zero vesting");
-        require(_liquidity != address(0), "BRIX: zero liquidity");
-        require(_marketing != address(0), "BRIX: zero marketing");
-        require(_presale != address(0), "BRIX: zero presale");
+    ) ERC20("BrixUp Token", "BRXU") Ownable(msg.sender) {
+        require(_treasury != address(0), "BRXU: zero treasury");
+        require(_rewards != address(0), "BRXU: zero rewards");
+        require(_vesting != address(0), "BRXU: zero vesting");
+        require(_liquidity != address(0), "BRXU: zero liquidity");
+        require(_marketing != address(0), "BRXU: zero marketing");
+        require(_presale != address(0), "BRXU: zero presale");
 
         treasury = _treasury;
         launchTime = block.timestamp;
@@ -86,7 +86,7 @@ contract BRIX is ERC20, Ownable, Pausable {
         // Anti-bot: limit max transfer in first 24 hours
         if (antiBotEnabled && block.timestamp < launchTime + 24 hours) {
             if (from != address(0) && to != address(0)) {
-                require(amount <= ANTI_BOT_LIMIT, "BRIX: exceeds anti-bot limit");
+                require(amount <= ANTI_BOT_LIMIT, "BRXU: exceeds anti-bot limit");
             }
         }
 
@@ -120,14 +120,14 @@ contract BRIX is ERC20, Ownable, Pausable {
 
     /// @notice Update the transfer fee (basis points). Max 2%.
     function setFeeBps(uint256 _feeBps) external onlyOwner {
-        require(_feeBps <= MAX_FEE_BPS, "BRIX: fee exceeds max");
+        require(_feeBps <= MAX_FEE_BPS, "BRXU: fee exceeds max");
         emit FeeUpdated(feeBps, _feeBps);
         feeBps = _feeBps;
     }
 
     /// @notice Update the treasury address.
     function setTreasury(address _treasury) external onlyOwner {
-        require(_treasury != address(0), "BRIX: zero address");
+        require(_treasury != address(0), "BRXU: zero address");
         emit TreasuryUpdated(treasury, _treasury);
         treasury = _treasury;
     }

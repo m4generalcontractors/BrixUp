@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @notice Per-deal escrow and profit-distribution contract for real-estate
  *         projects on the BrixUp platform.
  * @dev Each BrixDeal instance represents a single property deal. Investors
- *      deposit $BRIX tokens during the Funding phase. Once funded, the deal
+ *      deposit $BRXU tokens during the Funding phase. Once funded, the deal
  *      moves to Active. The builder requests milestone draws which the admin
  *      approves. On completion, principal is returned and profit is split
  *      according to pre-defined ratios among investors, the builder, the
@@ -44,7 +44,7 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     struct SweatEquity {
         address contractor;
         string  tradeDescription;
-        uint256 brixRate;          // BRIX tokens attributed for contribution
+        uint256 brixRate;          // BRXU tokens attributed for contribution
         bool    registered;
     }
 
@@ -62,13 +62,13 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     /// @notice Unique identifier for this deal (set at deployment).
     bytes32  public dealId;
 
-    /// @notice Total $BRIX capital required to fully fund the deal.
+    /// @notice Total $BRXU capital required to fully fund the deal.
     uint256  public totalCapitalNeeded;
 
-    /// @notice Amount of $BRIX capital raised so far.
+    /// @notice Amount of $BRXU capital raised so far.
     uint256  public totalCapitalRaised;
 
-    /// @notice Reference to the $BRIX ERC-20 token contract.
+    /// @notice Reference to the $BRXU ERC-20 token contract.
     IERC20   public brixToken;
 
     /// @notice Wallet that receives the platform's share of profits.
@@ -96,14 +96,14 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     /// @notice Address of the deal-maker who originated the deal.
     address public dealMaker;
 
-    /// @notice Minimum investment amount: 500 BRIX (18 decimals).
+    /// @notice Minimum investment amount: 500 BRXU (18 decimals).
     uint256 public constant MIN_INVESTMENT = 500 * 10 ** 18;
 
     /// @notice Basis-point denominator (100 %).
     uint256 public constant BPS_DENOMINATOR = 10_000;
 
     // Investor accounting
-    /// @notice BRIX deposited by each investor.
+    /// @notice BRXU deposited by each investor.
     mapping(address => uint256) public investments;
     /// @notice Ordered list of unique investor addresses.
     address[] public investors;
@@ -120,14 +120,14 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     /// @notice Draw request data per milestone index.
     mapping(uint256 => DrawRequest) public draws;
 
-    /// @notice Total BRIX already released via approved draws.
+    /// @notice Total BRXU already released via approved draws.
     uint256 public totalDrawn;
 
     // -------------------------------------------------------------------------
     //  Events
     // -------------------------------------------------------------------------
 
-    /// @notice Emitted when an investor deposits $BRIX into the deal.
+    /// @notice Emitted when an investor deposits $BRXU into the deal.
     event InvestmentMade(address indexed investor, uint256 amount, uint256 totalRaised);
 
     /// @notice Emitted when the deal transitions from Funding to Active.
@@ -177,7 +177,7 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     /**
      * @notice Deploy a new BrixDeal escrow.
      * @param _dealId              Unique deal identifier.
-     * @param _totalCapitalNeeded  Total $BRIX required to fund the deal.
+     * @param _totalCapitalNeeded  Total $BRXU required to fund the deal.
      * @param _brixToken           Address of the BrixToken ERC-20 contract.
      * @param _platformWallet      Wallet receiving the platform's profit share.
      * @param _milestoneCount      Number of draw-schedule milestones.
@@ -247,15 +247,15 @@ contract BrixDeal is ReentrancyGuard, Ownable {
     // -------------------------------------------------------------------------
 
     /**
-     * @notice Invest $BRIX into this deal during the Funding phase.
+     * @notice Invest $BRXU into this deal during the Funding phase.
      * @dev The caller must have approved this contract to spend at least
-     *      `amount` BRIX tokens. A minimum of 500 BRIX is enforced.
+     *      `amount` BRXU tokens. A minimum of 500 BRXU is enforced.
      *      If the investment causes `totalCapitalRaised` to reach
      *      `totalCapitalNeeded`, the deal automatically moves to Active.
-     * @param amount Number of BRIX tokens to invest (in wei).
+     * @param amount Number of BRXU tokens to invest (in wei).
      */
     function investInDeal(uint256 amount) external nonReentrant inState(DealState.Funding) {
-        require(amount >= MIN_INVESTMENT, "BrixDeal: below 500 BRIX minimum");
+        require(amount >= MIN_INVESTMENT, "BrixDeal: below 500 BRXU minimum");
         require(
             totalCapitalRaised + amount <= totalCapitalNeeded,
             "BrixDeal: investment exceeds remaining capacity"
@@ -291,7 +291,7 @@ contract BrixDeal is ReentrancyGuard, Ownable {
      *      A contractor may only be registered once.
      * @param contractor       Address of the contractor.
      * @param tradeDescription Human-readable description of the trade/skill.
-     * @param brixRate         BRIX token value attributed to the contribution.
+     * @param brixRate         BRXU token value attributed to the contribution.
      */
     function registerSweatEquity(
         address contractor,
@@ -299,7 +299,7 @@ contract BrixDeal is ReentrancyGuard, Ownable {
         uint256 brixRate
     ) external onlyOwner {
         require(contractor != address(0), "BrixDeal: contractor is zero address");
-        require(brixRate > 0, "BrixDeal: brix rate must be > 0");
+        require(brixRate > 0, "BrixDeal: brxu rate must be > 0");
         require(!sweatEquities[contractor].registered, "BrixDeal: contractor already registered");
 
         sweatEquities[contractor] = SweatEquity({
@@ -321,7 +321,7 @@ contract BrixDeal is ReentrancyGuard, Ownable {
      * @notice Builder submits a draw request for a specific milestone.
      * @dev Only the assigned builder may call this while the deal is Active.
      * @param milestoneIndex Zero-based index of the milestone.
-     * @param amount         BRIX amount requested for this draw.
+     * @param amount         BRXU amount requested for this draw.
      */
     function requestDraw(
         uint256 milestoneIndex,
@@ -373,19 +373,19 @@ contract BrixDeal is ReentrancyGuard, Ownable {
 
     /**
      * @notice Complete the deal and distribute profits.
-     * @dev The owner must first transfer sufficient BRIX into this contract
-     *      to cover principal repayment plus profit splits. The function:
+     * @dev The owner must first transfer sufficient BRXU into this contract
+     *      to cover principal repayment plus profit splits (in BRXU). The function:
      *        1. Returns each investor's principal pro-rata.
      *        2. Splits `totalProfit` according to the configured basis-point
      *           ratios among investors (pro-rata), builder, platform, and
      *           deal-maker.
      *
      *      The contract must hold at least
-     *      `(totalCapitalRaised - totalDrawn) + totalProfit` BRIX at the time
+     *      `(totalCapitalRaised - totalDrawn) + totalProfit` BRXU at the time
      *      of calling (draws already released are excluded from the principal
      *      repayment).
      *
-     * @param totalProfit Total profit (in BRIX) to distribute.
+     * @param totalProfit Total profit (in BRXU) to distribute.
      */
     function completeDeal(
         uint256 totalProfit

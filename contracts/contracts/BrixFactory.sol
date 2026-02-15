@@ -9,7 +9,7 @@ import "./BrixDeal.sol";
  * @author BrixUp Team
  * @notice Factory contract that deploys and tracks BrixDeal instances.
  * @dev The factory stores a configurable platform fee percentage, the platform
- *      wallet, and the $BRIX token address. When a new deal is created the
+ *      wallet, and the $BRXU token address. When a new deal is created the
  *      factory deploys a BrixDeal clone with the provided parameters and
  *      records the address.
  */
@@ -18,7 +18,7 @@ contract BrixFactory is Ownable {
     //  State variables
     // -------------------------------------------------------------------------
 
-    /// @notice Address of the $BRIX ERC-20 token used across all deals.
+    /// @notice Address of the $BRXU ERC-20 token used across all deals.
     address public brixToken;
 
     /// @notice Platform wallet that receives the platform share of profits.
@@ -91,7 +91,7 @@ contract BrixFactory is Ownable {
      *      (ownership is immediately transferred from the factory to `msg.sender`
      *      so the deal creator can manage the deal).
      * @param _dealId              Unique identifier for the deal.
-     * @param _totalCapitalNeeded  Total BRIX tokens required to fund the deal.
+     * @param _totalCapitalNeeded  Total BRXU tokens required to fund the deal.
      * @param _milestoneCount      Number of draw milestones in the schedule.
      * @param _investorSplitBps    Investor profit share (basis points).
      * @param _builderSplitBps     Builder profit share (basis points).

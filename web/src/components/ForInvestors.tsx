@@ -79,7 +79,7 @@ function MockDashboard() {
           <p className="font-[var(--font-display)] text-lg font-bold text-success">11.2%</p>
         </div>
         <div className="rounded-lg bg-charcoal/50 p-3">
-          <p className="text-xs text-offwhite/60">$BRIX Balance</p>
+          <p className="text-xs text-offwhite/60">$BRXU Balance</p>
           <p className="font-[var(--font-display)] text-lg font-bold text-gold">12,450</p>
         </div>
       </div>

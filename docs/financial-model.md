@@ -24,7 +24,7 @@
 
 | Parameter | Value |
 |-----------|-------|
-| Token Name | BrixUp Token ($BRIX) |
+| Token Name | BrixUp Token ($BRXU) |
 | Total Supply | 1,000,000,000 (1 Billion) |
 | Standard | ERC-20 |
 | Network | Base L2 (Ethereum) |
@@ -62,9 +62,9 @@
 
 ### 1.4 Token Price Scenarios
 
-The following scenarios illustrate potential $BRIX valuations based on fully diluted valuation (FDV) and circulating supply at various milestones. These are hypothetical scenarios, not price predictions or guarantees.
+The following scenarios illustrate potential $BRXU valuations based on fully diluted valuation (FDV) and circulating supply at various milestones. These are hypothetical scenarios, not price predictions or guarantees.
 
-**Pre-Sale Price:** $0.005 per $BRIX
+**Pre-Sale Price:** $0.005 per $BRXU
 
 | Scenario | FDV | Price/Token | Circulating Market Cap (Month 12) | Multiple from Pre-Sale |
 |----------|-----|-------------|----------------------------------|----------------------|
@@ -85,12 +85,12 @@ The following scenarios illustrate potential $BRIX valuations based on fully dil
 
 | Demand Source | Mechanism | Estimated Annual Demand (Year 2) |
 |---------------|-----------|----------------------------------|
-| Deal Access Staking | Users stake $BRIX for tiered deal access | 20M-50M tokens locked |
+| Deal Access Staking | Users stake $BRXU for tiered deal access | 20M-50M tokens locked |
 | Fee Reduction Staking | Users stake for 10-50% fee discounts | 10M-30M tokens locked |
 | Contractor Performance Bonds | Builders stake as performance guarantees | 5M-15M tokens locked |
 | Governance Staking | Community stakes for voting rights | 10M-25M tokens locked |
 | Rewards & Incentives | Platform distributes for engagement | 15M-30M tokens distributed |
-| Secondary Market Trading | $BRIX/USDC pair liquidity demand | Variable |
+| Secondary Market Trading | $BRXU/USDC pair liquidity demand | Variable |
 
 **Estimated tokens locked/staked at Year 2 steady state:** 60M-150M tokens (15-39% of circulating supply)
 
@@ -98,7 +98,7 @@ The following scenarios illustrate potential $BRIX valuations based on fully dil
 
 BrixUp may implement a token buyback and burn program using a percentage of platform revenue, subject to governance vote. Potential structure:
 
-- 10-20% of quarterly platform revenue used to buy $BRIX on open market
+- 10-20% of quarterly platform revenue used to buy $BRXU on open market
 - Purchased tokens burned (permanently removed from supply)
 - Reduces total supply over time, creating deflationary pressure
 - Governance vote required to activate and set parameters
@@ -533,15 +533,15 @@ An investor deploying $50,000 across 5 deals in Year 1:
 
 ## 7. Fundraising: Pre-Sale Terms and Seed Round
 
-### 7.1 $BRIX Pre-Sale Terms
+### 7.1 $BRXU Pre-Sale Terms
 
 | Parameter | Value |
 |-----------|-------|
-| Pre-Sale Allocation | 50,000,000 $BRIX (5% of total supply) |
-| Pre-Sale Price | $0.005 per $BRIX |
+| Pre-Sale Allocation | 50,000,000 $BRXU (5% of total supply) |
+| Pre-Sale Price | $0.005 per $BRXU |
 | Maximum Raise | $250,000 |
-| Minimum Purchase | $100 (20,000 $BRIX) |
-| Maximum Purchase | $25,000 (5,000,000 $BRIX) per individual |
+| Minimum Purchase | $100 (20,000 $BRXU) |
+| Maximum Purchase | $25,000 (5,000,000 $BRXU) per individual |
 | Vesting | 3-month cliff, 9-month linear vesting (12 months total) |
 | Payment Methods | USDC, ETH, USD (wire/ACH) |
 | KYC Required | Yes (Persona verification) |
@@ -566,7 +566,7 @@ An investor deploying $50,000 across 5 deals in Year 1:
 | Minimum Check | $25,000 |
 | Pro-Rata Rights | Yes, for investors at $100,000+ |
 | Board Seat | Lead investor ($500,000+) |
-| $BRIX Allocation | Pro-rata access to pre-sale at founding investor pricing ($0.003/token) |
+| $BRXU Allocation | Pro-rata access to pre-sale at founding investor pricing ($0.003/token) |
 
 ### 7.3 Use of Funds ($2M Seed)
 
@@ -613,7 +613,7 @@ BrixUp's $10M cap is competitive with comparable companies and reflects the earl
 | Registered Users | 5,000+ |
 | Builder Registrations | 100+ |
 | Markets | 5+ states |
-| $BRIX Holders | 2,000+ |
+| $BRXU Holders | 2,000+ |
 | Token FDV | $25M+ |
 
 **Series A Terms (Projected):**
@@ -628,7 +628,7 @@ BrixUp's $10M cap is competitive with comparable companies and reflects the earl
 
 For a $100,000 seed investment at $10M cap SAFE:
 
-| Exit Scenario | Company Valuation | Equity Value | $BRIX Value (at $0.003) | Total Return | Multiple |
+| Exit Scenario | Company Valuation | Equity Value | $BRXU Value (at $0.003) | Total Return | Multiple |
 |---------------|-------------------|-------------|--------------------------|--------------|----------|
 | Series A (18mo) | $60M | $600,000 | ~$167,000 | $767,000 | 7.7x |
 | Series B (36mo) | $250M | $2,500,000 | ~$500,000 | $3,000,000 | 30x |
@@ -671,7 +671,7 @@ For a $100,000 seed investment at $10M cap SAFE:
 | ROI | Return on Investment — net profit divided by invested capital |
 | SAFE | Simple Agreement for Future Equity — a seed-stage investment instrument |
 | SPV | Special Purpose Vehicle — a single-purpose LLC created for one deal |
-| TGE | Token Generation Event — the first creation and distribution of $BRIX tokens |
+| TGE | Token Generation Event — the first creation and distribution of $BRXU tokens |
 
 ---
 

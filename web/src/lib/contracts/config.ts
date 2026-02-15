@@ -20,18 +20,18 @@ export const activeChain = chainId === 8453 ? base : baseSepolia;
 //  Contract Addresses
 // ---------------------------------------------------------------------------
 
-export const BRIX_TOKEN_ADDRESS =
-  (process.env.NEXT_PUBLIC_BRIX_TOKEN_ADDRESS as `0x${string}`) || undefined;
+export const BRXU_TOKEN_ADDRESS =
+  (process.env.NEXT_PUBLIC_BRXU_TOKEN_ADDRESS as `0x${string}`) || undefined;
 
-export const BRIX_FACTORY_ADDRESS =
-  (process.env.NEXT_PUBLIC_BRIX_FACTORY_ADDRESS as `0x${string}`) || undefined;
+export const BRXU_FACTORY_ADDRESS =
+  (process.env.NEXT_PUBLIC_BRXU_FACTORY_ADDRESS as `0x${string}`) || undefined;
 
-export const BRIX_STAKING_ADDRESS =
-  (process.env.NEXT_PUBLIC_BRIX_STAKING_ADDRESS as `0x${string}`) || undefined;
+export const BRXU_STAKING_ADDRESS =
+  (process.env.NEXT_PUBLIC_BRXU_STAKING_ADDRESS as `0x${string}`) || undefined;
 
-export const BRIX_VESTING_ADDRESS =
-  (process.env.NEXT_PUBLIC_BRIX_VESTING_ADDRESS as `0x${string}`) || undefined;
+export const BRXU_VESTING_ADDRESS =
+  (process.env.NEXT_PUBLIC_BRXU_VESTING_ADDRESS as `0x${string}`) || undefined;
 
 /** True when all three core contracts have been deployed and configured. */
 export const CONTRACTS_DEPLOYED =
-  !!BRIX_TOKEN_ADDRESS && !!BRIX_FACTORY_ADDRESS && !!BRIX_STAKING_ADDRESS;
+  !!BRXU_TOKEN_ADDRESS && !!BRXU_FACTORY_ADDRESS && !!BRXU_STAKING_ADDRESS;

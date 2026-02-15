@@ -30,11 +30,11 @@ const sampleListings: ListedDeal[] = [
 ];
 
 const sampleActivity: ActivityItem[] = [
-  { date: "Feb 13", event: "Deal #001 fully funded — commission pending", amount: "+8,550 $BRIX", type: "earning" },
+  { date: "Feb 13", event: "Deal #001 fully funded — commission pending", amount: "+8,550 $BRXU", type: "earning" },
   { date: "Feb 10", event: "New deal submitted: 1509 Parkwood Ave", amount: "-", type: "action" },
   { date: "Feb 5", event: "Investor inquiry on 782 Eastway Dr", amount: "-", type: "info" },
   { date: "Feb 1", event: "Deal #002 listed on marketplace", amount: "-", type: "action" },
-  { date: "Jan 28", event: "Referral bonus: Sarah M. signed up", amount: "+500 $BRIX", type: "earning" },
+  { date: "Jan 28", event: "Referral bonus: Sarah M. signed up", amount: "+500 $BRXU", type: "earning" },
   { date: "Jan 15", event: "Deal #001 funding milestone 50%", amount: "-", type: "info" },
 ];
 
@@ -329,7 +329,7 @@ export default function DealFinderDashboard() {
               </div>
               <div className="flex justify-between">
                 <span className="text-xs text-white/40">Referral Bonus</span>
-                <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>500 $BRIX/referral</span>
+                <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>500 $BRXU/referral</span>
               </div>
             </div>
           </div>

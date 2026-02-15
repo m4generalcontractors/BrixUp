@@ -7,12 +7,12 @@ import { coinbaseWallet } from "wagmi/connectors";
 import { useBalance } from "@/lib/wallet/useBalance";
 import { CONTRACTS_DEPLOYED } from "@/lib/contracts/config";
 import {
-  useBrixApprove,
-  useBrixTransfer,
+  useBrxuApprove,
+  useBrxuTransfer,
   useStake as useContractStake,
   useUnstake as useContractUnstake,
   useClaimRewards as useContractClaim,
-  parseBrix,
+  parseBrxu,
 } from "@/lib/contracts";
 import { validate, amountSchema, createAmountSchema, createAddressSchema, parseAmount, validateAmount, sanitizeAmountInput } from "@/lib/validation";
 
@@ -35,7 +35,7 @@ const sampleTransactions: Transaction[] = [
   { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-12", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #001" },
   { id: "2", type: "staking_reward", amount: 42, description: "Staking reward", status: "confirmed", created_at: "2026-02-10", from_address: "Staking Pool", to_address: "0x7a3B...9f2E" },
   { id: "3", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05", from_address: "Deal Pool #003", to_address: "0x7a3B...9f2E" },
-  { id: "4", type: "conversion", amount: 1667, description: "Convert 1,667 BRIX to USDC", status: "confirmed", created_at: "2026-02-01", from_address: "0x7a3B...9f2E", to_address: "USDC Wallet" },
+  { id: "4", type: "conversion", amount: 1667, description: "Convert 1,667 BRXU to USDC", status: "confirmed", created_at: "2026-02-01", from_address: "0x7a3B...9f2E", to_address: "USDC Wallet" },
   { id: "5", type: "received", amount: 1000, description: "Received from 0x4e2C...1a8D", status: "confirmed", created_at: "2026-01-28", from_address: "0x4e2C...1a8D", to_address: "0x7a3B...9f2E" },
   { id: "6", type: "investment", amount: 10000, description: "Investment in 412 Magnolia Ln", status: "confirmed", created_at: "2026-01-20", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #002" },
   { id: "7", type: "yield", amount: 275, description: "Yield payout - Oakwood Dr", status: "confirmed", created_at: "2026-01-15", from_address: "Deal Pool #001", to_address: "0x7a3B...9f2E" },
@@ -86,8 +86,8 @@ export default function WalletPage() {
   const address = wagmiAddress || balance.address;
 
   // On-chain write hooks (only active when CONTRACTS_DEPLOYED)
-  const { approve, isPending: isApproving } = useBrixApprove();
-  const { transfer: onChainTransfer, isPending: isOnChainTransferring, isSuccess: onChainTransferSuccess } = useBrixTransfer();
+  const { approve, isPending: isApproving } = useBrxuApprove();
+  const { transfer: onChainTransfer, isPending: isOnChainTransferring, isSuccess: onChainTransferSuccess } = useBrxuTransfer();
   const { stake: onChainStake, isPending: isOnChainStaking, isSuccess: onChainStakeSuccess } = useContractStake();
   const { unstake: onChainUnstake, isPending: isOnChainUnstaking, isSuccess: onChainUnstakeSuccess } = useContractUnstake();
   const { claim: onChainClaim, isPending: isOnChainClaiming, isSuccess: onChainClaimSuccess } = useContractClaim();
@@ -175,7 +175,7 @@ export default function WalletPage() {
   // ---- Handlers (on-chain when deployed, DB fallback otherwise) -----------
 
   const handleStake = async () => {
-    const schema = createAmountSchema({ min: 1, max: brixBalance, minLabel: "Minimum is 1 BRIX", maxLabel: `Insufficient balance (${brixBalance.toLocaleString()} available)` });
+    const schema = createAmountSchema({ min: 1, max: brixBalance, minLabel: "Minimum is 1 BRXU", maxLabel: `Insufficient balance (${brixBalance.toLocaleString()} available)` });
     const err = validate(schema, stakeAmount);
     setStakeError(err);
     if (err) return;
@@ -183,7 +183,7 @@ export default function WalletPage() {
 
     // On-chain staking when contracts deployed
     if (CONTRACTS_DEPLOYED && isConnected) {
-      const wei = parseBrix(amount.toString());
+      const wei = parseBrxu(amount.toString());
       approve(process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS as `0x${string}`, wei);
       setTimeout(() => onChainStake(wei), 2000);
       return;
@@ -195,7 +195,7 @@ export default function WalletPage() {
       await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "stake", amount, description: `Staked ${amount.toLocaleString()} BRIX` }),
+        body: JSON.stringify({ type: "stake", amount, description: `Staked ${amount.toLocaleString()} BRXU` }),
       });
       setStakeSuccess(true);
       balance.refetch();
@@ -212,7 +212,7 @@ export default function WalletPage() {
     const amount = parseAmount(unstakeAmount || String(stakedAmount));
 
     if (CONTRACTS_DEPLOYED && isConnected) {
-      const wei = parseBrix(amount.toString());
+      const wei = parseBrxu(amount.toString());
       onChainUnstake(wei);
       return;
     }
@@ -222,7 +222,7 @@ export default function WalletPage() {
       await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "unstake", amount, description: `Unstaked ${amount.toLocaleString()} BRIX` }),
+        body: JSON.stringify({ type: "unstake", amount, description: `Unstaked ${amount.toLocaleString()} BRXU` }),
       });
       setUnstakeSuccess(true);
       balance.refetch();
@@ -240,7 +240,7 @@ export default function WalletPage() {
       await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "staking_reward", amount: pendingRewardsAmount, description: `Claimed ${pendingRewardsAmount.toLocaleString()} BRIX rewards` }),
+        body: JSON.stringify({ type: "staking_reward", amount: pendingRewardsAmount, description: `Claimed ${pendingRewardsAmount.toLocaleString()} BRXU rewards` }),
       });
       setClaimSuccess(true);
       await fetchTransactions();
@@ -255,7 +255,7 @@ export default function WalletPage() {
     const addrErr = validate(addrSchema, sendTo);
     setSendToError(addrErr);
     // Validate amount
-    const amtSchema = createAmountSchema({ min: 1, max: brixBalance, minLabel: "Minimum is 1 BRIX", maxLabel: `Insufficient balance (you have ${brixBalance.toLocaleString()} BRIX)` });
+    const amtSchema = createAmountSchema({ min: 1, max: brixBalance, minLabel: "Minimum is 1 BRXU", maxLabel: `Insufficient balance (you have ${brixBalance.toLocaleString()} BRXU)` });
     const amtErr = validate(amtSchema, sendAmount);
     setSendAmountError(amtErr);
     if (addrErr || amtErr) return;
@@ -264,7 +264,7 @@ export default function WalletPage() {
 
     // On-chain transfer when contracts deployed + wallet connected
     if (CONTRACTS_DEPLOYED && isConnected && sendTo.startsWith("0x")) {
-      onChainTransfer(sendTo as `0x${string}`, parseBrix(amount.toString()));
+      onChainTransfer(sendTo as `0x${string}`, parseBrxu(amount.toString()));
       return;
     }
 
@@ -277,7 +277,7 @@ export default function WalletPage() {
         body: JSON.stringify({
           type: "send",
           amount,
-          description: `Sent ${amount.toLocaleString()} BRIX to ${sendTo.startsWith("0x") ? sendTo.slice(0, 6) + "..." + sendTo.slice(-4) : sendTo}`,
+          description: `Sent ${amount.toLocaleString()} BRXU to ${sendTo.startsWith("0x") ? sendTo.slice(0, 6) + "..." + sendTo.slice(-4) : sendTo}`,
           from_address: address || user?.email || "Wallet",
           to_address: sendTo,
         }),
@@ -306,7 +306,7 @@ export default function WalletPage() {
         body: JSON.stringify({
           type: "conversion",
           amount,
-          description: `Convert ${amount.toLocaleString()} BRIX to USDC`,
+          description: `Convert ${amount.toLocaleString()} BRXU to USDC`,
           from_address: address || user?.email || "Wallet",
           to_address: "USDC Wallet",
         }),
@@ -326,7 +326,7 @@ export default function WalletPage() {
     setBuying(true);
     setBuySuccess(false);
 
-    // Calculate BRIX amount (1 USD = 1 BRIX at current rate)
+    // Calculate BRXU amount (1 USD = 1 BRXU at current rate)
     const brixAmount = usdAmount;
     const methodLabel = buyMethod === "card" ? "Debit/Credit Card" : buyMethod === "bank" ? "Bank Transfer (ACH)" : "Coinbase Account";
 
@@ -337,7 +337,7 @@ export default function WalletPage() {
         body: JSON.stringify({
           type: "buy",
           amount: brixAmount,
-          description: `Purchased ${brixAmount.toLocaleString()} BRIX via ${methodLabel} ($${usdAmount.toLocaleString()})`,
+          description: `Purchased ${brixAmount.toLocaleString()} BRXU via ${methodLabel} ($${usdAmount.toLocaleString()})`,
           from_address: methodLabel,
           to_address: address || user?.email || "Wallet",
         }),
@@ -366,7 +366,7 @@ export default function WalletPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Wallet</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Manage your $BRIX tokens</p>
+          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Manage your $BRXU tokens</p>
         </div>
         {/* Wallet connect — user-initiated via Coinbase Smart Wallet */}
         {!isConnected ? (
@@ -403,7 +403,7 @@ export default function WalletPage() {
       >
         <p className="text-sm font-medium" style={{ color: "#4A4A5A" }}>Total Balance</p>
         <p className="mt-2 text-3xl sm:text-5xl font-bold text-white">
-          {Math.max(0, brixBalance).toLocaleString()} <span style={{ color: "#D4A843" }}>BRIX</span>
+          {Math.max(0, brixBalance).toLocaleString()} <span style={{ color: "#D4A843" }}>BRXU</span>
         </p>
         <p className="mt-2 text-base sm:text-lg" style={{ color: "#4A4A5A" }}>
           ≈ ${Math.max(0, brixBalance).toLocaleString()} USD
@@ -438,7 +438,7 @@ export default function WalletPage() {
         ))}
       </div>
 
-      {/* Buy BRIX panel — Coinbase Onramp */}
+      {/* Buy BRXU panel — Coinbase Onramp */}
       {activeAction === "Buy" && (
         <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <div className="flex items-center gap-3 mb-4">
@@ -448,7 +448,7 @@ export default function WalletPage() {
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-white">Buy $BRIX</h2>
+              <h2 className="text-lg font-semibold text-white">Buy $BRXU</h2>
               <p className="text-xs" style={{ color: "#4A4A5A" }}>Purchase with fiat via Coinbase</p>
             </div>
           </div>
@@ -488,10 +488,10 @@ export default function WalletPage() {
             <div className="rounded-lg border border-white/5 px-4 py-3" style={{ backgroundColor: "#0D0D1A" }}>
               <div className="flex items-center justify-between">
                 <span className="text-xs" style={{ color: "#4A4A5A" }}>You Receive</span>
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>Rate: 1 BRIX = $1.00</span>
+                <span className="text-xs" style={{ color: "#4A4A5A" }}>Rate: 1 BRXU = $1.00</span>
               </div>
               <p className="mt-1 text-xl font-bold text-white">
-                {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} <span style={{ color: "#D4A843" }}>BRIX</span>
+                {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} <span style={{ color: "#D4A843" }}>BRXU</span>
               </p>
             </div>
 
@@ -531,7 +531,7 @@ export default function WalletPage() {
 
             {buySuccess && (
               <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
-                Purchase successful! {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRIX has been added to your wallet.
+                Purchase successful! {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRXU has been added to your wallet.
               </div>
             )}
 
@@ -541,7 +541,7 @@ export default function WalletPage() {
               className="w-full rounded-lg py-3.5 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}
             >
-              {buying ? "Processing..." : `Buy ${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRIX`}
+              {buying ? "Processing..." : `Buy ${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRXU`}
             </button>
 
             <div className="flex items-center justify-center gap-2 text-xs" style={{ color: "#4A4A5A" }}>
@@ -557,7 +557,7 @@ export default function WalletPage() {
       {/* Send panel */}
       {activeAction === "Send" && (
         <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Send $BRIX</h2>
+          <h2 className="mb-4 text-lg font-semibold text-white">Send $BRXU</h2>
           <div className="space-y-3">
             <div>
               <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Recipient Address</label>
@@ -573,7 +573,7 @@ export default function WalletPage() {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label>
+                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRXU)</label>
                 <button onClick={() => setSendAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
               </div>
               <input
@@ -588,7 +588,7 @@ export default function WalletPage() {
               {sendAmountError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{sendAmountError}</p>}
             </div>
             <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2B4C7E30", backgroundColor: "#2B4C7E10", color: "#6B9FE8" }}>
-              Available: {Math.max(0, brixBalance).toLocaleString()} BRIX
+              Available: {Math.max(0, brixBalance).toLocaleString()} BRXU
             </div>
             {transferSuccess && (
               <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
@@ -596,7 +596,7 @@ export default function WalletPage() {
               </div>
             )}
             <button onClick={handleSend} disabled={isTransferring || !sendTo || !sendAmount} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}>
-              {isTransferring ? "Sending..." : "Send BRIX"}
+              {isTransferring ? "Sending..." : "Send BRXU"}
             </button>
           </div>
         </div>
@@ -605,7 +605,7 @@ export default function WalletPage() {
       {/* Receive panel */}
       {activeAction === "Receive" && (
         <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Receive $BRIX</h2>
+          <h2 className="mb-4 text-lg font-semibold text-white">Receive $BRXU</h2>
           <div className="space-y-4">
             {/* QR Code */}
             <div className="flex justify-center">
@@ -674,7 +674,7 @@ export default function WalletPage() {
             <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
-                Base Network (Mainnet) &middot; Only send $BRIX or ETH on Base to this address
+                Base Network (Mainnet) &middot; Only send $BRXU or ETH on Base to this address
               </div>
             </div>
 
@@ -711,11 +711,11 @@ export default function WalletPage() {
       {/* Convert panel */}
       {activeAction === "Convert" && (
         <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Convert $BRIX to USDC</h2>
+          <h2 className="mb-4 text-lg font-semibold text-white">Convert $BRXU to USDC</h2>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label>
+                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRXU)</label>
                 <button onClick={() => setConvertAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
               </div>
               <div className="relative mt-1">
@@ -727,7 +727,7 @@ export default function WalletPage() {
                   className="w-full rounded-lg border py-3 px-4 text-lg text-white focus:outline-none focus:ring-1"
                   style={{ backgroundColor: "#0D0D1A", borderColor: convertError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "#D4A843" }}>BRIX</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "#D4A843" }}>BRXU</span>
               </div>
               {convertError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{convertError}</p>}
             </div>
@@ -746,7 +746,7 @@ export default function WalletPage() {
               </div>
             </div>
             <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#D4A84330", backgroundColor: "#D4A84310", color: "#D4A843" }}>
-              Rate: 1 BRIX = 1.00 USDC &middot; Fee: 0.5%
+              Rate: 1 BRXU = 1.00 USDC &middot; Fee: 0.5%
             </div>
             {convertSuccess && (
               <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
@@ -771,7 +771,7 @@ export default function WalletPage() {
               <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "#0D0D1A" }}>
                 <p className="text-xs" style={{ color: "#4A4A5A" }}>Currently Staked</p>
                 <p className="mt-1 text-xl font-bold text-white">{Math.max(0, stakedAmount).toLocaleString()}</p>
-                <p className="text-xs" style={{ color: "#D4A843" }}>BRIX</p>
+                <p className="text-xs" style={{ color: "#D4A843" }}>BRXU</p>
               </div>
               <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "#0D0D1A" }}>
                 <p className="text-xs" style={{ color: "#4A4A5A" }}>APY</p>
@@ -785,7 +785,7 @@ export default function WalletPage() {
                 <div>
                   <p className="text-xs" style={{ color: "#4A4A5A" }}>Pending Rewards</p>
                   <p className="mt-1 text-lg font-bold" style={{ color: "#2ECC71" }}>
-                    +{pendingRewardsAmount.toLocaleString()} BRIX
+                    +{pendingRewardsAmount.toLocaleString()} BRXU
                   </p>
                 </div>
                 <div className="text-right">
@@ -896,7 +896,7 @@ export default function WalletPage() {
                       </span>
                     </td>
                     <td className="py-3 pr-4 font-semibold whitespace-nowrap" style={{ color: isPositive ? "#2ECC71" : "#E8632B" }}>
-                      {isPositive ? "+" : "-"}{tx.amount.toLocaleString()} BRIX
+                      {isPositive ? "+" : "-"}{tx.amount.toLocaleString()} BRXU
                     </td>
                     <td className="py-3 pr-4 whitespace-nowrap font-mono text-xs text-white/60">{shortenAddr(tx.from_address)}</td>
                     <td className="py-3 pr-4 whitespace-nowrap font-mono text-xs text-white/60">{shortenAddr(tx.to_address)}</td>

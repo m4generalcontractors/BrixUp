@@ -1,11 +1,11 @@
-# BrixUp Token ($BRIX) — Exchange Listing Guide
+# BrixUp Token ($BRXU) — Exchange Listing Guide
 
 ## Token Overview
 
 | Field | Value |
 |---|---|
 | **Name** | BrixUp Token |
-| **Symbol** | BRIX |
+| **Symbol** | BRXU |
 | **Decimals** | 18 |
 | **Total Supply** | 1,000,000,000 |
 | **Chain** | Base (Chain ID 8453) |
@@ -26,20 +26,20 @@
 
 ## Smart Contracts
 
-### 1. BRIX (ERC-20 Token)
+### 1. BRXU (ERC-20 Token)
 - 0.5% transfer fee sent to treasury (configurable, max 2%)
 - Anti-bot: 10M token max transfer for first 24h
 - Fee-exempt addresses for treasury, staking, vesting
 - Burn function available to all holders
 - Pausable by owner for emergencies
 
-### 2. BRIXStaking
+### 2. BRXUStaking
 - 12.5% APY target (funded by community rewards pool)
 - No lock period — instant stake/unstake
 - Synthetix reward-per-token model
 - Owner funds rewards periodically
 
-### 3. BRIXVesting
+### 3. BRXUVesting
 - Team & advisor token vesting
 - 6-month cliff, 24-month linear vesting
 - Revocable by owner (unvested tokens returned)
@@ -48,7 +48,7 @@
 
 - [ ] Deploy contracts to Base mainnet
 - [ ] Verify all contracts on BaseScan
-- [ ] Setup Uniswap v3 BRIX/USDC pool
+- [ ] Setup Uniswap v3 BRXU/USDC pool
 - [ ] Ensure active trading volume
 - [ ] Submit application at https://coinmarketcap.com/request/
 - [ ] Provide: contract address, logo, description, social links

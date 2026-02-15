@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /**
  * @title BrixStaking
  * @author BrixUp Team
- * @notice Stake $BRIX tokens to earn yield and gain priority access to new
+ * @notice Stake $BRXU tokens to earn yield and gain priority access to new
  *         deals on the BrixUp platform.
  * @dev Implements a share-based reward model. When the owner deposits reward
  *      tokens via `distributeRewards()`, the accumulated reward-per-share
@@ -37,10 +37,10 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     //  State variables
     // -------------------------------------------------------------------------
 
-    /// @notice Reference to the $BRIX ERC-20 token contract.
+    /// @notice Reference to the $BRXU ERC-20 token contract.
     IERC20 public brixToken;
 
-    /// @notice Total BRIX currently staked across all users.
+    /// @notice Total BRXU currently staked across all users.
     uint256 public totalStaked;
 
     /// @notice Accumulated reward per staked token (scaled by ACC_PRECISION).
@@ -55,7 +55,7 @@ contract BrixStaking is ReentrancyGuard, Ownable {
 
     /// @notice Per-staker information.
     struct StakerInfo {
-        uint256 amount;       // BRIX staked
+        uint256 amount;       // BRXU staked
         uint256 rewardDebt;   // reward debt for share-based accounting
         uint256 stakedAt;     // timestamp of latest stake action
         uint256 pendingClaim; // rewards ready to claim (buffered on state change)
@@ -74,10 +74,10 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     //  Events
     // -------------------------------------------------------------------------
 
-    /// @notice Emitted when a user stakes BRIX tokens.
+    /// @notice Emitted when a user stakes BRXU tokens.
     event Staked(address indexed user, uint256 amount, uint256 totalStaked);
 
-    /// @notice Emitted when a user unstakes BRIX tokens.
+    /// @notice Emitted when a user unstakes BRXU tokens.
     event Unstaked(address indexed user, uint256 amount, uint256 totalStaked);
 
     /// @notice Emitted when a user claims their accumulated rewards.
@@ -104,11 +104,11 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     // -------------------------------------------------------------------------
 
     /**
-     * @notice Stake $BRIX tokens into the pool.
+     * @notice Stake $BRXU tokens into the pool.
      * @dev The caller must have approved this contract to spend at least
-     *      `amount` BRIX. Any pending rewards are buffered into `pendingClaim`
+     *      `amount` BRXU. Any pending rewards are buffered into `pendingClaim`
      *      before the staker's balance and debt are updated.
-     * @param amount Number of BRIX tokens to stake (in wei).
+     * @param amount Number of BRXU tokens to stake (in wei).
      */
     function stake(uint256 amount) external nonReentrant {
         require(amount > 0, "BrixStaking: amount must be > 0");
@@ -139,10 +139,10 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     }
 
     /**
-     * @notice Unstake $BRIX tokens from the pool.
+     * @notice Unstake $BRXU tokens from the pool.
      * @dev Enforces a 7-day minimum lock from the last stake action. Any
      *      pending rewards are buffered before the balance is reduced.
-     * @param amount Number of BRIX tokens to unstake (in wei).
+     * @param amount Number of BRXU tokens to unstake (in wei).
      */
     function unstake(uint256 amount) external nonReentrant {
         StakerInfo storage info = stakers[msg.sender];
@@ -198,10 +198,10 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Owner deposits reward tokens into the pool for stakers.
      * @dev The owner must have approved this contract to spend at least
-     *      `amount` BRIX. The accumulated reward-per-share is updated
+     *      `amount` BRXU. The accumulated reward-per-share is updated
      *      proportionally. If there are no stakers, the call reverts to
      *      prevent lost rewards.
-     * @param amount Number of BRIX tokens to add to the reward pool.
+     * @param amount Number of BRXU tokens to add to the reward pool.
      */
     function distributeRewards(uint256 amount) external onlyOwner nonReentrant {
         require(amount > 0, "BrixStaking: amount must be > 0");
@@ -236,7 +236,7 @@ contract BrixStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Return the staked balance of a user.
      * @param user Address of the staker.
-     * @return BRIX tokens staked.
+     * @return BRXU tokens staked.
      */
     function stakedBalance(address user) external view returns (uint256) {
         return stakers[user].amount;

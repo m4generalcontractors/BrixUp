@@ -6,9 +6,9 @@ import * as path from "path";
  * BrixUp Platform — Deployment Script
  *
  * Deploys the three core contracts in order:
- *   1. BrixToken   — ERC-20 $BRIX token (1 billion initial supply)
+ *   1. BrixToken   — ERC-20 $BRXU token (1 billion initial supply)
  *   2. BrixFactory — Factory for creating BrixDeal escrow contracts
- *   3. BrixStaking  — Staking pool for $BRIX holders
+ *   3. BrixStaking  — Staking pool for $BRXU holders
  *
  * After deployment the script:
  *   - Verifies all contracts on Basescan (skipped on local networks)

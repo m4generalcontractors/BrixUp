@@ -10,13 +10,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @title BrixToken
  * @author BrixUp Team
  * @notice ERC-20 utility token for the BrixUp real-estate investment platform.
- * @dev $BRIX has a fixed initial supply of 1 billion tokens (18 decimals).
+ * @dev $BRXU has a fixed initial supply of 1 billion tokens (18 decimals).
  *      The owner (platform treasury) may mint additional tokens and pause
  *      transfers in an emergency. Token holders can burn their own tokens
  *      to support deflationary mechanics.
  */
 contract BrixToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable {
-    /// @notice Total initial supply: 1 billion BRIX (1e9 * 1e18).
+    /// @notice Total initial supply: 1 billion BRXU (1e9 * 1e18).
     uint256 public constant INITIAL_SUPPLY = 1_000_000_000 * 10 ** 18;
 
     // -------------------------------------------------------------------------
@@ -43,7 +43,7 @@ contract BrixToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable {
      * @dev The deployer becomes both the Ownable owner and the initial holder of
      *      all tokens, acting as the platform treasury.
      */
-    constructor() ERC20("BrixUp Token", "BRIX") Ownable(msg.sender) {
+    constructor() ERC20("BrixUp Token", "BRXU") Ownable(msg.sender) {
         _mint(msg.sender, INITIAL_SUPPLY);
     }
 
@@ -52,7 +52,7 @@ contract BrixToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable {
     // -------------------------------------------------------------------------
 
     /**
-     * @notice Mint new $BRIX tokens to a given address.
+     * @notice Mint new $BRXU tokens to a given address.
      * @dev Only callable by the contract owner (platform treasury).
      * @param to     Recipient address.
      * @param amount Number of tokens to mint (in wei).

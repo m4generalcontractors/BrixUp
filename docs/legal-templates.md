@@ -25,7 +25,7 @@
 
 ## 1. Token Purchase Agreement (SAFT)
 
-### Simple Agreement for Future Tokens — $BRIX
+### Simple Agreement for Future Tokens — $BRXU
 
 > **DRAFT -- REQUIRES ATTORNEY REVIEW**
 
@@ -33,7 +33,7 @@
 
 **SIMPLE AGREEMENT FOR FUTURE TOKENS**
 
-**$BRIX TOKEN — BrixUp Technologies LLC**
+**$BRXU TOKEN — BrixUp Technologies LLC**
 
 This Simple Agreement for Future Tokens ("SAFT") is entered into on [DATE] by and between:
 
@@ -45,19 +45,19 @@ This Simple Agreement for Future Tokens ("SAFT") is entered into on [DATE] by an
 
 WHEREAS, the Company is developing the BrixUp platform, a tokenized real estate development marketplace;
 
-WHEREAS, the Company intends to create and distribute the $BRIX utility token (ERC-20 on Base L2) for use within the BrixUp platform;
+WHEREAS, the Company intends to create and distribute the $BRXU utility token (ERC-20 on Base L2) for use within the BrixUp platform;
 
-WHEREAS, the Purchaser wishes to provide funding to the Company in exchange for the right to receive $BRIX tokens upon the occurrence of a Token Generation Event;
+WHEREAS, the Purchaser wishes to provide funding to the Company in exchange for the right to receive $BRXU tokens upon the occurrence of a Token Generation Event;
 
 ### Article 1: Definitions
 
-**1.1 "Token Generation Event" or "TGE"** means the initial deployment of the $BRIX token smart contract on the Base L2 mainnet and the first distribution of tokens to pre-sale participants.
+**1.1 "Token Generation Event" or "TGE"** means the initial deployment of the $BRXU token smart contract on the Base L2 mainnet and the first distribution of tokens to pre-sale participants.
 
 **1.2 "Purchase Amount"** means [AMOUNT] USD or USDC paid by Purchaser to Company.
 
-**1.3 "Token Price"** means [PRICE] USD per $BRIX token, representing the pre-sale price applicable to this SAFT.
+**1.3 "Token Price"** means [PRICE] USD per $BRXU token, representing the pre-sale price applicable to this SAFT.
 
-**1.4 "Token Allocation"** means the number of $BRIX tokens to be delivered to Purchaser, calculated as Purchase Amount divided by Token Price.
+**1.4 "Token Allocation"** means the number of $BRXU tokens to be delivered to Purchaser, calculated as Purchase Amount divided by Token Price.
 
 **1.5 "Vesting Schedule"** means the schedule under which tokens become available to Purchaser: [3-month cliff, followed by 9-month linear vesting, totaling 12 months from TGE].
 
@@ -91,13 +91,13 @@ WHEREAS, the Purchaser wishes to provide funding to the Company in exchange for 
 
 **4.4** Purchaser represents that they understand the risks associated with blockchain technology, smart contracts, and digital tokens.
 
-**4.5** Purchaser acknowledges that $BRIX tokens are utility tokens and do not represent equity, debt, or profit-sharing rights in the Company or any deal on the Platform.
+**4.5** Purchaser acknowledges that $BRXU tokens are utility tokens and do not represent equity, debt, or profit-sharing rights in the Company or any deal on the Platform.
 
 ### Article 5: Representations and Warranties of Company
 
 **5.1** The Company represents that it is duly organized and validly existing under the laws of North Carolina.
 
-**5.2** The Company represents that the $BRIX token smart contract will undergo external security audit prior to mainnet deployment.
+**5.2** The Company represents that the $BRXU token smart contract will undergo external security audit prior to mainnet deployment.
 
 **5.3** The Company represents that it will use commercially reasonable efforts to develop and launch the Platform.
 
@@ -330,9 +330,9 @@ This Agreement is entered into between:
 
 **5.3 Distribution.** Vested Sweat Equity profit distributions are paid through the Brix Box smart contract in USDC upon Deal completion and sale/refinance of the Property.
 
-### Article 6: Performance Bond ($BRIX Staking)
+### Article 6: Performance Bond ($BRXU Staking)
 
-**6.1** Contractor agrees to stake [AMOUNT] $BRIX tokens as a performance bond in the BrixStaking smart contract.
+**6.1** Contractor agrees to stake [AMOUNT] $BRXU tokens as a performance bond in the BrixStaking smart contract.
 
 **6.2** If Contractor completes the scope in accordance with this Agreement, staked tokens are returned in full upon Deal completion.
 
@@ -399,7 +399,7 @@ By accessing or using the BrixUp platform (brixups.com), mobile applications, sm
 
 - 4.1 **Deal Marketplace:** BrixUp provides a marketplace for listing, funding, and managing tokenized real estate development deals.
 - 4.2 **Smart Contract Infrastructure:** BrixUp deploys and maintains smart contracts (Brix Boxes) for deal escrow, draw schedules, and profit distribution.
-- 4.3 **Token Services:** BrixUp issues the $BRIX utility token for platform access, governance, staking, and fee reduction.
+- 4.3 **Token Services:** BrixUp issues the $BRXU utility token for platform access, governance, staking, and fee reduction.
 - 4.4 **Matching Services:** BrixUp facilitates connections between dealmakers, builders, and investors.
 
 ### 5. Fees
@@ -411,11 +411,11 @@ By accessing or using the BrixUp platform (brixups.com), mobile applications, sm
 - 5.5 Subscription fees as applicable per selected tier.
 - 5.6 BrixUp reserves the right to modify fees with 30 days' notice to users.
 
-### 6. $BRIX Token
+### 6. $BRXU Token
 
-- 6.1 $BRIX is a utility token providing access to Platform features. It is not a security, equity, debt instrument, or investment contract.
-- 6.2 $BRIX does not represent ownership in BrixUp Technologies LLC or any deal on the Platform.
-- 6.3 $BRIX value may fluctuate. BrixUp makes no guarantees regarding token price or liquidity.
+- 6.1 $BRXU is a utility token providing access to Platform features. It is not a security, equity, debt instrument, or investment contract.
+- 6.2 $BRXU does not represent ownership in BrixUp Technologies LLC or any deal on the Platform.
+- 6.3 $BRXU value may fluctuate. BrixUp makes no guarantees regarding token price or liquidity.
 - 6.4 Token holders are solely responsible for secure storage of their tokens and private keys.
 
 ### 7. Deal Participation

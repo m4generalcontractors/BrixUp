@@ -27,9 +27,9 @@ export default function TokenManagementPage() {
   ];
 
   const recentActions = [
-    { action: "Mint", amount: "50,000 $BRIX", to: "Staking Pool", date: "Feb 10, 2026", by: "deployer" },
-    { action: "Transfer", amount: "10,000 $BRIX", to: "Marketing Wallet", date: "Feb 5, 2026", by: "admin" },
-    { action: "Burn", amount: "5,000 $BRIX", to: "—", date: "Jan 28, 2026", by: "deployer" },
+    { action: "Mint", amount: "50,000 $BRXU", to: "Staking Pool", date: "Feb 10, 2026", by: "deployer" },
+    { action: "Transfer", amount: "10,000 $BRXU", to: "Marketing Wallet", date: "Feb 5, 2026", by: "admin" },
+    { action: "Burn", amount: "5,000 $BRXU", to: "—", date: "Jan 28, 2026", by: "deployer" },
   ];
 
   const handleAction = async (type: "mint" | "burn") => {
@@ -47,7 +47,7 @@ export default function TokenManagementPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Token Management</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>$BRIX token controls and contract management</p>
+        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>$BRXU token controls and contract management</p>
       </div>
 
       {/* Token Stats */}
@@ -97,7 +97,7 @@ export default function TokenManagementPage() {
       {isAdmin && (
         <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-            <h3 className="mb-4 text-sm font-semibold text-white">Mint $BRIX</h3>
+            <h3 className="mb-4 text-sm font-semibold text-white">Mint $BRXU</h3>
             <div className="space-y-3">
               <input
                 type="text"
@@ -127,7 +127,7 @@ export default function TokenManagementPage() {
           </div>
 
           <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-            <h3 className="mb-4 text-sm font-semibold text-white">Burn $BRIX</h3>
+            <h3 className="mb-4 text-sm font-semibold text-white">Burn $BRXU</h3>
             <div className="space-y-3">
               <input
                 type="number"

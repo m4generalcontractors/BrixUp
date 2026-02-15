@@ -125,7 +125,7 @@ export default function AdminPortal() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ to: mintAddress, amount: parseFloat(mintAmount) }),
       });
-      if (res.ok) setMintResult(`Minted ${parseFloat(mintAmount).toLocaleString()} BRIX to ${mintAddress.slice(0, 8)}...`);
+      if (res.ok) setMintResult(`Minted ${parseFloat(mintAmount).toLocaleString()} BRXU to ${mintAddress.slice(0, 8)}...`);
       else setMintResult("Mint failed — check contract deployment");
     } catch { setMintResult("Network error"); }
     setMinting(false);
@@ -244,9 +244,9 @@ export default function AdminPortal() {
             <h2 className="mb-4 text-lg font-semibold text-white">Smart Contract Status</h2>
             <div className="space-y-3">
               {[
-                { label: "BrixToken (ERC-20)", addr: process.env.NEXT_PUBLIC_BRIX_TOKEN_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRIX_TOKEN_ADDRESS },
-                { label: "BrixStaking", addr: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || process.env.NEXT_PUBLIC_BRIX_STAKING_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRIX_STAKING_ADDRESS },
-                { label: "BrixFactory (Deal Pool)", addr: process.env.NEXT_PUBLIC_BRIX_FACTORY_ADDRESS || process.env.NEXT_PUBLIC_DEAL_POOL_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRIX_FACTORY_ADDRESS },
+                { label: "BrixToken (ERC-20)", addr: process.env.NEXT_PUBLIC_BRXU_TOKEN_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRXU_TOKEN_ADDRESS },
+                { label: "BrixStaking", addr: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || process.env.NEXT_PUBLIC_BRXU_STAKING_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRXU_STAKING_ADDRESS },
+                { label: "BrixFactory (Deal Pool)", addr: process.env.NEXT_PUBLIC_BRXU_FACTORY_ADDRESS || process.env.NEXT_PUBLIC_DEAL_POOL_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRXU_FACTORY_ADDRESS },
               ].map(c => (
                 <div key={c.label} className="flex items-center justify-between rounded-lg px-4 py-3" style={{ backgroundColor: "#0D0D1A" }}>
                   <div className="flex items-center gap-3">
@@ -281,7 +281,7 @@ export default function AdminPortal() {
               <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#D4A84320" }}>
                 <svg className="w-5 h-5" style={{ color: "#D4A843" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1" /></svg>
               </div>
-              <div><p className="text-sm font-medium text-white">Mint Tokens</p><p className="text-xs" style={{ color: "#4A4A5A" }}>Mint BRIX to an address</p></div>
+              <div><p className="text-sm font-medium text-white">Mint Tokens</p><p className="text-xs" style={{ color: "#4A4A5A" }}>Mint BRXU to an address</p></div>
             </button>
             <button onClick={() => setActiveTab("documents")} className="flex items-center gap-3 rounded-xl border border-white/10 p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "#1A1A2E" }}>
               <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#2ECC7120" }}>
@@ -415,14 +415,14 @@ export default function AdminPortal() {
 
           {/* Mint tokens */}
           <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-            <h3 className="mb-4 text-base font-semibold text-white">Mint $BRIX Tokens</h3>
+            <h3 className="mb-4 text-base font-semibold text-white">Mint $BRXU Tokens</h3>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs" style={{ color: "#4A4A5A" }}>Recipient Address</label>
                 <input value={mintAddress} onChange={e => setMintAddress(e.target.value)} placeholder="0x..." className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
               </div>
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Amount (BRIX)</label>
+                <label className="text-xs" style={{ color: "#4A4A5A" }}>Amount (BRXU)</label>
                 <input type="text" inputMode="numeric" value={mintAmount} onChange={e => setMintAmount(e.target.value)} placeholder="10000" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
               </div>
             </div>
@@ -537,7 +537,7 @@ export default function AdminPortal() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Min Investment (BRIX)</label>
+                <label className="text-xs" style={{ color: "#4A4A5A" }}>Min Investment (BRXU)</label>
                 <input type="number" defaultValue="500" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
               </div>
               <div>

@@ -20,7 +20,7 @@ const milestones = [
     title: "Public Launch",
     description:
       "Token pre-sale, investor onboarding, 10 metro areas. Opening the platform to the public.",
-    items: ["$BRIX token pre-sale", "Investor onboarding flow", "10 metro area coverage"],
+    items: ["$BRXU token pre-sale", "Investor onboarding flow", "10 metro area coverage"],
     status: "upcoming",
   },
   {

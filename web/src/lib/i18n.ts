@@ -24,8 +24,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "BrixUp",
   },
   "global.brix": {
-    en: "$BRIX",
-    es: "$BRIX",
+    en: "$BRXU",
+    es: "$BRXU",
   },
   "global.back": {
     en: "Back",
@@ -60,8 +60,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Tu trabajo vale más de lo que te pagan",
   },
   "landing.hero.subheadline": {
-    en: "BrixUp turns your labor into ownership. Earn $BRIX tokens on every project, convert them to real cash, and build long-term wealth from the work you already do.",
-    es: "BrixUp convierte tu trabajo en propiedad. Gana tokens $BRIX en cada proyecto, conviértelos en dinero real y construye riqueza a largo plazo con el trabajo que ya haces.",
+    en: "BrixUp turns your labor into ownership. Earn $BRXU tokens on every project, convert them to real cash, and build long-term wealth from the work you already do.",
+    es: "BrixUp convierte tu trabajo en propiedad. Gana tokens $BRXU en cada proyecto, conviértelos en dinero real y construye riqueza a largo plazo con el trabajo que ya haces.",
   },
   "landing.hero.cta": {
     en: "Start Earning Today",
@@ -92,12 +92,12 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Explora proyectos de construcción cerca de ti. Elige los que coincidan con tu oficio.",
   },
   "landing.steps.step3.title": {
-    en: "Earn $BRIX",
-    es: "Gana $BRIX",
+    en: "Earn $BRXU",
+    es: "Gana $BRXU",
   },
   "landing.steps.step3.desc": {
-    en: "Get paid in $BRIX tokens that convert to real money. Plus earn profit share when the project succeeds.",
-    es: "Recibe pago en tokens $BRIX que se convierten en dinero real. Además gana participación en las ganancias cuando el proyecto tiene éxito.",
+    en: "Get paid in $BRXU tokens that convert to real money. Plus earn profit share when the project succeeds.",
+    es: "Recibe pago en tokens $BRXU que se convierten en dinero real. Además gana participación en las ganancias cuando el proyecto tiene éxito.",
   },
 
   // -------------------------------------------------------------------------
@@ -120,8 +120,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Cobra más rápido",
   },
   "landing.benefits.card2.desc": {
-    en: "$BRIX converts to USDC instantly, then ACH deposits straight to your bank account. No more waiting 30-60 days.",
-    es: "$BRIX se convierte a USDC al instante, luego depósitos ACH directo a tu cuenta bancaria. No más esperas de 30-60 días.",
+    en: "$BRXU converts to USDC instantly, then ACH deposits straight to your bank account. No more waiting 30-60 days.",
+    es: "$BRXU se convierte a USDC al instante, luego depósitos ACH directo a tu cuenta bancaria. No más esperas de 30-60 días.",
   },
   "landing.benefits.card3.title": {
     en: "Build Your Reputation",
@@ -140,8 +140,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Constructores Como Tú",
   },
   "landing.testimonials.t1.quote": {
-    en: "I used to chase payments for weeks. With BrixUp, I earned $BRIX on my first project and had cash in my account in 2 days. Game changer.",
-    es: "Antes perseguía pagos por semanas. Con BrixUp, gané $BRIX en mi primer proyecto y tuve efectivo en mi cuenta en 2 días. Un cambio total.",
+    en: "I used to chase payments for weeks. With BrixUp, I earned $BRXU on my first project and had cash in my account in 2 days. Game changer.",
+    es: "Antes perseguía pagos por semanas. Con BrixUp, gané $BRXU en mi primer proyecto y tuve efectivo en mi cuenta en 2 días. Un cambio total.",
   },
   "landing.testimonials.t1.name": {
     en: "Marcus Johnson",
@@ -180,12 +180,12 @@ const dictionary: Record<string, { en: string; es: string }> = {
   // Contractor Landing Page — Video
   // -------------------------------------------------------------------------
   "landing.video.title": {
-    en: "Watch: What is $BRIX?",
-    es: "Mira: ¿Qué es $BRIX?",
+    en: "Watch: What is $BRXU?",
+    es: "Mira: ¿Qué es $BRXU?",
   },
   "landing.video.desc": {
-    en: "In 90 seconds, learn how $BRIX tokens turn your labor into lasting wealth.",
-    es: "En 90 segundos, aprende cómo los tokens $BRIX convierten tu trabajo en riqueza duradera.",
+    en: "In 90 seconds, learn how $BRXU tokens turn your labor into lasting wealth.",
+    es: "En 90 segundos, aprende cómo los tokens $BRXU convierten tu trabajo en riqueza duradera.",
   },
   "landing.video.play": {
     en: "Play Video",
@@ -196,16 +196,16 @@ const dictionary: Record<string, { en: string; es: string }> = {
   // Contractor Landing Page — Final CTA
   // -------------------------------------------------------------------------
   "landing.cta.headline": {
-    en: "Join the Builder Army — Get 1,000 $BRIX Free",
-    es: "Únete al Ejército de Constructores — Recibe 1,000 $BRIX Gratis",
+    en: "Join the Builder Army — Get 1,000 $BRXU Free",
+    es: "Únete al Ejército de Constructores — Recibe 1,000 $BRXU Gratis",
   },
   "landing.cta.subtext": {
-    en: "Sign up now and we'll drop 1,000 $BRIX into your wallet. No strings attached.",
-    es: "Regístrate ahora y depositaremos 1,000 $BRIX en tu billetera. Sin compromisos.",
+    en: "Sign up now and we'll drop 1,000 $BRXU into your wallet. No strings attached.",
+    es: "Regístrate ahora y depositaremos 1,000 $BRXU en tu billetera. Sin compromisos.",
   },
   "landing.cta.button": {
-    en: "Claim My 1,000 $BRIX",
-    es: "Reclamar Mis 1,000 $BRIX",
+    en: "Claim My 1,000 $BRXU",
+    es: "Reclamar Mis 1,000 $BRXU",
   },
 
   // -------------------------------------------------------------------------
@@ -339,8 +339,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Tu billetera digital en 60 segundos",
   },
   "onboarding.step3.explanation": {
-    en: "Your BrixUp Wallet is where you'll receive $BRIX tokens for your work. Think of it like a digital bank account — but faster, with no fees, and you control it completely.",
-    es: "Tu Billetera BrixUp es donde recibirás tokens $BRIX por tu trabajo. Piensa en ella como una cuenta bancaria digital — pero más rápida, sin cargos, y tú la controlas completamente.",
+    en: "Your BrixUp Wallet is where you'll receive $BRXU tokens for your work. Think of it like a digital bank account — but faster, with no fees, and you control it completely.",
+    es: "Tu Billetera BrixUp es donde recibirás tokens $BRXU por tu trabajo. Piensa en ella como una cuenta bancaria digital — pero más rápida, sin cargos, y tú la controlas completamente.",
   },
   "onboarding.step3.bullet1": {
     en: "Secured by blockchain technology",
@@ -351,8 +351,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Solo tú puedes acceder a tus fondos",
   },
   "onboarding.step3.bullet3": {
-    en: "Convert $BRIX to cash anytime",
-    es: "Convierte $BRIX a efectivo en cualquier momento",
+    en: "Convert $BRXU to cash anytime",
+    es: "Convierte $BRXU a efectivo en cualquier momento",
   },
   "onboarding.step3.bullet4": {
     en: "No crypto experience needed",
@@ -395,8 +395,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "¡Seleccionado!",
   },
   "onboarding.step4.brixRate": {
-    en: "$BRIX / hour",
-    es: "$BRIX / hora",
+    en: "$BRXU / hour",
+    es: "$BRXU / hora",
   },
   "onboarding.step4.profitShare": {
     en: "Profit Share",
@@ -419,8 +419,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Oficialmente eres parte del Ejército de Constructores.",
   },
   "onboarding.step5.airdrop": {
-    en: "1,000 $BRIX has been dropped into your wallet!",
-    es: "¡1,000 $BRIX han sido depositados en tu billetera!",
+    en: "1,000 $BRXU has been dropped into your wallet!",
+    es: "¡1,000 $BRXU han sido depositados en tu billetera!",
   },
   "onboarding.step5.nextSteps": {
     en: "What's Next",
@@ -431,52 +431,52 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Explora proyectos abiertos en tu área",
   },
   "onboarding.step5.next2": {
-    en: "Complete the $BRIX education module to earn a bonus",
-    es: "Completa el módulo educativo de $BRIX para ganar un bono",
+    en: "Complete the $BRXU education module to earn a bonus",
+    es: "Completa el módulo educativo de $BRXU para ganar un bono",
   },
   "onboarding.step5.next3": {
-    en: "Invite fellow builders and earn referral $BRIX",
-    es: "Invita a compañeros constructores y gana $BRIX de referencia",
+    en: "Invite fellow builders and earn referral $BRXU",
+    es: "Invita a compañeros constructores y gana $BRXU de referencia",
   },
   "onboarding.step5.goToDashboard": {
     en: "Go to My Dashboard",
     es: "Ir a Mi Panel",
   },
   "onboarding.step5.learnBrix": {
-    en: "Learn About $BRIX",
-    es: "Aprende Sobre $BRIX",
+    en: "Learn About $BRXU",
+    es: "Aprende Sobre $BRXU",
   },
 
   // -------------------------------------------------------------------------
-  // Learn Page — Section 1: What is $BRIX?
+  // Learn Page — Section 1: What is $BRXU?
   // -------------------------------------------------------------------------
   "learn.title": {
-    en: "Learn About $BRIX",
-    es: "Aprende Sobre $BRIX",
+    en: "Learn About $BRXU",
+    es: "Aprende Sobre $BRXU",
   },
   "learn.s1.title": {
-    en: "What is $BRIX?",
-    es: "¿Qué es $BRIX?",
+    en: "What is $BRXU?",
+    es: "¿Qué es $BRXU?",
   },
   "learn.s1.analogy": {
-    en: "Think of $BRIX like loyalty points, but they're worth real money and backed by real estate deals.",
-    es: "Piensa en $BRIX como puntos de lealtad, pero valen dinero real y están respaldados por proyectos inmobiliarios.",
+    en: "Think of $BRXU like loyalty points, but they're worth real money and backed by real estate deals.",
+    es: "Piensa en $BRXU como puntos de lealtad, pero valen dinero real y están respaldados por proyectos inmobiliarios.",
   },
   "learn.s1.p1": {
-    en: "$BRIX is BrixUp's digital token. When you work on a BrixUp construction project, you earn $BRIX based on your hours, trade, and performance. Unlike regular pay, $BRIX also represents your share of the project's future profits.",
-    es: "$BRIX es el token digital de BrixUp. Cuando trabajas en un proyecto de construcción de BrixUp, ganas $BRIX basado en tus horas, oficio y rendimiento. A diferencia del pago regular, $BRIX también representa tu participación en las ganancias futuras del proyecto.",
+    en: "$BRXU is BrixUp's digital token. When you work on a BrixUp construction project, you earn $BRXU based on your hours, trade, and performance. Unlike regular pay, $BRXU also represents your share of the project's future profits.",
+    es: "$BRXU es el token digital de BrixUp. Cuando trabajas en un proyecto de construcción de BrixUp, ganas $BRXU basado en tus horas, oficio y rendimiento. A diferencia del pago regular, $BRXU también representa tu participación en las ganancias futuras del proyecto.",
   },
   "learn.s1.p2": {
-    en: "Every $BRIX token is tracked on the blockchain, which means it's transparent, secure, and can't be tampered with. You don't need to understand blockchain to use it — BrixUp handles all of that for you.",
-    es: "Cada token $BRIX se rastrea en la blockchain, lo que significa que es transparente, seguro y no se puede manipular. No necesitas entender blockchain para usarlo — BrixUp se encarga de todo eso por ti.",
+    en: "Every $BRXU token is tracked on the blockchain, which means it's transparent, secure, and can't be tampered with. You don't need to understand blockchain to use it — BrixUp handles all of that for you.",
+    es: "Cada token $BRXU se rastrea en la blockchain, lo que significa que es transparente, seguro y no se puede manipular. No necesitas entender blockchain para usarlo — BrixUp se encarga de todo eso por ti.",
   },
 
   // -------------------------------------------------------------------------
   // Learn Page — Section 2: Convert to Cash
   // -------------------------------------------------------------------------
   "learn.s2.title": {
-    en: "How to Convert $BRIX to Cash",
-    es: "Cómo convertir $BRIX a dinero",
+    en: "How to Convert $BRXU to Cash",
+    es: "Cómo convertir $BRXU a dinero",
   },
   "learn.s2.step1.title": {
     en: "Open Wallet",
@@ -499,8 +499,8 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Ingresa la Cantidad",
   },
   "learn.s2.step3.desc": {
-    en: "Choose how much $BRIX you want to convert. $BRIX converts to USDC at a fixed rate.",
-    es: "Elige cuántos $BRIX quieres convertir. $BRIX se convierte a USDC a una tasa fija.",
+    en: "Choose how much $BRXU you want to convert. $BRXU converts to USDC at a fixed rate.",
+    es: "Elige cuántos $BRXU quieres convertir. $BRXU se convierte a USDC a una tasa fija.",
   },
   "learn.s2.step4.title": {
     en: "Money Arrives",
@@ -535,12 +535,12 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Semanas en el Proyecto",
   },
   "learn.s3.baseRate": {
-    en: "Base $BRIX Rate",
-    es: "Tasa Base de $BRIX",
+    en: "Base $BRXU Rate",
+    es: "Tasa Base de $BRXU",
   },
   "learn.s3.totalBrix": {
-    en: "Total $BRIX Earned",
-    es: "Total de $BRIX Ganados",
+    en: "Total $BRXU Earned",
+    es: "Total de $BRXU Ganados",
   },
   "learn.s3.cashValue": {
     en: "Estimated Cash Value",
@@ -575,20 +575,20 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Preguntas Frecuentes",
   },
   "learn.faq.q1.q": {
-    en: "Do I need crypto experience to use $BRIX?",
-    es: "¿Necesito experiencia con criptomonedas para usar $BRIX?",
+    en: "Do I need crypto experience to use $BRXU?",
+    es: "¿Necesito experiencia con criptomonedas para usar $BRXU?",
   },
   "learn.faq.q1.a": {
-    en: "No! BrixUp handles all the technical details. You earn $BRIX, and when you're ready, you tap a button to convert it to cash in your bank account. It's as simple as using Venmo or Cash App.",
-    es: "¡No! BrixUp maneja todos los detalles técnicos. Ganas $BRIX, y cuando estés listo, tocas un botón para convertirlo en efectivo en tu cuenta bancaria. Es tan simple como usar Venmo o Cash App.",
+    en: "No! BrixUp handles all the technical details. You earn $BRXU, and when you're ready, you tap a button to convert it to cash in your bank account. It's as simple as using Venmo or Cash App.",
+    es: "¡No! BrixUp maneja todos los detalles técnicos. Ganas $BRXU, y cuando estés listo, tocas un botón para convertirlo en efectivo en tu cuenta bancaria. Es tan simple como usar Venmo o Cash App.",
   },
   "learn.faq.q2.q": {
-    en: "How soon can I convert $BRIX to cash?",
-    es: "¿Qué tan pronto puedo convertir $BRIX a efectivo?",
+    en: "How soon can I convert $BRXU to cash?",
+    es: "¿Qué tan pronto puedo convertir $BRXU a efectivo?",
   },
   "learn.faq.q2.a": {
-    en: "You can convert $BRIX to USDC at any time. The ACH transfer to your bank takes 1-2 business days. Some $BRIX may have a vesting period tied to project milestones.",
-    es: "Puedes convertir $BRIX a USDC en cualquier momento. La transferencia ACH a tu banco toma 1-2 días hábiles. Algunos $BRIX pueden tener un período de adquisición vinculado a hitos del proyecto.",
+    en: "You can convert $BRXU to USDC at any time. The ACH transfer to your bank takes 1-2 business days. Some $BRXU may have a vesting period tied to project milestones.",
+    es: "Puedes convertir $BRXU a USDC en cualquier momento. La transferencia ACH a tu banco toma 1-2 días hábiles. Algunos $BRXU pueden tener un período de adquisición vinculado a hitos del proyecto.",
   },
   "learn.faq.q3.q": {
     en: "What's a Brix Score and why does it matter?",
@@ -599,36 +599,36 @@ const dictionary: Record<string, { en: string; es: string }> = {
     es: "Tu Puntaje Brix es como un puntaje crediticio para constructores. Se basa en proyectos completados, calificaciones de calidad y confiabilidad. Puntajes más altos desbloquean proyectos premium con mejor pago y mayores participaciones en ganancias.",
   },
   "learn.faq.q4.q": {
-    en: "Do I have to pay taxes on $BRIX?",
-    es: "¿Tengo que pagar impuestos sobre $BRIX?",
+    en: "Do I have to pay taxes on $BRXU?",
+    es: "¿Tengo que pagar impuestos sobre $BRXU?",
   },
   "learn.faq.q4.a": {
     en: "Yes, earnings are taxable income. BrixUp provides year-end tax documents (1099) to make filing easy. We recommend consulting a tax professional for your specific situation.",
     es: "Sí, las ganancias son ingresos sujetos a impuestos. BrixUp proporciona documentos fiscales de fin de año (1099) para facilitar la declaración. Recomendamos consultar a un profesional de impuestos para tu situación específica.",
   },
   "learn.faq.q5.q": {
-    en: "Can I lose my $BRIX?",
-    es: "¿Puedo perder mis $BRIX?",
+    en: "Can I lose my $BRXU?",
+    es: "¿Puedo perder mis $BRXU?",
   },
   "learn.faq.q5.a": {
-    en: "Your $BRIX are secured in your wallet on the blockchain. As long as you maintain access to your BrixUp account, your tokens are safe. BrixUp also provides recovery options if you lose access.",
-    es: "Tus $BRIX están asegurados en tu billetera en la blockchain. Mientras mantengas acceso a tu cuenta BrixUp, tus tokens están seguros. BrixUp también proporciona opciones de recuperación si pierdes acceso.",
+    en: "Your $BRXU are secured in your wallet on the blockchain. As long as you maintain access to your BrixUp account, your tokens are safe. BrixUp also provides recovery options if you lose access.",
+    es: "Tus $BRXU están asegurados en tu billetera en la blockchain. Mientras mantengas acceso a tu cuenta BrixUp, tus tokens están seguros. BrixUp también proporciona opciones de recuperación si pierdes acceso.",
   },
   "learn.faq.q6.q": {
-    en: "What happens to my $BRIX if a project fails?",
-    es: "¿Qué pasa con mis $BRIX si un proyecto falla?",
+    en: "What happens to my $BRXU if a project fails?",
+    es: "¿Qué pasa con mis $BRXU si un proyecto falla?",
   },
   "learn.faq.q6.a": {
-    en: "Your base $BRIX earnings for hours worked are yours to keep regardless. Profit share $BRIX are tied to project outcomes, but BrixUp's deal vetting process minimizes risk.",
-    es: "Tus ganancias base de $BRIX por horas trabajadas son tuyas sin importar qué. Los $BRIX de participación en ganancias están vinculados a los resultados del proyecto, pero el proceso de evaluación de BrixUp minimiza el riesgo.",
+    en: "Your base $BRXU earnings for hours worked are yours to keep regardless. Profit share $BRXU are tied to project outcomes, but BrixUp's deal vetting process minimizes risk.",
+    es: "Tus ganancias base de $BRXU por horas trabajadas son tuyas sin importar qué. Los $BRXU de participación en ganancias están vinculados a los resultados del proyecto, pero el proceso de evaluación de BrixUp minimiza el riesgo.",
   },
   "learn.faq.q7.q": {
     en: "How is BrixUp different from a regular construction job?",
     es: "¿En qué se diferencia BrixUp de un trabajo de construcción regular?",
   },
   "learn.faq.q7.a": {
-    en: "In a regular job, you get your hourly rate and that's it. With BrixUp, you earn your rate PLUS $BRIX tokens that give you profit sharing in the actual real estate deal. You become a stakeholder, not just a laborer.",
-    es: "En un trabajo regular, recibes tu tarifa por hora y eso es todo. Con BrixUp, ganas tu tarifa MÁS tokens $BRIX que te dan participación en el proyecto inmobiliario real. Te conviertes en un participante, no solo un trabajador.",
+    en: "In a regular job, you get your hourly rate and that's it. With BrixUp, you earn your rate PLUS $BRXU tokens that give you profit sharing in the actual real estate deal. You become a stakeholder, not just a laborer.",
+    es: "En un trabajo regular, recibes tu tarifa por hora y eso es todo. Con BrixUp, ganas tu tarifa MÁS tokens $BRXU que te dan participación en el proyecto inmobiliario real. Te conviertes en un participante, no solo un trabajador.",
   },
   "learn.faq.q8.q": {
     en: "Is BrixUp available in my area?",

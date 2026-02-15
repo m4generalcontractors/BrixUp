@@ -11,8 +11,8 @@
 ### Brand Name
 
 - **Full Name:** BrixUp
-- **Token Ticker:** $BRIX
-- **Acceptable Variations:** BrixUp, BRIXUP (all-caps in headers), $BRIX (token context only)
+- **Token Ticker:** $BRXU
+- **Acceptable Variations:** BrixUp, BRIXUP (all-caps in headers), $BRXU (token context only)
 - **Never:** Brix Up (two words), brixup (all lowercase in display), BRIX-UP (hyphenated)
 
 ### Tagline
@@ -49,7 +49,7 @@ The BrixUp logo is a geometric wordmark built on a construction metaphor:
 | ----------------- | ---------------------------------------------- |
 | Full wordmark     | Website header, marketing materials, documents |
 | Monogram (B+arrow)| Favicon, app icon, social avatar, loading states|
-| Token mark ($BRIX)| Exchange listings, token-specific contexts      |
+| Token mark ($BRXU)| Exchange listings, token-specific contexts      |
 | Horizontal lockup | Navigation bars, partnership logos              |
 
 ### Logo Clear Space
@@ -188,7 +188,7 @@ BrixUp speaks like **a general contractor who also reads white papers.** The voi
 | **Confident** | We know what we are building and we say it plainly.   | "Your brix earn 12.4% APY. Period."                       |
 | **Builder**   | Everything is framed as construction, stacking, making.| "Stack your first brix in under two minutes."              |
 | **Inclusive** | No gatekeeping. Clear language. Bilingual-ready.       | "New to DeFi? Start here. No jargon, no judgment."         |
-| **Direct**    | Short sentences. Active voice. Say the thing.          | "Connect wallet. Stake $BRIX. Watch it grow."              |
+| **Direct**    | Short sentences. Active voice. Say the thing.          | "Connect wallet. Stake $BRXU. Watch it grow."              |
 
 ### Tone Spectrum
 

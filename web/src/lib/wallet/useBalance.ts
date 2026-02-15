@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * useBalance — single source of truth for BRIX balance across all views.
+ * useBalance — single source of truth for BRXU balance across all views.
  *
  * Priority:
  *   1. On-chain balance (when wallet connected + contracts deployed)
  *   2. Supabase transaction history (computed from DB)
- *   3. Fallback constant (12,500 BRIX)
+ *   3. Fallback constant (12,500 BRXU)
  *
  * All components (header, dashboard, wallet) should use this hook
  * instead of computing balance independently.
@@ -15,10 +15,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
-import { BrixTokenABI, BrixStakingABI } from "@/lib/contracts/abis";
+import { BrxuTokenABI, BrxuStakingABI } from "@/lib/contracts/abis";
 import {
-  BRIX_TOKEN_ADDRESS,
-  BRIX_STAKING_ADDRESS,
+  BRXU_TOKEN_ADDRESS,
+  BRXU_STAKING_ADDRESS,
   CONTRACTS_DEPLOYED,
 } from "@/lib/contracts/config";
 
@@ -27,11 +27,11 @@ const FALLBACK_STAKED = 2_000;
 const REFRESH_INTERVAL = 30_000; // 30 seconds
 
 export interface BalanceState {
-  /** Total BRIX balance (available + staked) */
+  /** Total BRXU balance (available + staked) */
   totalBalance: number;
-  /** Available (unstaked) BRIX */
+  /** Available (unstaked) BRXU */
   availableBalance: number;
-  /** Currently staked BRIX */
+  /** Currently staked BRXU */
   stakedBalance: number;
   /** Pending staking rewards */
   pendingRewards: number;
@@ -56,24 +56,24 @@ export function useBalance(): BalanceState {
 
   // --- On-chain reads (only when wallet connected + contracts deployed) ---
   const { data: onChainBalance, refetch: refetchOnChain } = useReadContract({
-    address: BRIX_TOKEN_ADDRESS,
-    abi: BrixTokenABI,
+    address: BRXU_TOKEN_ADDRESS,
+    abi: BrxuTokenABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
   });
 
   const { data: onChainStaked, refetch: refetchStaked } = useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "stakedBalance",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
   });
 
   const { data: onChainRewards, refetch: refetchRewards } = useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "pendingRewards",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },

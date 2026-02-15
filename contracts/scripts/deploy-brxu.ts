@@ -3,23 +3,23 @@ import * as fs from "fs";
 import * as path from "path";
 
 /**
- * BrixUp — Production $BRIX Deployment Script
+ * BrixUp — Production $BRXU Deployment Script
  *
  * Deploys the three production contracts:
- *   1. BRIX      — ERC-20 token (1B supply, 0.5% fee, anti-bot)
- *   2. BRIXStaking — Staking pool (12.5% APY, no lock)
- *   3. BRIXVesting — Team vesting (6mo cliff, 24mo linear)
+ *   1. BRXU        — ERC-20 token (1B supply, 0.5% fee, anti-bot)
+ *   2. BRXUStaking — Staking pool (12.5% APY, no lock)
+ *   3. BRXUVesting — Team vesting (6mo cliff, 24mo linear)
  *
  * After deployment:
- *   - Sets fee-exempt addresses on BRIX token
- *   - Funds initial staking rewards (25M BRIX over 365 days = 12.5% on 200M)
+ *   - Sets fee-exempt addresses on BRXU token
+ *   - Funds initial staking rewards (25M BRXU over 365 days = 12.5% on 200M)
  *   - Creates vesting schedules for team members
  *   - Verifies all contracts on BaseScan
  *   - Saves addresses to deployments/
  *
  * Usage:
- *   npx hardhat run scripts/deploy-brix.ts --network baseSepolia
- *   npx hardhat run scripts/deploy-brix.ts --network base
+ *   npx hardhat run scripts/deploy-brxu.ts --network baseSepolia
+ *   npx hardhat run scripts/deploy-brxu.ts --network base
  *
  * Required env vars:
  *   DEPLOYER_PRIVATE_KEY    — Deployer wallet private key
@@ -70,9 +70,9 @@ function saveDeployment(
   }
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `brix-${networkName}-${timestamp}.json`;
+  const filename = `brxu-${networkName}-${timestamp}.json`;
   const filepath = path.join(deploymentsDir, filename);
-  const latestPath = path.join(deploymentsDir, `brix-${networkName}-latest.json`);
+  const latestPath = path.join(deploymentsDir, `brxu-${networkName}-latest.json`);
 
   const data = {
     network: networkName,
@@ -118,7 +118,7 @@ async function main() {
   const presaleAddr = getAddr("PRESALE_WALLET");
 
   console.log("=".repeat(60));
-  console.log("BrixUp — Production $BRIX Deployment");
+  console.log("BrixUp — Production $BRXU Deployment");
   console.log("=".repeat(60));
   console.log(`Deployer  : ${deployer.address}`);
   console.log(`Network   : ${networkName} (chainId: ${chainId})`);
@@ -136,10 +136,10 @@ async function main() {
   console.log(`Pre-sale  : ${presaleAddr}`);
   console.log("-".repeat(60));
 
-  // ---- 1. Deploy BRIX Token ---------------------------------------------------
-  console.log("\n[1/3] Deploying BRIX Token...");
-  const BRIX = await ethers.getContractFactory("BRIX");
-  const brix = await BRIX.deploy(
+  // ---- 1. Deploy BRXU Token ---------------------------------------------------
+  console.log("\n[1/3] Deploying BRXU Token...");
+  const BRXU = await ethers.getContractFactory("BRXU");
+  const brxu = await BRXU.deploy(
     treasuryAddr,
     rewardsAddr,
     vestingAddr,
@@ -147,16 +147,16 @@ async function main() {
     marketingAddr,
     presaleAddr
   );
-  await brix.waitForDeployment();
-  const brixAddress = await brix.getAddress();
-  console.log(`  BRIX deployed at: ${brixAddress}`);
+  await brxu.waitForDeployment();
+  const brxuAddress = await brxu.getAddress();
+  console.log(`  BRXU deployed at: ${brxuAddress}`);
 
   if (!isLocal) {
     console.log("  Waiting for 5 block confirmations...");
-    await brix.deploymentTransaction()?.wait(5);
+    await brxu.deploymentTransaction()?.wait(5);
   }
 
-  await verifyContract(brixAddress, [
+  await verifyContract(brxuAddress, [
     treasuryAddr,
     rewardsAddr,
     vestingAddr,
@@ -165,54 +165,54 @@ async function main() {
     presaleAddr,
   ]);
 
-  // ---- 2. Deploy BRIXStaking --------------------------------------------------
-  console.log("\n[2/3] Deploying BRIXStaking...");
-  const BRIXStaking = await ethers.getContractFactory("BRIXStaking");
-  const staking = await BRIXStaking.deploy(brixAddress);
+  // ---- 2. Deploy BRXUStaking --------------------------------------------------
+  console.log("\n[2/3] Deploying BRXUStaking...");
+  const BRXUStaking = await ethers.getContractFactory("BRXUStaking");
+  const staking = await BRXUStaking.deploy(brxuAddress);
   await staking.waitForDeployment();
   const stakingAddress = await staking.getAddress();
-  console.log(`  BRIXStaking deployed at: ${stakingAddress}`);
+  console.log(`  BRXUStaking deployed at: ${stakingAddress}`);
 
   if (!isLocal) {
     console.log("  Waiting for 5 block confirmations...");
     await staking.deploymentTransaction()?.wait(5);
   }
 
-  await verifyContract(stakingAddress, [brixAddress]);
+  await verifyContract(stakingAddress, [brxuAddress]);
 
-  // ---- 3. Deploy BRIXVesting --------------------------------------------------
-  console.log("\n[3/3] Deploying BRIXVesting...");
-  const BRIXVesting = await ethers.getContractFactory("BRIXVesting");
-  const vesting = await BRIXVesting.deploy(brixAddress);
+  // ---- 3. Deploy BRXUVesting --------------------------------------------------
+  console.log("\n[3/3] Deploying BRXUVesting...");
+  const BRXUVesting = await ethers.getContractFactory("BRXUVesting");
+  const vesting = await BRXUVesting.deploy(brxuAddress);
   await vesting.waitForDeployment();
   const vestingAddress = await vesting.getAddress();
-  console.log(`  BRIXVesting deployed at: ${vestingAddress}`);
+  console.log(`  BRXUVesting deployed at: ${vestingAddress}`);
 
   if (!isLocal) {
     console.log("  Waiting for 5 block confirmations...");
     await vesting.deploymentTransaction()?.wait(5);
   }
 
-  await verifyContract(vestingAddress, [brixAddress]);
+  await verifyContract(vestingAddress, [brxuAddress]);
 
   // ---- Post-Deployment Setup --------------------------------------------------
   console.log("\n--- Post-Deployment Setup ---");
 
   // Set staking contract as fee-exempt
   console.log("  Setting staking contract as fee-exempt...");
-  await brix.setFeeExempt(stakingAddress, true);
+  await brxu.setFeeExempt(stakingAddress, true);
 
   // Set vesting contract as fee-exempt
   console.log("  Setting vesting contract as fee-exempt...");
-  await brix.setFeeExempt(vestingAddress, true);
+  await brxu.setFeeExempt(vestingAddress, true);
 
   console.log("  ✅ Fee-exempt addresses configured.");
 
   // ---- Save Deployment Addresses -----------------------------------------------
   const addresses = {
-    BRIX: brixAddress,
-    BRIXStaking: stakingAddress,
-    BRIXVesting: vestingAddress,
+    BRXU: brxuAddress,
+    BRXUStaking: stakingAddress,
+    BRXUVesting: vestingAddress,
   };
 
   const savedPath = saveDeployment(
@@ -226,14 +226,14 @@ async function main() {
   console.log("\n" + "=".repeat(60));
   console.log("Deployment Summary");
   console.log("=".repeat(60));
-  console.log(`  BRIX        : ${brixAddress}`);
-  console.log(`  BRIXStaking : ${stakingAddress}`);
-  console.log(`  BRIXVesting : ${vestingAddress}`);
+  console.log(`  BRXU        : ${brxuAddress}`);
+  console.log(`  BRXUStaking : ${stakingAddress}`);
+  console.log(`  BRXUVesting : ${vestingAddress}`);
   console.log("-".repeat(60));
   console.log(`  Addresses saved to: ${savedPath}`);
   console.log("=".repeat(60));
   console.log("\nNext steps:");
-  console.log("  1. Run verify script: npm run verify:brix");
+  console.log("  1. Run verify script: npm run verify:brxu");
   console.log("  2. Fund staking rewards from treasury");
   console.log("  3. Create team vesting schedules");
   console.log("  4. Setup Uniswap v3 liquidity: npm run setup:liquidity");

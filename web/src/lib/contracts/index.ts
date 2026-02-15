@@ -1,19 +1,19 @@
-export { BrixTokenABI, BrixStakingABI, BrixFactoryABI, BrixVestingABI } from "./abis";
+export { BrxuTokenABI, BrxuStakingABI, BrxuFactoryABI, BrxuVestingABI } from "./abis";
 export {
   activeChain,
-  BRIX_TOKEN_ADDRESS,
-  BRIX_FACTORY_ADDRESS,
-  BRIX_STAKING_ADDRESS,
-  BRIX_VESTING_ADDRESS,
+  BRXU_TOKEN_ADDRESS,
+  BRXU_FACTORY_ADDRESS,
+  BRXU_STAKING_ADDRESS,
+  BRXU_VESTING_ADDRESS,
   CONTRACTS_DEPLOYED,
 } from "./config";
 export {
-  parseBrix,
-  formatBrix,
-  useBrixBalance,
-  useBrixAllowance,
-  useBrixApprove,
-  useBrixTransfer,
+  parseBrxu,
+  formatBrxu,
+  useBrxuBalance,
+  useBrxuAllowance,
+  useBrxuApprove,
+  useBrxuTransfer,
   useStakedBalance,
   usePendingRewards,
   useTotalStaked,

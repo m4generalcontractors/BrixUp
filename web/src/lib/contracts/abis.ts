@@ -6,10 +6,10 @@
  */
 
 // ---------------------------------------------------------------------------
-//  BrixToken (ERC-20 + Burnable + Pausable)
+//  BrxuToken (ERC-20 + Burnable + Pausable)
 // ---------------------------------------------------------------------------
 
-export const BrixTokenABI = [
+export const BrxuTokenABI = [
   // ERC-20 read
   { type: "function", name: "name", inputs: [], outputs: [{ type: "string" }], stateMutability: "view" },
   { type: "function", name: "symbol", inputs: [], outputs: [{ type: "string" }], stateMutability: "view" },
@@ -57,7 +57,7 @@ export const BrixTokenABI = [
   { type: "function", name: "paused", inputs: [], outputs: [{ type: "bool" }], stateMutability: "view" },
   // Ownable
   { type: "function", name: "owner", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
-  // BRIX production — fee & anti-bot
+  // BRXU production — fee & anti-bot
   { type: "function", name: "feeBps", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   { type: "function", name: "treasury", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
   { type: "function", name: "antiBotEnabled", inputs: [], outputs: [{ type: "bool" }], stateMutability: "view" },
@@ -88,12 +88,12 @@ export const BrixTokenABI = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-//  BrixStaking
+//  BrxuStaking
 // ---------------------------------------------------------------------------
 
-export const BrixStakingABI = [
+export const BrxuStakingABI = [
   // Read
-  { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
+  { type: "function", name: "brxuToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
   { type: "function", name: "totalStaked", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   { type: "function", name: "rewardRate", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   { type: "function", name: "rewardsDuration", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
@@ -168,14 +168,10 @@ export const BrixStakingABI = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-//  BrixFactory
+//  BrxuDeal (per-deal escrow contract)
 // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-//  BrixDeal (per-deal escrow contract)
-// ---------------------------------------------------------------------------
-
-export const BrixDealABI = [
+export const BrxuDealABI = [
   // Read
   { type: "function", name: "dealId", inputs: [], outputs: [{ type: "bytes32" }], stateMutability: "view" },
   { type: "function", name: "totalCapitalNeeded", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
@@ -207,16 +203,12 @@ export const BrixDealABI = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-//  BrixFactory
+//  BRXUVesting
 // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-//  BRIXVesting
-// ---------------------------------------------------------------------------
-
-export const BrixVestingABI = [
+export const BrxuVestingABI = [
   // Read
-  { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
+  { type: "function", name: "brxuToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
   { type: "function", name: "DEFAULT_CLIFF", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   { type: "function", name: "DEFAULT_DURATION", inputs: [], outputs: [{ type: "uint256" }], stateMutability: "view" },
   {
@@ -265,10 +257,10 @@ export const BrixVestingABI = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-//  BrixFactory
+//  BrxuFactory
 // ---------------------------------------------------------------------------
 
-export const BrixFactoryABI = [
+export const BrxuFactoryABI = [
   // Read
   { type: "function", name: "brixToken", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },
   { type: "function", name: "platformWallet", inputs: [], outputs: [{ type: "address" }], stateMutability: "view" },

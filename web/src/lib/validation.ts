@@ -11,7 +11,7 @@ import { z } from "zod";
 //  Amount validation
 // ---------------------------------------------------------------------------
 
-/** Validates a numeric BRIX amount string. */
+/** Validates a numeric BRXU amount string. */
 export const amountSchema = z
   .string()
   .min(1, "Amount is required")
@@ -35,7 +35,7 @@ export function createAmountSchema(opts: {
 
   if (opts.min !== undefined) {
     const minVal = opts.min;
-    const label = opts.minLabel || `Minimum is ${minVal.toLocaleString()} BRIX`;
+    const label = opts.minLabel || `Minimum is ${minVal.toLocaleString()} BRXU`;
     schema = schema.refine((val) => {
       const num = parseFloat(val.replace(/,/g, ""));
       return num >= minVal;
@@ -44,7 +44,7 @@ export function createAmountSchema(opts: {
 
   if (opts.max !== undefined) {
     const maxVal = opts.max;
-    const label = opts.maxLabel || `Insufficient balance (max ${maxVal.toLocaleString()} BRIX)`;
+    const label = opts.maxLabel || `Insufficient balance (max ${maxVal.toLocaleString()} BRXU)`;
     schema = schema.refine((val) => {
       const num = parseFloat(val.replace(/,/g, ""));
       return num <= maxVal;
@@ -71,9 +71,9 @@ export function validateAmount(
   if (num <= 0)
     return { valid: false, error: "Amount must be greater than 0" };
   if (num < min)
-    return { valid: false, error: `Minimum amount is ${min.toLocaleString()} BRIX` };
+    return { valid: false, error: `Minimum amount is ${min.toLocaleString()} BRXU` };
   if (num > balance)
-    return { valid: false, error: `Insufficient balance (${balance.toLocaleString()} BRIX available)` };
+    return { valid: false, error: `Insufficient balance (${balance.toLocaleString()} BRXU available)` };
   return { valid: true, error: null };
 }
 
@@ -136,10 +136,10 @@ export function createInvestmentSchema(opts: {
     amount: createAmountSchema({
       min: opts.minInvestment,
       max: Math.min(opts.maxCapacity, opts.balance),
-      minLabel: `Minimum investment is ${opts.minInvestment.toLocaleString()} BRIX`,
+      minLabel: `Minimum investment is ${opts.minInvestment.toLocaleString()} BRXU`,
       maxLabel: opts.balance < opts.minInvestment
-        ? `Insufficient balance (you have ${opts.balance.toLocaleString()} BRIX)`
-        : `Exceeds remaining capacity (${opts.maxCapacity.toLocaleString()} BRIX available)`,
+        ? `Insufficient balance (you have ${opts.balance.toLocaleString()} BRXU)`
+        : `Exceeds remaining capacity (${opts.maxCapacity.toLocaleString()} BRXU available)`,
     }),
     riskAcknowledged: z.boolean().refine((val) => val === true, "You must acknowledge the investment risk"),
   });

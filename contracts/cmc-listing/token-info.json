@@ -1,6 +1,6 @@
 {
   "name": "BrixUp Token",
-  "symbol": "BRIX",
+  "symbol": "BRXU",
   "decimals": 18,
   "total_supply": "1,000,000,000",
   "max_supply": "1,000,000,000",
@@ -14,7 +14,7 @@
   "project": {
     "name": "BrixUp",
     "tagline": "Stack Brix. Build Wealth. Together.",
-    "description": "BrixUp is the first tokenized real estate marketplace where investors, builders, and dealmakers unite under smart contracts to develop property and share the profits. The $BRIX token powers the entire platform — used for investments, staking rewards, contractor payments, and governance.",
+    "description": "BrixUp is the first tokenized real estate marketplace where investors, builders, and dealmakers unite under smart contracts to develop property and share the profits. The $BRXU token powers the entire platform — used for investments, staking rewards, contractor payments, and governance.",
     "category": "Real Estate / DeFi / Tokenization",
     "website": "https://brixup.io",
     "whitepaper": "https://brixup.io/whitepaper",
@@ -27,8 +27,8 @@
   "token_allocation": {
     "platform_treasury": { "percentage": "40%", "amount": "400,000,000", "purpose": "Platform operations, ecosystem growth, deal funding" },
     "community_rewards": { "percentage": "20%", "amount": "200,000,000", "purpose": "Staking rewards (12.5% APY), referral bonuses, community incentives" },
-    "team_advisors": { "percentage": "15%", "amount": "150,000,000", "purpose": "6-month cliff, 24-month linear vesting via BRIXVesting contract" },
-    "liquidity_pool": { "percentage": "10%", "amount": "100,000,000", "purpose": "Uniswap v3 BRIX/USDC pool on Base" },
+    "team_advisors": { "percentage": "15%", "amount": "150,000,000", "purpose": "6-month cliff, 24-month linear vesting via BRXUVesting contract" },
+    "liquidity_pool": { "percentage": "10%", "amount": "100,000,000", "purpose": "Uniswap v3 BRXU/USDC pool on Base" },
     "marketing": { "percentage": "10%", "amount": "100,000,000", "purpose": "Exchange listings, partnerships, marketing campaigns" },
     "presale": { "percentage": "5%", "amount": "50,000,000", "purpose": "Early investor allocation" }
   },
@@ -36,24 +36,24 @@
   "features": {
     "transfer_fee": "0.5% (configurable up to 2%, collected by treasury)",
     "anti_bot": "10M token max transfer limit for first 24 hours post-launch",
-    "staking": "12.5% APY via BRIXStaking contract, no lock period",
+    "staking": "12.5% APY via BRXUStaking contract, no lock period",
     "vesting": "Team tokens locked with 6-month cliff + 24-month linear vesting, revocable",
     "burn": "Any holder can burn their tokens",
     "pausable": "Owner can pause all transfers in emergencies"
   },
 
   "contracts": {
-    "BRIX": {
+    "BRXU": {
       "description": "ERC-20 token with 0.5% transfer fee, anti-bot protection, pausable",
       "address": "TBD",
       "verified": false
     },
-    "BRIXStaking": {
+    "BRXUStaking": {
       "description": "Synthetix-style staking pool, 12.5% APY, no lock period",
       "address": "TBD",
       "verified": false
     },
-    "BRIXVesting": {
+    "BRXUVesting": {
       "description": "Linear vesting for Team & Advisors, 6-month cliff, 24-month duration",
       "address": "TBD",
       "verified": false

@@ -54,9 +54,9 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-white mb-3">4. $BRIX Token</h2>
+            <h2 className="text-lg font-semibold text-white mb-3">4. $BRXU Token</h2>
             <p className="mb-2">
-              The $BRIX token is a utility token issued on the Base blockchain (Coinbase L2). The $BRIX token:
+              The $BRXU token is a utility token issued on the Base blockchain (Coinbase L2). The $BRXU token:
             </p>
             <ul className="list-disc pl-6 space-y-1">
               <li aria-label="Is a utility token and does NOT constitute a security, equity, or ownership stake in BrixUp Technologies LLC or any property">Is a utility token and <strong className="text-white">does NOT constitute</strong> a security, equity, or ownership stake in BrixUp Technologies LLC or any property</li>

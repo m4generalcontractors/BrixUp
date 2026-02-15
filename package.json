@@ -2,7 +2,7 @@
   "name": "brixup",
   "version": "0.1.0",
   "private": true,
-  "description": "BrixUp — Tokenized Real Estate Development Marketplace powered by $BRIX",
+  "description": "BrixUp — Tokenized Real Estate Development Marketplace powered by $BRXU",
   "workspaces": [
     "web",
     "contracts"

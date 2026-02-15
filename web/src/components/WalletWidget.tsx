@@ -7,15 +7,15 @@ import {
   ConnectWallet,
 } from "@coinbase/onchainkit/wallet";
 import {
-  useBrixBalance,
+  useBrxuBalance,
   useStakedBalance,
   usePendingRewards,
-  formatBrix,
+  formatBrxu,
 } from "@/lib/contracts";
 import { CONTRACTS_DEPLOYED } from "@/lib/contracts/config";
 
 interface WalletWidgetProps {
-  /** Fallback BRIX balance when contracts not deployed. */
+  /** Fallback BRXU balance when contracts not deployed. */
   brixBalance: number;
   /** Fallback USDC balance. */
   usdcBalance: number;
@@ -32,7 +32,7 @@ export default function WalletWidget({
   onConvert,
 }: WalletWidgetProps) {
   const { address, isConnected } = useAccount();
-  const { data: onChainBalance } = useBrixBalance(address);
+  const { data: onChainBalance } = useBrxuBalance(address);
   const { data: onChainStaked } = useStakedBalance(address);
   const { data: onChainRewards } = usePendingRewards(address);
 
@@ -43,16 +43,16 @@ export default function WalletWidget({
 
   // Prefer on-chain data when available
   const brixBalance = CONTRACTS_DEPLOYED && onChainBalance
-    ? parseFloat(formatBrix(onChainBalance as bigint))
+    ? parseFloat(formatBrxu(onChainBalance as bigint))
     : fallbackBrix;
   const stakedAmount = CONTRACTS_DEPLOYED && onChainStaked
-    ? parseFloat(formatBrix(onChainStaked as bigint))
+    ? parseFloat(formatBrxu(onChainStaked as bigint))
     : fallbackStaked;
   const pendingRewards = CONTRACTS_DEPLOYED && onChainRewards
-    ? parseFloat(formatBrix(onChainRewards as bigint))
+    ? parseFloat(formatBrxu(onChainRewards as bigint))
     : 0;
 
-  const usdEquivalent = brixBalance * 1.0; // 1 BRIX ≈ $1 at launch
+  const usdEquivalent = brixBalance * 1.0; // 1 BRXU ≈ $1 at launch
 
   return (
     <div
@@ -95,7 +95,7 @@ export default function WalletWidget({
             {brixBalance.toLocaleString()}
           </span>
           <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>
-            $BRIX
+            $BRXU
           </span>
         </div>
         <p className="mt-0.5 text-xs text-white/40">
@@ -113,7 +113,7 @@ export default function WalletWidget({
         </div>
         {stakedAmount > 0 && (
           <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
-            <span className="text-xs text-white/50">Staked $BRIX</span>
+            <span className="text-xs text-white/50">Staked $BRXU</span>
             <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>
               {stakedAmount.toLocaleString()}
             </span>
@@ -158,7 +158,7 @@ export default function WalletWidget({
           className="mt-3 rounded-lg border border-white/10 p-3"
           style={{ backgroundColor: "#0D0D1A" }}
         >
-          <p className="mb-2 text-xs text-white/50">Convert $BRIX → USDC</p>
+          <p className="mb-2 text-xs text-white/50">Convert $BRXU → USDC</p>
           <div className="flex gap-2">
             <input
               type="number"
@@ -178,7 +178,7 @@ export default function WalletWidget({
                   const res = await fetch("/api/transactions", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ type: "conversion", amount: amt, description: `Converted ${amt} $BRIX to USDC` }),
+                    body: JSON.stringify({ type: "conversion", amount: amt, description: `Converted ${amt} $BRXU to USDC` }),
                   });
                   if (res.ok) {
                     setConvertSuccess(true);

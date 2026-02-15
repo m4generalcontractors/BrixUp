@@ -8,8 +8,8 @@ import * as path from "path";
  * Reads deployed addresses from deployments/ and verifies them on BaseScan.
  *
  * Usage:
- *   npx hardhat run scripts/verify-brix.ts --network base
- *   npx hardhat run scripts/verify-brix.ts --network baseSepolia
+ *   npx hardhat run scripts/verify-brxu.ts --network base
+ *   npx hardhat run scripts/verify-brxu.ts --network baseSepolia
  */
 
 interface DeploymentData {
@@ -18,9 +18,9 @@ interface DeploymentData {
   deployer: string;
   deployedAt: string;
   contracts: {
-    BRIX: string;
-    BRIXStaking: string;
-    BRIXVesting: string;
+    BRXU: string;
+    BRXUStaking: string;
+    BRXUVesting: string;
   };
 }
 
@@ -58,12 +58,12 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    `brix-${networkName}-latest.json`
+    `brxu-${networkName}-latest.json`
   );
 
   if (!fs.existsSync(latestPath)) {
     console.error(
-      `No deployment found at ${latestPath}. Run deploy-brix.ts first.`
+      `No deployment found at ${latestPath}. Run deploy-brxu.ts first.`
     );
     process.exit(1);
   }
@@ -91,8 +91,8 @@ async function main() {
   let success = 0;
   let failed = 0;
 
-  // 1. Verify BRIX
-  const brixOk = await verifyContract("BRIX", deployment.contracts.BRIX, [
+  // 1. Verify BRXU
+  const brxuOk = await verifyContract("BRXU", deployment.contracts.BRXU, [
     treasuryAddr,
     rewardsAddr,
     vestingAddr,
@@ -100,21 +100,21 @@ async function main() {
     marketingAddr,
     presaleAddr,
   ]);
-  brixOk ? success++ : failed++;
+  brxuOk ? success++ : failed++;
 
-  // 2. Verify BRIXStaking
+  // 2. Verify BRXUStaking
   const stakingOk = await verifyContract(
-    "BRIXStaking",
-    deployment.contracts.BRIXStaking,
-    [deployment.contracts.BRIX]
+    "BRXUStaking",
+    deployment.contracts.BRXUStaking,
+    [deployment.contracts.BRXU]
   );
   stakingOk ? success++ : failed++;
 
-  // 3. Verify BRIXVesting
+  // 3. Verify BRXUVesting
   const vestingOk = await verifyContract(
-    "BRIXVesting",
-    deployment.contracts.BRIXVesting,
-    [deployment.contracts.BRIX]
+    "BRXUVesting",
+    deployment.contracts.BRXUVesting,
+    [deployment.contracts.BRXU]
   );
   vestingOk ? success++ : failed++;
 
@@ -131,9 +131,9 @@ async function main() {
         ? "https://basescan.org"
         : "https://sepolia.basescan.org";
     console.log("\nView on BaseScan:");
-    console.log(`  BRIX        : ${baseUrl}/address/${deployment.contracts.BRIX}`);
-    console.log(`  BRIXStaking : ${baseUrl}/address/${deployment.contracts.BRIXStaking}`);
-    console.log(`  BRIXVesting : ${baseUrl}/address/${deployment.contracts.BRIXVesting}`);
+    console.log(`  BRXU        : ${baseUrl}/address/${deployment.contracts.BRXU}`);
+    console.log(`  BRXUStaking : ${baseUrl}/address/${deployment.contracts.BRXUStaking}`);
+    console.log(`  BRXUVesting : ${baseUrl}/address/${deployment.contracts.BRXUVesting}`);
   }
 }
 

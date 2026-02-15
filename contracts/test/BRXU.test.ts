@@ -3,15 +3,15 @@ import { ethers } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Shared Fixture — deploys BRIX token with 6 wallets
+//  Shared Fixture — deploys BRXU token with 6 wallets
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function deployBRIXFixture() {
+async function deployBRXUFixture() {
   const [owner, treasury, rewards, vesting, liquidity, marketing, presale, alice, bob, charlie] =
     await ethers.getSigners();
 
-  const BRIX = await ethers.getContractFactory("BRIX");
-  const brix = await BRIX.deploy(
+  const BRXU = await ethers.getContractFactory("BRXU");
+  const brxu = await BRXU.deploy(
     treasury.address,
     rewards.address,
     vesting.address,
@@ -20,14 +20,14 @@ async function deployBRIXFixture() {
     presale.address
   );
 
-  const brixAddress = await brix.getAddress();
+  const brxuAddress = await brxu.getAddress();
 
   // Disable anti-bot so fixture transfers > 10M don't revert
-  await brix.connect(owner).disableAntiBot();
+  await brxu.connect(owner).disableAntiBot();
 
   return {
-    brix,
-    brixAddress,
+    brxu,
+    brxuAddress,
     owner,
     treasury,
     rewards,
@@ -42,12 +42,12 @@ async function deployBRIXFixture() {
 }
 
 // Separate fixture with anti-bot still enabled for anti-bot tests
-async function deployBRIXWithAntiBotFixture() {
+async function deployBRXUWithAntiBotFixture() {
   const [owner, treasury, rewards, vesting, liquidity, marketing, presale, alice, bob, charlie] =
     await ethers.getSigners();
 
-  const BRIX = await ethers.getContractFactory("BRIX");
-  const brix = await BRIX.deploy(
+  const BRXU = await ethers.getContractFactory("BRXU");
+  const brxu = await BRXU.deploy(
     treasury.address,
     rewards.address,
     vesting.address,
@@ -56,11 +56,11 @@ async function deployBRIXWithAntiBotFixture() {
     presale.address
   );
 
-  const brixAddress = await brix.getAddress();
+  const brxuAddress = await brxu.getAddress();
 
   return {
-    brix,
-    brixAddress,
+    brxu,
+    brxuAddress,
     owner,
     treasury,
     rewards,
@@ -75,314 +75,314 @@ async function deployBRIXWithAntiBotFixture() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  BRIX Token Tests
+//  BRXU Token Tests
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("BRIX Token", function () {
+describe("BRXU Token", function () {
   describe("Deployment", function () {
     it("should have correct name and symbol", async function () {
-      const { brix } = await loadFixture(deployBRIXFixture);
-      expect(await brix.name()).to.equal("BrixUp Token");
-      expect(await brix.symbol()).to.equal("BRIX");
+      const { brxu } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.name()).to.equal("BrixUp Token");
+      expect(await brxu.symbol()).to.equal("BRXU");
     });
 
     it("should mint 1 billion total supply", async function () {
-      const { brix } = await loadFixture(deployBRIXFixture);
-      expect(await brix.totalSupply()).to.equal(
+      const { brxu } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.totalSupply()).to.equal(
         ethers.parseEther("1000000000")
       );
     });
 
     it("should allocate 40% to treasury", async function () {
-      const { brix, treasury } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(treasury.address)).to.equal(
+      const { brxu, treasury } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(treasury.address)).to.equal(
         ethers.parseEther("400000000")
       );
     });
 
     it("should allocate 20% to rewards", async function () {
-      const { brix, rewards } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(rewards.address)).to.equal(
+      const { brxu, rewards } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(rewards.address)).to.equal(
         ethers.parseEther("200000000")
       );
     });
 
     it("should allocate 15% to vesting", async function () {
-      const { brix, vesting } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(vesting.address)).to.equal(
+      const { brxu, vesting } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(vesting.address)).to.equal(
         ethers.parseEther("150000000")
       );
     });
 
     it("should allocate 10% to liquidity", async function () {
-      const { brix, liquidity } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(liquidity.address)).to.equal(
+      const { brxu, liquidity } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(liquidity.address)).to.equal(
         ethers.parseEther("100000000")
       );
     });
 
     it("should allocate 10% to marketing", async function () {
-      const { brix, marketing } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(marketing.address)).to.equal(
+      const { brxu, marketing } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(marketing.address)).to.equal(
         ethers.parseEther("100000000")
       );
     });
 
     it("should allocate 5% to presale", async function () {
-      const { brix, presale } = await loadFixture(deployBRIXFixture);
-      expect(await brix.balanceOf(presale.address)).to.equal(
+      const { brxu, presale } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.balanceOf(presale.address)).to.equal(
         ethers.parseEther("50000000")
       );
     });
 
     it("should set fee-exempt for deployer, treasury, rewards, vesting, liquidity", async function () {
-      const { brix, owner, treasury, rewards, vesting, liquidity } =
-        await loadFixture(deployBRIXFixture);
-      expect(await brix.feeExempt(owner.address)).to.be.true;
-      expect(await brix.feeExempt(treasury.address)).to.be.true;
-      expect(await brix.feeExempt(rewards.address)).to.be.true;
-      expect(await brix.feeExempt(vesting.address)).to.be.true;
-      expect(await brix.feeExempt(liquidity.address)).to.be.true;
+      const { brxu, owner, treasury, rewards, vesting, liquidity } =
+        await loadFixture(deployBRXUFixture);
+      expect(await brxu.feeExempt(owner.address)).to.be.true;
+      expect(await brxu.feeExempt(treasury.address)).to.be.true;
+      expect(await brxu.feeExempt(rewards.address)).to.be.true;
+      expect(await brxu.feeExempt(vesting.address)).to.be.true;
+      expect(await brxu.feeExempt(liquidity.address)).to.be.true;
     });
 
     it("should revert on zero address constructor args", async function () {
-      const BRIX = await ethers.getContractFactory("BRIX");
+      const BRXU = await ethers.getContractFactory("BRXU");
       const [, t, r, v, l, m] = await ethers.getSigners();
       await expect(
-        BRIX.deploy(ethers.ZeroAddress, r.address, v.address, l.address, m.address, t.address)
-      ).to.be.revertedWith("BRIX: zero treasury");
+        BRXU.deploy(ethers.ZeroAddress, r.address, v.address, l.address, m.address, t.address)
+      ).to.be.revertedWith("BRXU: zero treasury");
     });
 
     it("should set default fee to 50 bps (0.5%)", async function () {
-      const { brix } = await loadFixture(deployBRIXFixture);
-      expect(await brix.feeBps()).to.equal(50);
+      const { brxu } = await loadFixture(deployBRXUFixture);
+      expect(await brxu.feeBps()).to.equal(50);
     });
 
     it("should enable anti-bot by default", async function () {
-      const { brix } = await loadFixture(deployBRIXWithAntiBotFixture);
-      expect(await brix.antiBotEnabled()).to.be.true;
+      const { brxu } = await loadFixture(deployBRXUWithAntiBotFixture);
+      expect(await brxu.antiBotEnabled()).to.be.true;
     });
   });
 
   describe("Transfer Fees", function () {
     it("should charge 0.5% fee on non-exempt transfers", async function () {
-      const { brix, treasury, alice, bob } = await loadFixture(
-        deployBRIXFixture
+      const { brxu, treasury, alice, bob } = await loadFixture(
+        deployBRXUFixture
       );
 
       // Transfer from treasury (exempt) to alice (non-exempt) — no fee
       const amount = ethers.parseEther("10000");
-      await brix.connect(treasury).transfer(alice.address, amount);
+      await brxu.connect(treasury).transfer(alice.address, amount);
 
       // Transfer from alice (non-exempt) to bob (non-exempt) — 0.5% fee
       const sendAmount = ethers.parseEther("1000");
-      const fee = (sendAmount * 50n) / 10000n; // 5 BRIX
+      const fee = (sendAmount * 50n) / 10000n; // 5 BRXU
       const net = sendAmount - fee;
 
-      const treasuryBefore = await brix.balanceOf(treasury.address);
-      await brix.connect(alice).transfer(bob.address, sendAmount);
+      const treasuryBefore = await brxu.balanceOf(treasury.address);
+      await brxu.connect(alice).transfer(bob.address, sendAmount);
 
-      expect(await brix.balanceOf(bob.address)).to.equal(net);
-      expect(await brix.balanceOf(treasury.address)).to.equal(
+      expect(await brxu.balanceOf(bob.address)).to.equal(net);
+      expect(await brxu.balanceOf(treasury.address)).to.equal(
         treasuryBefore + fee
       );
     });
 
     it("should not charge fee for fee-exempt sender", async function () {
-      const { brix, treasury, alice } = await loadFixture(deployBRIXFixture);
+      const { brxu, treasury, alice } = await loadFixture(deployBRXUFixture);
       const amount = ethers.parseEther("1000");
-      await brix.connect(treasury).transfer(alice.address, amount);
-      expect(await brix.balanceOf(alice.address)).to.equal(amount);
+      await brxu.connect(treasury).transfer(alice.address, amount);
+      expect(await brxu.balanceOf(alice.address)).to.equal(amount);
     });
 
     it("should not charge fee for fee-exempt receiver", async function () {
-      const { brix, treasury, alice, owner } = await loadFixture(
-        deployBRIXFixture
+      const { brxu, treasury, alice, owner } = await loadFixture(
+        deployBRXUFixture
       );
       // alice is non-exempt, give her tokens
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("10000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("10000"));
 
       // Set owner as fee-exempt receiver
       // Transfer from alice (non-exempt) to treasury (exempt) — no fee
       const amount = ethers.parseEther("1000");
-      await brix.connect(alice).transfer(treasury.address, amount);
+      await brxu.connect(alice).transfer(treasury.address, amount);
 
       // treasury got full amount (fee exempt as receiver)
       const treasuryExpected =
         ethers.parseEther("400000000") -
         ethers.parseEther("10000") +
         amount;
-      expect(await brix.balanceOf(treasury.address)).to.equal(treasuryExpected);
+      expect(await brxu.balanceOf(treasury.address)).to.equal(treasuryExpected);
     });
   });
 
   describe("Anti-Bot", function () {
     it("should enforce 10M token transfer limit in first 24h", async function () {
-      const { brix, treasury, alice, bob } = await loadFixture(
-        deployBRIXWithAntiBotFixture
+      const { brxu, treasury, alice, bob } = await loadFixture(
+        deployBRXUWithAntiBotFixture
       );
 
       // Transfer under the limit to fund alice (treasury is fee-exempt but NOT anti-bot exempt)
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("5000000"));
 
       // alice tries to send 15M (above 10M limit)
       const overLimit = ethers.parseEther("15000000");
       await expect(
-        brix.connect(alice).transfer(bob.address, overLimit)
-      ).to.be.revertedWith("BRIX: exceeds anti-bot limit");
+        brxu.connect(alice).transfer(bob.address, overLimit)
+      ).to.be.revertedWith("BRXU: exceeds anti-bot limit");
     });
 
     it("should allow transfers under the limit", async function () {
-      const { brix, treasury, alice, bob } = await loadFixture(
-        deployBRIXWithAntiBotFixture
+      const { brxu, treasury, alice, bob } = await loadFixture(
+        deployBRXUWithAntiBotFixture
       );
-      await brix
+      await brxu
         .connect(treasury)
         .transfer(alice.address, ethers.parseEther("8000000"));
 
       const underLimit = ethers.parseEther("5000000");
-      await brix.connect(alice).transfer(bob.address, underLimit);
+      await brxu.connect(alice).transfer(bob.address, underLimit);
       // Should succeed (fees apply)
     });
 
     it("should not enforce limit after 24 hours", async function () {
-      const { brix, treasury, alice, bob } = await loadFixture(
-        deployBRIXWithAntiBotFixture
+      const { brxu, treasury, alice, bob } = await loadFixture(
+        deployBRXUWithAntiBotFixture
       );
       // Transfer in chunks under the limit
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("10000000"));
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("10000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("10000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("10000000"));
 
       // Advance 25 hours
       await time.increase(25 * 60 * 60);
 
       const overLimit = ethers.parseEther("15000000");
-      await brix.connect(alice).transfer(bob.address, overLimit);
+      await brxu.connect(alice).transfer(bob.address, overLimit);
       // Should succeed — past 24h window
     });
 
     it("should allow owner to permanently disable anti-bot", async function () {
-      const { brix, owner, treasury, alice, bob } = await loadFixture(
-        deployBRIXWithAntiBotFixture
+      const { brxu, owner, treasury, alice, bob } = await loadFixture(
+        deployBRXUWithAntiBotFixture
       );
 
-      await brix.connect(owner).disableAntiBot();
-      expect(await brix.antiBotEnabled()).to.be.false;
+      await brxu.connect(owner).disableAntiBot();
+      expect(await brxu.antiBotEnabled()).to.be.false;
 
       // Now can transfer any amount
-      await brix.connect(treasury).transfer(alice.address, ethers.parseEther("20000000"));
+      await brxu.connect(treasury).transfer(alice.address, ethers.parseEther("20000000"));
       const overLimit = ethers.parseEther("15000000");
-      await brix.connect(alice).transfer(bob.address, overLimit);
+      await brxu.connect(alice).transfer(bob.address, overLimit);
       // Should succeed even within 24h
     });
 
     it("should emit AntiBotDisabled event", async function () {
-      const { brix, owner } = await loadFixture(deployBRIXWithAntiBotFixture);
-      await expect(brix.connect(owner).disableAntiBot())
-        .to.emit(brix, "AntiBotDisabled");
+      const { brxu, owner } = await loadFixture(deployBRXUWithAntiBotFixture);
+      await expect(brxu.connect(owner).disableAntiBot())
+        .to.emit(brxu, "AntiBotDisabled");
     });
   });
 
   describe("Owner Functions", function () {
     it("should allow owner to update fee", async function () {
-      const { brix, owner } = await loadFixture(deployBRIXFixture);
-      await expect(brix.connect(owner).setFeeBps(100))
-        .to.emit(brix, "FeeUpdated")
+      const { brxu, owner } = await loadFixture(deployBRXUFixture);
+      await expect(brxu.connect(owner).setFeeBps(100))
+        .to.emit(brxu, "FeeUpdated")
         .withArgs(50, 100);
-      expect(await brix.feeBps()).to.equal(100);
+      expect(await brxu.feeBps()).to.equal(100);
     });
 
     it("should reject fee above MAX_FEE_BPS (200)", async function () {
-      const { brix, owner } = await loadFixture(deployBRIXFixture);
+      const { brxu, owner } = await loadFixture(deployBRXUFixture);
       await expect(
-        brix.connect(owner).setFeeBps(201)
-      ).to.be.revertedWith("BRIX: fee exceeds max");
+        brxu.connect(owner).setFeeBps(201)
+      ).to.be.revertedWith("BRXU: fee exceeds max");
     });
 
     it("should allow owner to update treasury", async function () {
-      const { brix, owner, alice } = await loadFixture(deployBRIXFixture);
-      await expect(brix.connect(owner).setTreasury(alice.address))
-        .to.emit(brix, "TreasuryUpdated");
-      expect(await brix.treasury()).to.equal(alice.address);
+      const { brxu, owner, alice } = await loadFixture(deployBRXUFixture);
+      await expect(brxu.connect(owner).setTreasury(alice.address))
+        .to.emit(brxu, "TreasuryUpdated");
+      expect(await brxu.treasury()).to.equal(alice.address);
     });
 
     it("should reject zero address treasury", async function () {
-      const { brix, owner } = await loadFixture(deployBRIXFixture);
+      const { brxu, owner } = await loadFixture(deployBRXUFixture);
       await expect(
-        brix.connect(owner).setTreasury(ethers.ZeroAddress)
-      ).to.be.revertedWith("BRIX: zero address");
+        brxu.connect(owner).setTreasury(ethers.ZeroAddress)
+      ).to.be.revertedWith("BRXU: zero address");
     });
 
     it("should allow owner to set fee-exempt addresses", async function () {
-      const { brix, owner, alice } = await loadFixture(deployBRIXFixture);
-      await brix.connect(owner).setFeeExempt(alice.address, true);
-      expect(await brix.feeExempt(alice.address)).to.be.true;
+      const { brxu, owner, alice } = await loadFixture(deployBRXUFixture);
+      await brxu.connect(owner).setFeeExempt(alice.address, true);
+      expect(await brxu.feeExempt(alice.address)).to.be.true;
 
-      await brix.connect(owner).setFeeExempt(alice.address, false);
-      expect(await brix.feeExempt(alice.address)).to.be.false;
+      await brxu.connect(owner).setFeeExempt(alice.address, false);
+      expect(await brxu.feeExempt(alice.address)).to.be.false;
     });
 
     it("should reject non-owner calls", async function () {
-      const { brix, alice } = await loadFixture(deployBRIXFixture);
+      const { brxu, alice } = await loadFixture(deployBRXUFixture);
       await expect(
-        brix.connect(alice).setFeeBps(100)
-      ).to.be.revertedWithCustomError(brix, "OwnableUnauthorizedAccount");
+        brxu.connect(alice).setFeeBps(100)
+      ).to.be.revertedWithCustomError(brxu, "OwnableUnauthorizedAccount");
       await expect(
-        brix.connect(alice).setTreasury(alice.address)
-      ).to.be.revertedWithCustomError(brix, "OwnableUnauthorizedAccount");
+        brxu.connect(alice).setTreasury(alice.address)
+      ).to.be.revertedWithCustomError(brxu, "OwnableUnauthorizedAccount");
       await expect(
-        brix.connect(alice).setFeeExempt(alice.address, true)
-      ).to.be.revertedWithCustomError(brix, "OwnableUnauthorizedAccount");
+        brxu.connect(alice).setFeeExempt(alice.address, true)
+      ).to.be.revertedWithCustomError(brxu, "OwnableUnauthorizedAccount");
       await expect(
-        brix.connect(alice).disableAntiBot()
-      ).to.be.revertedWithCustomError(brix, "OwnableUnauthorizedAccount");
+        brxu.connect(alice).disableAntiBot()
+      ).to.be.revertedWithCustomError(brxu, "OwnableUnauthorizedAccount");
     });
   });
 
   describe("Pausable", function () {
     it("should allow owner to pause and unpause", async function () {
-      const { brix, owner, treasury, alice } = await loadFixture(
-        deployBRIXFixture
+      const { brxu, owner, treasury, alice } = await loadFixture(
+        deployBRXUFixture
       );
-      await brix.connect(owner).pause();
+      await brxu.connect(owner).pause();
       await expect(
-        brix
+        brxu
           .connect(treasury)
           .transfer(alice.address, ethers.parseEther("100"))
-      ).to.be.revertedWithCustomError(brix, "EnforcedPause");
+      ).to.be.revertedWithCustomError(brxu, "EnforcedPause");
 
-      await brix.connect(owner).unpause();
-      await brix
+      await brxu.connect(owner).unpause();
+      await brxu
         .connect(treasury)
         .transfer(alice.address, ethers.parseEther("100"));
     });
 
     it("should reject pause from non-owner", async function () {
-      const { brix, alice } = await loadFixture(deployBRIXFixture);
+      const { brxu, alice } = await loadFixture(deployBRXUFixture);
       await expect(
-        brix.connect(alice).pause()
-      ).to.be.revertedWithCustomError(brix, "OwnableUnauthorizedAccount");
+        brxu.connect(alice).pause()
+      ).to.be.revertedWithCustomError(brxu, "OwnableUnauthorizedAccount");
     });
   });
 
   describe("Burn", function () {
     it("should allow anyone to burn their tokens", async function () {
-      const { brix, treasury, alice } = await loadFixture(deployBRIXFixture);
-      await brix
+      const { brxu, treasury, alice } = await loadFixture(deployBRXUFixture);
+      await brxu
         .connect(treasury)
         .transfer(alice.address, ethers.parseEther("1000"));
 
       const burnAmount = ethers.parseEther("500");
-      await expect(brix.connect(alice).burn(burnAmount))
-        .to.emit(brix, "TokensBurned")
+      await expect(brxu.connect(alice).burn(burnAmount))
+        .to.emit(brxu, "TokensBurned")
         .withArgs(alice.address, burnAmount);
 
-      expect(await brix.balanceOf(alice.address)).to.equal(
+      expect(await brxu.balanceOf(alice.address)).to.equal(
         ethers.parseEther("500")
       );
-      expect(await brix.totalSupply()).to.equal(
+      expect(await brxu.totalSupply()).to.equal(
         ethers.parseEther("1000000000") - burnAmount
       );
     });
@@ -390,26 +390,26 @@ describe("BRIX Token", function () {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  BRIXStaking Tests
+//  BRXUStaking Tests
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("BRIXStaking", function () {
+describe("BRXUStaking", function () {
   async function deployStakingFixture() {
-    const base = await loadFixture(deployBRIXFixture);
-    const { brix, brixAddress, owner, treasury, alice, bob } = base;
+    const base = await loadFixture(deployBRXUFixture);
+    const { brxu, brxuAddress, owner, treasury, alice, bob } = base;
 
-    const BRIXStaking = await ethers.getContractFactory("BRIXStaking");
-    const staking = await BRIXStaking.deploy(brixAddress);
+    const BRXUStaking = await ethers.getContractFactory("BRXUStaking");
+    const staking = await BRXUStaking.deploy(brxuAddress);
     const stakingAddress = await staking.getAddress();
 
     // Set staking as fee-exempt
-    await brix.connect(owner).setFeeExempt(stakingAddress, true);
+    await brxu.connect(owner).setFeeExempt(stakingAddress, true);
 
     // Transfer tokens to test users from treasury (fee-exempt)
-    await brix
+    await brxu
       .connect(treasury)
       .transfer(alice.address, ethers.parseEther("100000"));
-    await brix
+    await brxu
       .connect(treasury)
       .transfer(bob.address, ethers.parseEther("100000"));
 
@@ -418,11 +418,11 @@ describe("BRIXStaking", function () {
 
   describe("Staking", function () {
     it("should allow users to stake tokens", async function () {
-      const { brix, staking, stakingAddress, alice } = await loadFixture(
+      const { brxu, staking, stakingAddress, alice } = await loadFixture(
         deployStakingFixture
       );
       const amount = ethers.parseEther("1000");
-      await brix.connect(alice).approve(stakingAddress, amount);
+      await brxu.connect(alice).approve(stakingAddress, amount);
       await expect(staking.connect(alice).stake(amount))
         .to.emit(staking, "Staked")
         .withArgs(alice.address, amount);
@@ -436,18 +436,18 @@ describe("BRIXStaking", function () {
       const { staking, alice } = await loadFixture(deployStakingFixture);
       await expect(
         staking.connect(alice).stake(0)
-      ).to.be.revertedWith("BRIXStaking: zero amount");
+      ).to.be.revertedWith("BRXUStaking: zero amount");
     });
 
     it("should track multiple stakers", async function () {
-      const { brix, staking, stakingAddress, alice, bob } = await loadFixture(
+      const { brxu, staking, stakingAddress, alice, bob } = await loadFixture(
         deployStakingFixture
       );
       const amount = ethers.parseEther("1000");
-      await brix.connect(alice).approve(stakingAddress, amount);
+      await brxu.connect(alice).approve(stakingAddress, amount);
       await staking.connect(alice).stake(amount);
 
-      await brix.connect(bob).approve(stakingAddress, amount);
+      await brxu.connect(bob).approve(stakingAddress, amount);
       await staking.connect(bob).stake(amount);
 
       expect(await staking.stakerCount()).to.equal(2);
@@ -457,60 +457,60 @@ describe("BRIXStaking", function () {
 
   describe("Unstaking (No Lock Period)", function () {
     it("should allow immediate unstaking", async function () {
-      const { brix, staking, stakingAddress, alice } = await loadFixture(
+      const { brxu, staking, stakingAddress, alice } = await loadFixture(
         deployStakingFixture
       );
       const amount = ethers.parseEther("1000");
-      await brix.connect(alice).approve(stakingAddress, amount);
+      await brxu.connect(alice).approve(stakingAddress, amount);
       await staking.connect(alice).stake(amount);
 
       // Unstake immediately — no lock period
-      const balBefore = await brix.balanceOf(alice.address);
+      const balBefore = await brxu.balanceOf(alice.address);
       await expect(staking.connect(alice).unstake(amount))
         .to.emit(staking, "Unstaked")
         .withArgs(alice.address, amount);
 
-      expect(await brix.balanceOf(alice.address)).to.equal(
+      expect(await brxu.balanceOf(alice.address)).to.equal(
         balBefore + amount
       );
       expect(await staking.totalStaked()).to.equal(0);
     });
 
     it("should reject unstaking more than staked", async function () {
-      const { brix, staking, stakingAddress, alice } = await loadFixture(
+      const { brxu, staking, stakingAddress, alice } = await loadFixture(
         deployStakingFixture
       );
       const amount = ethers.parseEther("1000");
-      await brix.connect(alice).approve(stakingAddress, amount);
+      await brxu.connect(alice).approve(stakingAddress, amount);
       await staking.connect(alice).stake(amount);
 
       await expect(
         staking.connect(alice).unstake(ethers.parseEther("2000"))
-      ).to.be.revertedWith("BRIXStaking: insufficient balance");
+      ).to.be.revertedWith("BRXUStaking: insufficient balance");
     });
 
     it("should reject unstaking zero", async function () {
       const { staking, alice } = await loadFixture(deployStakingFixture);
       await expect(
         staking.connect(alice).unstake(0)
-      ).to.be.revertedWith("BRIXStaking: zero amount");
+      ).to.be.revertedWith("BRXUStaking: zero amount");
     });
   });
 
   describe("Rewards", function () {
     it("should accrue rewards over time after funding", async function () {
-      const { brix, staking, stakingAddress, owner, treasury, alice } =
+      const { brxu, staking, stakingAddress, owner, treasury, alice } =
         await loadFixture(deployStakingFixture);
 
       // Alice stakes 10,000
       const stakeAmount = ethers.parseEther("10000");
-      await brix.connect(alice).approve(stakingAddress, stakeAmount);
+      await brxu.connect(alice).approve(stakingAddress, stakeAmount);
       await staking.connect(alice).stake(stakeAmount);
 
-      // Owner funds rewards: 1250 BRIX over 365 days (12.5% APY on 10k)
+      // Owner funds rewards: 1250 BRXU over 365 days (12.5% APY on 10k)
       const rewardAmount = ethers.parseEther("1250");
-      await brix.connect(treasury).transfer(owner.address, rewardAmount);
-      await brix.connect(owner).approve(stakingAddress, rewardAmount);
+      await brxu.connect(treasury).transfer(owner.address, rewardAmount);
+      await brxu.connect(owner).approve(stakingAddress, rewardAmount);
       await staking
         .connect(owner)
         .fundRewards(rewardAmount, 365 * 24 * 60 * 60);
@@ -525,24 +525,24 @@ describe("BRIXStaking", function () {
     });
 
     it("should distribute rewards proportionally", async function () {
-      const { brix, staking, stakingAddress, owner, treasury, alice, bob } =
+      const { brxu, staking, stakingAddress, owner, treasury, alice, bob } =
         await loadFixture(deployStakingFixture);
 
       // Alice stakes 3000, Bob stakes 1000
-      await brix
+      await brxu
         .connect(alice)
         .approve(stakingAddress, ethers.parseEther("3000"));
       await staking.connect(alice).stake(ethers.parseEther("3000"));
 
-      await brix
+      await brxu
         .connect(bob)
         .approve(stakingAddress, ethers.parseEther("1000"));
       await staking.connect(bob).stake(ethers.parseEther("1000"));
 
-      // Fund 4000 BRIX over 1 day
+      // Fund 4000 BRXU over 1 day
       const rewardAmount = ethers.parseEther("4000");
-      await brix.connect(treasury).transfer(owner.address, rewardAmount);
-      await brix.connect(owner).approve(stakingAddress, rewardAmount);
+      await brxu.connect(treasury).transfer(owner.address, rewardAmount);
+      await brxu.connect(owner).approve(stakingAddress, rewardAmount);
       await staking
         .connect(owner)
         .fundRewards(rewardAmount, 24 * 60 * 60);
@@ -565,29 +565,29 @@ describe("BRIXStaking", function () {
     });
 
     it("should allow claiming rewards", async function () {
-      const { brix, staking, stakingAddress, owner, treasury, alice } =
+      const { brxu, staking, stakingAddress, owner, treasury, alice } =
         await loadFixture(deployStakingFixture);
 
-      await brix
+      await brxu
         .connect(alice)
         .approve(stakingAddress, ethers.parseEther("10000"));
       await staking.connect(alice).stake(ethers.parseEther("10000"));
 
       const rewardAmount = ethers.parseEther("1000");
-      await brix.connect(treasury).transfer(owner.address, rewardAmount);
-      await brix.connect(owner).approve(stakingAddress, rewardAmount);
+      await brxu.connect(treasury).transfer(owner.address, rewardAmount);
+      await brxu.connect(owner).approve(stakingAddress, rewardAmount);
       await staking
         .connect(owner)
         .fundRewards(rewardAmount, 24 * 60 * 60);
 
       await time.increase(24 * 60 * 60);
 
-      const balBefore = await brix.balanceOf(alice.address);
+      const balBefore = await brxu.balanceOf(alice.address);
       await expect(staking.connect(alice).claimRewards()).to.emit(
         staking,
         "RewardsClaimed"
       );
-      const balAfter = await brix.balanceOf(alice.address);
+      const balAfter = await brxu.balanceOf(alice.address);
 
       expect(balAfter - balBefore).to.be.closeTo(
         rewardAmount,
@@ -596,32 +596,32 @@ describe("BRIXStaking", function () {
     });
 
     it("should reject claiming with no rewards", async function () {
-      const { brix, staking, stakingAddress, alice } = await loadFixture(
+      const { brxu, staking, stakingAddress, alice } = await loadFixture(
         deployStakingFixture
       );
-      await brix
+      await brxu
         .connect(alice)
         .approve(stakingAddress, ethers.parseEther("1000"));
       await staking.connect(alice).stake(ethers.parseEther("1000"));
 
       await expect(
         staking.connect(alice).claimRewards()
-      ).to.be.revertedWith("BRIXStaking: no rewards");
+      ).to.be.revertedWith("BRXUStaking: no rewards");
     });
 
     it("should handle rolling over leftover rewards to new period", async function () {
-      const { brix, staking, stakingAddress, owner, treasury, alice } =
+      const { brxu, staking, stakingAddress, owner, treasury, alice } =
         await loadFixture(deployStakingFixture);
 
-      await brix
+      await brxu
         .connect(alice)
         .approve(stakingAddress, ethers.parseEther("10000"));
       await staking.connect(alice).stake(ethers.parseEther("10000"));
 
       // First funding
       const reward1 = ethers.parseEther("1000");
-      await brix.connect(treasury).transfer(owner.address, reward1);
-      await brix.connect(owner).approve(stakingAddress, reward1);
+      await brxu.connect(treasury).transfer(owner.address, reward1);
+      await brxu.connect(owner).approve(stakingAddress, reward1);
       await staking
         .connect(owner)
         .fundRewards(reward1, 24 * 60 * 60);
@@ -630,8 +630,8 @@ describe("BRIXStaking", function () {
       await time.increase(12 * 60 * 60);
 
       const reward2 = ethers.parseEther("2000");
-      await brix.connect(treasury).transfer(owner.address, reward2);
-      await brix.connect(owner).approve(stakingAddress, reward2);
+      await brxu.connect(treasury).transfer(owner.address, reward2);
+      await brxu.connect(owner).approve(stakingAddress, reward2);
       await staking
         .connect(owner)
         .fundRewards(reward2, 24 * 60 * 60);
@@ -660,23 +660,23 @@ describe("BRIXStaking", function () {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  BRIXVesting Tests
+//  BRXUVesting Tests
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("BRIXVesting", function () {
+describe("BRXUVesting", function () {
   async function deployVestingFixture() {
-    const base = await loadFixture(deployBRIXFixture);
-    const { brix, brixAddress, owner, treasury, alice, bob } = base;
+    const base = await loadFixture(deployBRXUFixture);
+    const { brxu, brxuAddress, owner, treasury, alice, bob } = base;
 
-    const BRIXVesting = await ethers.getContractFactory("BRIXVesting");
-    const vesting = await BRIXVesting.deploy(brixAddress);
+    const BRXUVesting = await ethers.getContractFactory("BRXUVesting");
+    const vesting = await BRXUVesting.deploy(brxuAddress);
     const vestingAddress = await vesting.getAddress();
 
     // Set vesting as fee-exempt
-    await brix.connect(owner).setFeeExempt(vestingAddress, true);
+    await brxu.connect(owner).setFeeExempt(vestingAddress, true);
 
     // Give owner tokens to create vesting schedules
-    await brix
+    await brxu
       .connect(treasury)
       .transfer(owner.address, ethers.parseEther("50000000"));
 
@@ -685,11 +685,11 @@ describe("BRIXVesting", function () {
 
   describe("Creating Vesting Schedules", function () {
     it("should create a default vesting schedule (6mo cliff, 24mo)", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
 
       await expect(
         vesting.connect(owner).createDefaultVesting(alice.address, amount)
@@ -706,14 +706,14 @@ describe("BRIXVesting", function () {
     });
 
     it("should create a custom vesting schedule", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("500000");
       const cliff = 90 * 24 * 60 * 60; // 3 months
       const duration = 365 * 24 * 60 * 60; // 12 months
 
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting
         .connect(owner)
         .createVesting(alice.address, amount, cliff, duration);
@@ -725,32 +725,32 @@ describe("BRIXVesting", function () {
     });
 
     it("should reject duplicate vesting for same beneficiary", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("100000");
-      await brix
+      await brxu
         .connect(owner)
         .approve(vestingAddress, ethers.parseEther("200000"));
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       await expect(
         vesting.connect(owner).createDefaultVesting(alice.address, amount)
-      ).to.be.revertedWith("BRIXVesting: schedule exists");
+      ).to.be.revertedWith("BRXUVesting: schedule exists");
     });
 
     it("should reject vesting with duration <= cliff", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("100000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
 
       await expect(
         vesting
           .connect(owner)
           .createVesting(alice.address, amount, 365 * 86400, 180 * 86400) // cliff > duration
-      ).to.be.revertedWith("BRIXVesting: duration <= cliff");
+      ).to.be.revertedWith("BRXUVesting: duration <= cliff");
     });
 
     it("should reject zero amount", async function () {
@@ -759,7 +759,7 @@ describe("BRIXVesting", function () {
       );
       await expect(
         vesting.connect(owner).createDefaultVesting(alice.address, 0)
-      ).to.be.revertedWith("BRIXVesting: zero amount");
+      ).to.be.revertedWith("BRXUVesting: zero amount");
     });
 
     it("should reject non-owner creating vesting", async function () {
@@ -774,11 +774,11 @@ describe("BRIXVesting", function () {
 
   describe("Releasing Tokens", function () {
     it("should release nothing before cliff", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       // Advance 3 months (before 6-month cliff)
@@ -789,15 +789,15 @@ describe("BRIXVesting", function () {
 
       await expect(
         vesting.connect(alice).release()
-      ).to.be.revertedWith("BRIXVesting: nothing to release");
+      ).to.be.revertedWith("BRXUVesting: nothing to release");
     });
 
     it("should vest linearly after cliff", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("730000"); // Easy math: 1000/day
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       // Advance to just past cliff (180 days)
@@ -812,22 +812,22 @@ describe("BRIXVesting", function () {
     });
 
     it("should release vested tokens", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       // Advance past cliff (365 days = ~50% vested in 730-day schedule)
       await time.increase(365 * 24 * 60 * 60);
 
-      const balBefore = await brix.balanceOf(alice.address);
+      const balBefore = await brxu.balanceOf(alice.address);
       await expect(vesting.connect(alice).release()).to.emit(
         vesting,
         "TokensReleased"
       );
-      const balAfter = await brix.balanceOf(alice.address);
+      const balAfter = await brxu.balanceOf(alice.address);
 
       const released = balAfter - balBefore;
       expect(released).to.be.closeTo(
@@ -837,11 +837,11 @@ describe("BRIXVesting", function () {
     });
 
     it("should vest 100% after full duration", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       // Advance past full duration (730 days)
@@ -850,28 +850,28 @@ describe("BRIXVesting", function () {
       expect(await vesting.vestedAmount(alice.address)).to.equal(amount);
 
       await vesting.connect(alice).release();
-      expect(await brix.balanceOf(alice.address)).to.equal(amount);
+      expect(await brxu.balanceOf(alice.address)).to.equal(amount);
     });
   });
 
   describe("Revocation", function () {
     it("should allow owner to revoke vesting", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       // Advance past cliff (365 days)
       await time.increase(365 * 24 * 60 * 60);
 
-      const ownerBalBefore = await brix.balanceOf(owner.address);
+      const ownerBalBefore = await brxu.balanceOf(owner.address);
       await expect(vesting.connect(owner).revoke(alice.address))
         .to.emit(vesting, "VestingRevoked");
 
       // Owner should receive unvested tokens (~50%)
-      const ownerBalAfter = await brix.balanceOf(owner.address);
+      const ownerBalAfter = await brxu.balanceOf(owner.address);
       const returned = ownerBalAfter - ownerBalBefore;
       expect(returned).to.be.closeTo(
         ethers.parseEther("500000"),
@@ -884,11 +884,11 @@ describe("BRIXVesting", function () {
     });
 
     it("should not allow releasing after revocation", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       await time.increase(365 * 24 * 60 * 60);
@@ -896,35 +896,35 @@ describe("BRIXVesting", function () {
 
       await expect(
         vesting.connect(alice).release()
-      ).to.be.revertedWith("BRIXVesting: revoked");
+      ).to.be.revertedWith("BRXUVesting: revoked");
     });
 
     it("should reject revoking non-existent schedule", async function () {
       const { vesting, owner, bob } = await loadFixture(deployVestingFixture);
       await expect(
         vesting.connect(owner).revoke(bob.address)
-      ).to.be.revertedWith("BRIXVesting: no schedule");
+      ).to.be.revertedWith("BRXUVesting: no schedule");
     });
 
     it("should reject double revocation", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("1000000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       await vesting.connect(owner).revoke(alice.address);
       await expect(
         vesting.connect(owner).revoke(alice.address)
-      ).to.be.revertedWith("BRIXVesting: already revoked");
+      ).to.be.revertedWith("BRXUVesting: already revoked");
     });
 
     it("should reject revoke from non-owner", async function () {
-      const { brix, vesting, vestingAddress, owner, alice, bob } =
+      const { brxu, vesting, vestingAddress, owner, alice, bob } =
         await loadFixture(deployVestingFixture);
       const amount = ethers.parseEther("100000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       await expect(
@@ -935,9 +935,9 @@ describe("BRIXVesting", function () {
 
   describe("View Functions", function () {
     it("should report beneficiary count", async function () {
-      const { brix, vesting, vestingAddress, owner, alice, bob } =
+      const { brxu, vesting, vestingAddress, owner, alice, bob } =
         await loadFixture(deployVestingFixture);
-      await brix
+      await brxu
         .connect(owner)
         .approve(vestingAddress, ethers.parseEther("2000000"));
       await vesting
@@ -951,11 +951,11 @@ describe("BRIXVesting", function () {
     });
 
     it("should return 0 releasable for revoked schedule", async function () {
-      const { brix, vesting, vestingAddress, owner, alice } = await loadFixture(
+      const { brxu, vesting, vestingAddress, owner, alice } = await loadFixture(
         deployVestingFixture
       );
       const amount = ethers.parseEther("100000");
-      await brix.connect(owner).approve(vestingAddress, amount);
+      await brxu.connect(owner).approve(vestingAddress, amount);
       await vesting.connect(owner).createDefaultVesting(alice.address, amount);
 
       await time.increase(365 * 86400);

@@ -4,8 +4,8 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { useAccount } from "wagmi";
-import { useBrixApprove, useInvestInDeal, parseBrix } from "@/lib/contracts/hooks";
-import { CONTRACTS_DEPLOYED, BRIX_TOKEN_ADDRESS } from "@/lib/contracts/config";
+import { useBrxuApprove, useInvestInDeal, parseBrxu } from "@/lib/contracts/hooks";
+import { CONTRACTS_DEPLOYED, BRXU_TOKEN_ADDRESS } from "@/lib/contracts/config";
 import { validate, createAmountSchema, parseAmount, sanitizeAmountInput, validateAmount } from "@/lib/validation";
 import { useBalance } from "@/lib/wallet/useBalance";
 
@@ -73,7 +73,7 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   const userBalance = balanceData.availableBalance;
 
   // Contract hooks for on-chain invest flow
-  const { approve, isPending: isApproving, isSuccess: approveSuccess } = useBrixApprove();
+  const { approve, isPending: isApproving, isSuccess: approveSuccess } = useBrxuApprove();
   const { invest: contractInvest, isPending: isInvesting, isConfirming, isSuccess: investTxSuccess } = useInvestInDeal();
 
   const deal = allDeals[dealId];
@@ -86,8 +86,8 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   useEffect(() => {
     if (!investAmount || !deal) { setInvestError(null); return; }
     const amt = parseAmount(investAmount);
-    if (amt < deal.minInvestment) { setInvestError(`Minimum investment is ${deal.minInvestment.toLocaleString()} BRIX`); return; }
-    if (amt > userBalance) { setInvestError(`Insufficient balance (${Math.floor(userBalance).toLocaleString()} BRIX available)`); return; }
+    if (amt < deal.minInvestment) { setInvestError(`Minimum investment is ${deal.minInvestment.toLocaleString()} BRXU`); return; }
+    if (amt > userBalance) { setInvestError(`Insufficient balance (${Math.floor(userBalance).toLocaleString()} BRXU available)`); return; }
     setInvestError(null);
   }, [investAmount, deal, userBalance]);
 
@@ -127,7 +127,7 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
     // On-chain path: approve + investInDeal when contracts are deployed and wallet connected
     if (CONTRACTS_DEPLOYED && isConnected && address) {
       try {
-        const amountWei = parseBrix(String(amount));
+        const amountWei = parseBrxu(String(amount));
         // The deal would have an on-chain address from the factory.
         // For now, we use the API path as fallback until deals are deployed on-chain.
         // When a dealContractAddress is available, uncomment the on-chain flow:
@@ -230,10 +230,10 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
             <div className="mb-4"><div className="flex items-center justify-between mb-1.5"><span className="text-xs" style={{ color: "#4A4A5A" }}>Funding Progress</span><span className="text-xs font-semibold" style={{ color: "#D4A843" }}>{fundedPct}%</span></div><div className="h-3 w-full rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${Math.min(fundedPct, 100)}%`, backgroundColor: "#D4A843" }} /></div><div className="mt-2 flex items-center justify-between"><span className="text-sm font-semibold" style={{ color: "#D4A843" }}>${currentFunded.toLocaleString()} raised</span><span className="text-sm" style={{ color: "#4A4A5A" }}>of ${deal.capitalNeeded.toLocaleString()}</span></div></div>
             <div className="space-y-3 mb-5 border-t border-white/10 pt-4">{[{ label: "Investors", value: String(currentInvestors) }, { label: "Min Investment", value: `$${deal.minInvestment.toLocaleString()}` }, { label: "Projected Return", value: `${deal.roi}% ROI` }, { label: "Timeline", value: deal.timeline }].map((s) => (<div key={s.label} className="flex items-center justify-between"><span className="text-sm" style={{ color: "#4A4A5A" }}>{s.label}</span><span className="text-sm font-semibold text-white">{s.value}</span></div>))}</div>
             <div className="space-y-3">
-              <div><label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRIX)</label><div className="relative mt-1"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "#D4A843" }}>$BRIX</span><input type="text" inputMode="decimal" value={investAmount} onChange={(e) => { setInvestAmount(sanitizeAmountInput(e.target.value)); setInvestError(null); }} className="w-full rounded-lg border py-2.5 pl-16 pr-4 text-sm text-white text-right focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A", borderColor: investError ? "#E8632B" : "rgba(255,255,255,0.1)" }} /></div></div>
+              <div><label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRXU)</label><div className="relative mt-1"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "#D4A843" }}>$BRXU</span><input type="text" inputMode="decimal" value={investAmount} onChange={(e) => { setInvestAmount(sanitizeAmountInput(e.target.value)); setInvestError(null); }} className="w-full rounded-lg border py-2.5 pl-16 pr-4 text-sm text-white text-right focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A", borderColor: investError ? "#E8632B" : "rgba(255,255,255,0.1)" }} /></div></div>
               {investSuccess && <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>Investment submitted successfully!</div>}
               {investError && <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">{investError}</div>}
-              <button onClick={handleInvest} disabled={investing || isApproving || isInvesting || isConfirming || !investAmount || !!investError} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{isApproving ? "Approving..." : isInvesting ? "Submitting..." : isConfirming ? "Confirming..." : investing ? "Processing..." : "Invest $BRIX"}</button>
+              <button onClick={handleInvest} disabled={investing || isApproving || isInvesting || isConfirming || !investAmount || !!investError} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>{isApproving ? "Approving..." : isInvesting ? "Submitting..." : isConfirming ? "Confirming..." : investing ? "Processing..." : "Invest $BRXU"}</button>
               <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>By investing, you agree to the Terms & Conditions</p>
             </div>
           </div>

@@ -1,12 +1,12 @@
 # BrixUp Investor Pitch Deck
-## $BRIX — The Build Token
+## $BRXU — The Build Token
 ### Seed Round — $2M | 2026
 
 ---
 
 ## Slide 1: Cover
 
-### $BRIX — The Build Token
+### $BRXU — The Build Token
 
 **BrixUp Technologies LLC**
 
@@ -16,9 +16,9 @@
 - Website: [brixups.com](https://brixups.com)
 - Contact: miguel@brixups.com
 
-**Tagline:** "Stack $BRIX. Build Wealth. Own the Block."
+**Tagline:** "Stack $BRXU. Build Wealth. Own the Block."
 
-> **Speaker Notes:** Open with the core narrative — BrixUp is the first platform where contractors, investors, and dealmakers all participate in real estate deals through smart contracts. We are raising $2M to build the MVP, fund the first 10 deals, and launch the $BRIX token on Base L2. This is not a theoretical product — our founder has a 15-year track record and $12M+ in active pipeline ready to tokenize on day one.
+> **Speaker Notes:** Open with the core narrative — BrixUp is the first platform where contractors, investors, and dealmakers all participate in real estate deals through smart contracts. We are raising $2M to build the MVP, fund the first 10 deals, and launch the $BRXU token on Base L2. This is not a theoretical product — our founder has a 15-year track record and $12M+ in active pipeline ready to tokenize on day one.
 
 ---
 
@@ -112,7 +112,7 @@ Four participant types on one platform:
 
 ## Slide 6: Token Utility & Economics
 
-### $BRIX — ERC-20 on Base L2
+### $BRXU — ERC-20 on Base L2
 
 | Parameter | Value |
 |-----------|-------|
@@ -138,9 +138,9 @@ Four participant types on one platform:
 4. Governance Voting (platform decisions, fee changes)
 5. Contractor Staking / Performance Bond
 6. Reward Distribution (referrals, engagement, milestones)
-7. Secondary Market Trading Pair ($BRIX/USDC)
+7. Secondary Market Trading Pair ($BRXU/USDC)
 
-> **Speaker Notes:** $BRIX is a utility token, not a security. It does not represent ownership in BrixUp Technologies LLC or in any deal. Its value derives from its utility within the platform — fee discounts, deal access, governance, and contractor bonding. The 40% treasury allocation ensures long-term ecosystem development. The 15% team allocation vests over 4 years with a 12-month cliff, demonstrating long-term commitment.
+> **Speaker Notes:** $BRXU is a utility token, not a security. It does not represent ownership in BrixUp Technologies LLC or in any deal. Its value derives from its utility within the platform — fee discounts, deal access, governance, and contractor bonding. The 40% treasury allocation ensures long-term ecosystem development. The 15% team allocation vests over 4 years with a 12-month cliff, demonstrating long-term commitment.
 
 ---
 
@@ -201,7 +201,7 @@ BrixStaking.sol
 | Gross Deal Volume | $5M | $30M | $175M |
 | **Platform Revenue** | **$226K** | **$1.35M** | **$7.5M** |
 
-> **Speaker Notes:** Six revenue streams with compounding growth. Year 1 is conservative — 20 deals, mostly from M4's existing pipeline. Year 2 scales to 100 deals as we expand geographically and onboard external dealmakers. Year 3 at 500 deals represents market traction across 8+ states. The origination fee is the primary driver, but SaaS subscriptions and secondary market fees become increasingly significant as the platform matures. Note: these projections exclude $BRIX token appreciation, which is not a revenue source for the operating company.
+> **Speaker Notes:** Six revenue streams with compounding growth. Year 1 is conservative — 20 deals, mostly from M4's existing pipeline. Year 2 scales to 100 deals as we expand geographically and onboard external dealmakers. Year 3 at 500 deals represents market traction across 8+ states. The origination fee is the primary driver, but SaaS subscriptions and secondary market fees become increasingly significant as the platform matures. Note: these projections exclude $BRXU token appreciation, which is not a revenue source for the operating company.
 
 ---
 
@@ -281,10 +281,10 @@ BrixStaking.sol
 
 | Quarter | Milestone | Deliverable |
 |---------|-----------|-------------|
-| **Q1 2026** | Foundation | Smart contracts on Base testnet, Persona KYC integration, brixups.com MVP, $BRIX pre-sale, first 5 deals from M4 pipeline, external audit engagement |
-| **Q2 2026** | Launch | $BRIX TGE on Base mainnet, Brix Box contracts live, 10 funded deals, Coinbase Smart Wallet, staking tiers live, Reg D 506(c) offerings |
+| **Q1 2026** | Foundation | Smart contracts on Base testnet, Persona KYC integration, brixups.com MVP, $BRXU pre-sale, first 5 deals from M4 pipeline, external audit engagement |
+| **Q2 2026** | Launch | $BRXU TGE on Base mainnet, Brix Box contracts live, 10 funded deals, Coinbase Smart Wallet, staking tiers live, Reg D 506(c) offerings |
 | **Q3 2026** | Growth | 50+ active deals, Sweat Equity module live, secondary market, mobile PWA, FL/SC/GA expansion, Circle USDC integration |
-| **Q4 2026** | Scale | 100+ deals, Reg CF offerings, governance portal, builder reputation system, $BRIX rewards, TX/AZ/TN expansion |
+| **Q4 2026** | Scale | 100+ deals, Reg CF offerings, governance portal, builder reputation system, $BRXU rewards, TX/AZ/TN expansion |
 
 **2027:** 250+ deals/quarter, native mobile app, API platform, multi-family deals, international feasibility
 
@@ -302,7 +302,7 @@ BrixStaking.sol
 
 **What you get:**
 - Equity in BrixUp Technologies LLC (SAFE or priced round, terms TBD)
-- Pro-rata allocation in $BRIX pre-sale at founding investor pricing
+- Pro-rata allocation in $BRXU pre-sale at founding investor pricing
 - Advisory board seat (for lead investor / $500K+ commitment)
 - Quarterly investor updates and platform access
 

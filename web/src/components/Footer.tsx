@@ -101,7 +101,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 border-t border-offwhite/5 pt-8">
           <p className="text-center text-xs text-offwhite/50">
-            &copy; 2026 BrixUp Technologies LLC. $BRIX is a utility token and
+            &copy; 2026 BrixUp Technologies LLC. $BRXU is a utility token and
             does NOT constitute a security.
           </p>
         </div>

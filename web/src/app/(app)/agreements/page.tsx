@@ -239,8 +239,8 @@ export default function AgreementsPage() {
                     <>
                       <p className="text-white font-semibold">Private Placement Memorandum</p>
                       <p>This PPM is for {agreement.dealAddress || "the referenced deal"}.</p>
-                      <p>Offering: Tokenized fractional ownership via $BRIX tokens on Base L2 network.</p>
-                      <p>Minimum Investment: $500 (500 BRIX tokens at $1.00/token).</p>
+                      <p>Offering: Tokenized fractional ownership via $BRXU tokens on Base L2 network.</p>
+                      <p>Minimum Investment: $500 (500 BRXU tokens at $1.00/token).</p>
                       <p>Use of Proceeds: Property acquisition, rehabilitation, and resale.</p>
                       <p>Risk Factors: Market risk, construction risk, liquidity risk, regulatory risk.</p>
                       <p className="text-white/30">... [Full document available for download]</p>
@@ -249,8 +249,8 @@ export default function AgreementsPage() {
                   {agreement.type === "saft" && (
                     <>
                       <p className="text-white font-semibold">Simple Agreement for Future Tokens (SAFT)</p>
-                      <p>Token: $BRIX on Base L2 (ERC-20). Contract: 0x636E2f0cA4eFaAB67fd3FB67B31dfc677a494850</p>
-                      <p>Each BRIX token represents a fractional interest in the underlying real estate deal SPV.</p>
+                      <p>Token: $BRXU on Base L2 (ERC-20). Contract: 0x636E2f0cA4eFaAB67fd3FB67B31dfc677a494850</p>
+                      <p>Each BRXU token represents a fractional interest in the underlying real estate deal SPV.</p>
                       <p>Tokens are non-transferable for 12 months from issuance (lock-up period).</p>
                       <p className="text-white/30">... [Full document available for download]</p>
                     </>
@@ -260,7 +260,7 @@ export default function AgreementsPage() {
                       <p className="text-white font-semibold">SPV Operating Agreement</p>
                       <p>Deal: {agreement.dealAddress || "Referenced property"}</p>
                       <p>Structure: Single-purpose LLC holding title to the property.</p>
-                      <p>Distribution: Pro-rata based on BRIX token holdings in the deal pool.</p>
+                      <p>Distribution: Pro-rata based on BRXU token holdings in the deal pool.</p>
                       <p className="text-white/30">... [Full document available for download]</p>
                     </>
                   )}
@@ -268,8 +268,8 @@ export default function AgreementsPage() {
                     <>
                       <p className="text-white font-semibold">Contractor Participation Agreement</p>
                       <p>Deal: {agreement.dealAddress || "Referenced property"}</p>
-                      <p>Compensation: Cash draws per milestone + sweat equity BRIX tokens.</p>
-                      <p>Performance Bond: 500 BRIX staked as quality guarantee.</p>
+                      <p>Compensation: Cash draws per milestone + sweat equity BRXU tokens.</p>
+                      <p>Performance Bond: 500 BRXU staked as quality guarantee.</p>
                       <p>Draw Schedule: Based on milestone completion verified by inspections.</p>
                       <p className="text-white/30">... [Full document available for download]</p>
                     </>

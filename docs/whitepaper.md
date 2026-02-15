@@ -1,4 +1,4 @@
-# $BRIX: The Build Token — Whitepaper v1.0
+# $BRXU: The Build Token — Whitepaper v1.0
 
 ## BrixUp Technologies LLC | 2026
 
@@ -15,7 +15,7 @@
 2. [Introduction: The Problem](#2-introduction-the-problem)
 3. [Market Opportunity](#3-market-opportunity)
 4. [The BrixUp Solution](#4-the-brixup-solution)
-5. [$BRIX Token: Utility, Economics, and Governance](#5-brix-token-utility-economics-and-governance)
+5. [$BRXU Token: Utility, Economics, and Governance](#5-brix-token-utility-economics-and-governance)
 6. [Smart Contract Architecture](#6-smart-contract-architecture)
 7. [Deal Lifecycle](#7-deal-lifecycle)
 8. [Sweat Equity Tokenization](#8-sweat-equity-tokenization)
@@ -33,7 +33,7 @@
 
 ## 1. Abstract
 
-BrixUp is a tokenized real estate development marketplace that unites investors, builders, and dealmakers under a unified smart contract framework, creating the first vertically integrated platform where capital meets construction at the point of execution. The $BRIX token (ERC-20, deployed on Base L2) serves as the utility and governance backbone of the platform, enabling deal participation, staking, fee reduction, reputation scoring, and community governance across every phase of the real estate development lifecycle.
+BrixUp is a tokenized real estate development marketplace that unites investors, builders, and dealmakers under a unified smart contract framework, creating the first vertically integrated platform where capital meets construction at the point of execution. The $BRXU token (ERC-20, deployed on Base L2) serves as the utility and governance backbone of the platform, enabling deal participation, staking, fee reduction, reputation scoring, and community governance across every phase of the real estate development lifecycle.
 
 The United States residential construction market exceeds $1.3 trillion annually, yet the participants who create the most value — contractors, tradespeople, and small-scale developers — remain systematically excluded from the profit upside of the projects they build. Meanwhile, real estate crowdfunding has surpassed $300 billion in total addressable market, but existing platforms operate as institutional gatekeepers that ignore the builders, wholesalers, and local operators who originate and execute deals on the ground. BrixUp bridges this gap by tokenizing the entire deal lifecycle: from deal origination and investor funding through active construction, milestone-based draw schedules, and automated profit distribution.
 
@@ -86,7 +86,7 @@ The U.S. construction industry faces a shortage of over 500,000 skilled tradespe
 | Fix-and-flip operators | 350K+ active in US | Deal funding, contractor matching, transparent draws |
 | Licensed general contractors | 700K+ active licenses | Sweat equity participation, deal flow, payment certainty |
 | Real estate wholesalers | 200K+ active | Capital partners, execution platform, profit participation |
-| Retail RE investors | 15M+ accounts on existing platforms | Access to small deals, transparent returns, $BRIX staking |
+| Retail RE investors | 15M+ accounts on existing platforms | Access to small deals, transparent returns, $BRXU staking |
 | Construction subcontractors | 2M+ firms | Payment guarantee, profit sharing, reputation building |
 
 ---
@@ -97,7 +97,7 @@ BrixUp is best understood as the convergence of three platforms that have never 
 
 ### Platform Overview
 
-BrixUp is a two-sided marketplace with four distinct participant types, each incentivized through the $BRIX token ecosystem:
+BrixUp is a two-sided marketplace with four distinct participant types, each incentivized through the $BRXU token ecosystem:
 
 **Dealmakers** are the originators — wholesalers, real estate agents, developers, and scouts who source undervalued properties and structure renovation or development deals. Dealmakers list projects on BrixUp with detailed scopes of work, budgets, timelines, and profit projections. They earn origination fees and retain equity participation in the deals they sponsor. The platform provides dealmakers with capital access they cannot find through traditional channels, transforming them from transaction intermediaries into deal sponsors.
 
@@ -114,19 +114,19 @@ BrixUp is a two-sided marketplace with four distinct participant types, each inc
 - **Draw Schedule Automation:** Milestone-based fund releases triggered by inspector verification, replacing manual draw request processes
 - **Sweat Equity Engine:** Contractors register trade commitments, log hours, and earn tokenized profit participation
 - **Reputation System:** On-chain track record for builders, dealmakers, and investors based on completed deals, on-time delivery, and return performance
-- **$BRIX Staking:** Stake tokens for fee discounts, priority deal access, governance voting, and enhanced reputation scores
+- **$BRXU Staking:** Stake tokens for fee discounts, priority deal access, governance voting, and enhanced reputation scores
 - **Secondary Market:** Trade deal participation tokens before project completion, providing liquidity to traditionally illiquid investments
 
 ---
 
-## 5. $BRIX Token: Utility, Economics, and Governance
+## 5. $BRXU Token: Utility, Economics, and Governance
 
 ### Token Overview
 
 | Parameter | Value |
 |-----------|-------|
 | Token Name | BrixUp Token |
-| Symbol | $BRIX |
+| Symbol | $BRXU |
 | Standard | ERC-20 |
 | Network | Base L2 (Ethereum) |
 | Total Supply | 1,000,000,000 (1 Billion) |
@@ -146,29 +146,29 @@ BrixUp is a two-sided marketplace with four distinct participant types, each inc
 
 ### Utility Functions
 
-$BRIX is designed as a utility token with seven core functions within the BrixUp ecosystem:
+$BRXU is designed as a utility token with seven core functions within the BrixUp ecosystem:
 
-1. **Deal Access:** Holding or staking $BRIX is required to access premium deal listings, early funding windows, and exclusive deal categories. Tiered access levels (Bronze, Silver, Gold, Platinum) unlock progressively better deal flow based on staking thresholds.
+1. **Deal Access:** Holding or staking $BRXU is required to access premium deal listings, early funding windows, and exclusive deal categories. Tiered access levels (Bronze, Silver, Gold, Platinum) unlock progressively better deal flow based on staking thresholds.
 
-2. **Fee Reduction:** $BRIX holders receive fee discounts proportional to their staking tier. Bronze (1,000 $BRIX staked) receives a 10% discount on platform fees; Silver (10,000) receives 20%; Gold (50,000) receives 30%; Platinum (250,000) receives 50%.
+2. **Fee Reduction:** $BRXU holders receive fee discounts proportional to their staking tier. Bronze (1,000 $BRXU staked) receives a 10% discount on platform fees; Silver (10,000) receives 20%; Gold (50,000) receives 30%; Platinum (250,000) receives 50%.
 
-3. **Reputation Weighting:** $BRIX staking contributes to a participant's reputation score, which affects deal visibility, builder matching priority, and investor confidence signals. Staking demonstrates commitment to the platform and aligns long-term incentives.
+3. **Reputation Weighting:** $BRXU staking contributes to a participant's reputation score, which affects deal visibility, builder matching priority, and investor confidence signals. Staking demonstrates commitment to the platform and aligns long-term incentives.
 
-4. **Governance Voting:** $BRIX holders vote on platform governance proposals including fee structure changes, new market expansion, feature prioritization, treasury disbursements, and dispute resolution policies. Voting power is proportional to staked tokens with a quadratic weighting mechanism to prevent plutocratic capture.
+4. **Governance Voting:** $BRXU holders vote on platform governance proposals including fee structure changes, new market expansion, feature prioritization, treasury disbursements, and dispute resolution policies. Voting power is proportional to staked tokens with a quadratic weighting mechanism to prevent plutocratic capture.
 
-5. **Contractor Staking (Bond):** Builders stake $BRIX as a performance bond when committing to deals. If the builder fails to meet milestones or abandons the project, a portion of their staked tokens is slashed and distributed to affected investors and dealmakers. This creates a powerful accountability mechanism that replaces traditional surety bonds.
+5. **Contractor Staking (Bond):** Builders stake $BRXU as a performance bond when committing to deals. If the builder fails to meet milestones or abandons the project, a portion of their staked tokens is slashed and distributed to affected investors and dealmakers. This creates a powerful accountability mechanism that replaces traditional surety bonds.
 
-6. **Reward Distribution:** Community rewards, referral bonuses, and platform incentives are denominated and distributed in $BRIX. Early adopters, high-performing builders, and active investors earn $BRIX through platform engagement.
+6. **Reward Distribution:** Community rewards, referral bonuses, and platform incentives are denominated and distributed in $BRXU. Early adopters, high-performing builders, and active investors earn $BRXU through platform engagement.
 
-7. **Secondary Market Currency:** Deal participation shares can be listed and traded on BrixUp's secondary market, with $BRIX serving as one side of the trading pair alongside USDC.
+7. **Secondary Market Currency:** Deal participation shares can be listed and traded on BrixUp's secondary market, with $BRXU serving as one side of the trading pair alongside USDC.
 
 ### Governance Framework
 
 BrixUp governance operates through a DAO-lite structure during the initial launch phase, transitioning to full DAO governance as the platform matures:
 
-- **Phase 1 (2026):** Advisory governance. $BRIX holders submit and vote on proposals, but the core team retains veto authority for compliance and operational reasons.
+- **Phase 1 (2026):** Advisory governance. $BRXU holders submit and vote on proposals, but the core team retains veto authority for compliance and operational reasons.
 - **Phase 2 (2027):** Hybrid governance. Community votes are binding for fee changes, market expansion, and treasury allocation above $100,000. Core team retains veto only for legal and compliance matters.
-- **Phase 3 (2028+):** Full DAO governance. All platform decisions governed by $BRIX holder votes with a multi-sig execution committee elected by token holders.
+- **Phase 3 (2028+):** Full DAO governance. All platform decisions governed by $BRXU holder votes with a multi-sig execution committee elected by token holders.
 
 ---
 
@@ -178,7 +178,7 @@ BrixUp's smart contract system is built on a modular architecture deployed on Ba
 
 ### Core Contracts
 
-**BrixToken.sol** — The ERC-20 token contract for $BRIX. Implements standard ERC-20 functionality with additional modules for vesting schedules (team, treasury, pre-sale), pausability (emergency circuit breaker), and snapshot functionality for governance voting. The contract is deployed once and serves as the canonical $BRIX token across the entire platform.
+**BrixToken.sol** — The ERC-20 token contract for $BRXU. Implements standard ERC-20 functionality with additional modules for vesting schedules (team, treasury, pre-sale), pausability (emergency circuit breaker), and snapshot functionality for governance voting. The contract is deployed once and serves as the canonical $BRXU token across the entire platform.
 
 **BrixDeal.sol** — The per-deal escrow contract, referred to as a "Brix Box." Each deal listed on BrixUp deploys a new instance of BrixDeal with customized parameters including funding target, draw milestones, profit distribution waterfall, builder commitments, and timeline. The Brix Box holds all investor funds in USDC, releases draws upon verified milestone completion, and automatically distributes profits upon deal completion. Key functions include:
 
@@ -191,7 +191,7 @@ BrixUp's smart contract system is built on a modular architecture deployed on Ba
 
 **BrixFactory.sol** — The factory contract that deploys new BrixDeal instances. The factory ensures consistent contract creation, maintains a registry of all active deals, and enforces platform-wide parameters such as minimum funding thresholds, maximum deal sizes, and approved builder requirements. The factory pattern enables gas-efficient deployment while maintaining upgradeability through proxy patterns.
 
-**BrixStaking.sol** — The staking contract for $BRIX tokens. Manages staking positions, calculates tier levels (Bronze through Platinum), tracks staking duration for governance weight, and handles slashing events for builder performance bonds. The staking contract integrates with the reputation system to provide on-chain credibility scoring.
+**BrixStaking.sol** — The staking contract for $BRXU tokens. Manages staking positions, calculates tier levels (Bronze through Platinum), tracks staking duration for governance weight, and handles slashing events for builder performance bonds. The staking contract integrates with the reputation system to provide on-chain credibility scoring.
 
 ### The "Brix Box" Concept
 
@@ -250,7 +250,7 @@ Upon full funding, the deal transitions to Active Construction. The dealmaker ac
 - Builders log daily activity and progress photos to the platform
 - Project timelines are tracked against the original schedule
 - Change orders require dealmaker approval and investor notification (material changes require investor vote)
-- The $BRIX reputation system records builder performance in real-time
+- The $BRXU reputation system records builder performance in real-time
 
 ### Phase 4: Draw Schedule
 
@@ -345,7 +345,7 @@ If an investor or dealmaker disputes a draw request, the following escalation pr
 
 - **Level 1:** 48-hour review period where the builder can provide additional evidence
 - **Level 2:** Independent third-party inspection ordered and funded from the deal's contingency allocation
-- **Level 3:** Platform arbitration panel (three $BRIX-staked community members) renders binding decision
+- **Level 3:** Platform arbitration panel (three $BRXU-staked community members) renders binding decision
 - **Level 4:** Off-chain legal remedies per the deal's governing law (North Carolina)
 
 ---
@@ -365,12 +365,12 @@ All platform participants undergo identity verification through Persona, an ente
 
 ### Token Classification
 
-$BRIX is structured as a utility token under U.S. securities law. Under the Howey Test analysis:
+$BRXU is structured as a utility token under U.S. securities law. Under the Howey Test analysis:
 
-1. **Investment of Money:** $BRIX is acquired for platform utility, not as an investment of money for profit. Holders stake tokens for fee discounts, deal access, and governance — functional utilities within the platform.
-2. **Common Enterprise:** $BRIX utility functions operate independently of BrixUp's financial performance. Fee discounts and governance rights have value regardless of platform profitability.
-3. **Expectation of Profit:** The token is marketed and sold for its utility functions, not as a profit-generating investment. The platform does not promote $BRIX as an investment vehicle.
-4. **Efforts of Others:** $BRIX utility derives from the holder's own actions (staking, governance participation, deal access) rather than the managerial efforts of BrixUp.
+1. **Investment of Money:** $BRXU is acquired for platform utility, not as an investment of money for profit. Holders stake tokens for fee discounts, deal access, and governance — functional utilities within the platform.
+2. **Common Enterprise:** $BRXU utility functions operate independently of BrixUp's financial performance. Fee discounts and governance rights have value regardless of platform profitability.
+3. **Expectation of Profit:** The token is marketed and sold for its utility functions, not as a profit-generating investment. The platform does not promote $BRXU as an investment vehicle.
+4. **Efforts of Others:** $BRXU utility derives from the holder's own actions (staking, governance participation, deal access) rather than the managerial efforts of BrixUp.
 
 *Note: This analysis represents BrixUp's good-faith interpretation. Token holders should consult their own legal counsel regarding applicable securities laws in their jurisdiction.*
 
@@ -397,7 +397,7 @@ BrixUp's technology platform is built on a modern, scalable architecture designe
 - **Network:** Base L2 (Coinbase's Ethereum Layer 2)
 - **Rationale:** Low gas costs ($0.01-0.05/tx), 2-second finality, native Coinbase Smart Wallet integration, growing ecosystem, Ethereum security inheritance
 - **Smart Contracts:** Solidity 0.8.x, compiled with Hardhat, tested with Foundry
-- **Token Standard:** ERC-20 ($BRIX), ERC-1155 (deal participation tokens)
+- **Token Standard:** ERC-20 ($BRXU), ERC-1155 (deal participation tokens)
 - **Storage:** IPFS via Pinata for deal documentation, milestone evidence, and inspection reports
 
 ### Application Layer
@@ -486,12 +486,12 @@ When deal participation tokens are traded on BrixUp's secondary market, a 1% fee
 - Finalize smart contract architecture and deploy to Base testnet
 - Complete Persona KYC integration
 - Launch brixups.com with deal marketplace MVP
-- $BRIX token pre-sale to early supporters
+- $BRXU token pre-sale to early supporters
 - Onboard first 5 deals from M4 Development Holdings pipeline
 - Engage external smart contract auditor
 
 ### 2026 Q2: Launch
-- $BRIX Token Generation Event (TGE) on Base mainnet
+- $BRXU Token Generation Event (TGE) on Base mainnet
 - Launch Brix Box smart contracts on Base mainnet
 - First 10 funded deals live on platform
 - Coinbase Smart Wallet integration for seamless onboarding
@@ -511,7 +511,7 @@ When deal participation tokens are traded on BrixUp's secondary market, a 1% fee
 - Launch Reg CF offerings for non-accredited investors
 - Governance voting portal live
 - Builder reputation system with on-chain scoring
-- Launch $BRIX rewards program for platform engagement
+- Launch $BRXU rewards program for platform engagement
 - Geographic expansion to TX, AZ, and TN markets
 
 ### 2027: Expansion
@@ -525,10 +525,10 @@ When deal participation tokens are traded on BrixUp's secondary market, a 1% fee
 ### 2028: Maturity
 - 500+ deals per quarter
 - Full DAO governance transition
-- Insurance and warranty products built on $BRIX staking
+- Insurance and warranty products built on $BRXU staking
 - Lending marketplace (construction loans originated through platform)
 - White-label platform for regional operators
-- $BRIX listed on major CEXs (Coinbase, Kraken)
+- $BRXU listed on major CEXs (Coinbase, Kraken)
 
 ---
 
@@ -565,17 +565,17 @@ BrixUp's seed round will fund the following key hires:
 
 ## 15. Risk Factors
 
-Prospective participants in the BrixUp platform and holders of the $BRIX token should carefully consider the following risk factors:
+Prospective participants in the BrixUp platform and holders of the $BRXU token should carefully consider the following risk factors:
 
 **Market Risk:** Real estate markets are cyclical and subject to downturns. Property values may decline, construction costs may increase, and deal returns may underperform projections. BrixUp does not guarantee returns on any deal and past performance of similar deals is not indicative of future results.
 
-**Regulatory Risk:** The regulatory environment for digital assets and tokenized securities is evolving rapidly. Changes in federal or state law may affect the legality, tax treatment, or operational requirements of $BRIX tokens, deal participation tokens, or the BrixUp platform. BrixUp may be required to modify its business model, restrict access to certain jurisdictions, or cease operations in response to regulatory changes.
+**Regulatory Risk:** The regulatory environment for digital assets and tokenized securities is evolving rapidly. Changes in federal or state law may affect the legality, tax treatment, or operational requirements of $BRXU tokens, deal participation tokens, or the BrixUp platform. BrixUp may be required to modify its business model, restrict access to certain jurisdictions, or cease operations in response to regulatory changes.
 
 **Smart Contract Risk:** Despite rigorous testing and external auditing, smart contracts may contain bugs, vulnerabilities, or logic errors that could result in loss of funds. The immutable nature of blockchain transactions means that errors cannot always be reversed. BrixUp mitigates this risk through multi-sig controls, emergency pause functionality, and bug bounty programs, but cannot guarantee zero-defect smart contract performance.
 
 **Construction Risk:** Real estate construction projects are inherently risky. Deals may experience cost overruns, timeline delays, permitting issues, labor shortages, material price increases, weather delays, or total project failure. BrixUp's Brix Box structure isolates each deal from others, but investors in any individual deal may experience partial or total loss of capital.
 
-**Liquidity Risk:** $BRIX tokens and deal participation tokens may have limited liquidity, particularly during the early stages of platform operation. There is no guarantee that a secondary market will develop, and token holders may be unable to sell their tokens at their desired price or at all.
+**Liquidity Risk:** $BRXU tokens and deal participation tokens may have limited liquidity, particularly during the early stages of platform operation. There is no guarantee that a secondary market will develop, and token holders may be unable to sell their tokens at their desired price or at all.
 
 **Counterparty Risk:** Despite KYC verification and reputation scoring, participants on the platform may fail to fulfill their obligations. Builders may abandon projects, dealmakers may provide inaccurate projections, and investors may fail to meet capital calls. BrixUp provides dispute resolution mechanisms but cannot guarantee participant performance.
 
@@ -587,11 +587,11 @@ Prospective participants in the BrixUp platform and holders of the $BRIX token s
 
 BrixUp sits at the intersection of three powerful forces reshaping the American economy: the tokenization of real-world assets, the critical shortage of construction labor, and the democratization of real estate investing through crowdfunding technology. By building the first platform that unites these forces under a single smart contract framework, BrixUp creates a marketplace where every participant in the real estate development value chain — from the investor contributing $100 to the framing contractor committing 320 hours of labor — can participate transparently, equitably, and profitably.
 
-The $BRIX token is the connective tissue of this marketplace, aligning incentives across all participant types through staking, governance, reputation, and fee mechanics that reward long-term commitment and quality execution. The Brix Box smart contract is the trust layer, replacing handshake deals, paper draws, and opaque profit sharing with auditable, enforceable, and automated financial logic.
+The $BRXU token is the connective tissue of this marketplace, aligning incentives across all participant types through staking, governance, reputation, and fee mechanics that reward long-term commitment and quality execution. The Brix Box smart contract is the trust layer, replacing handshake deals, paper draws, and opaque profit sharing with auditable, enforceable, and automated financial logic.
 
 BrixUp is not building technology for technology's sake. We are building the platform that Miguel Perez wished existed when he was a young contractor waiting 90 days for payment on a project that made the developer $200,000 in profit. We are building the marketplace that every wholesaler wishes existed when they assign a $300,000 deal for a $10,000 fee while someone else captures $80,000 in renovation profit. We are building the investment platform that every retail investor wishes existed when they want to put $1,000 into a real deal in a real neighborhood built by a real contractor — not another REIT share in a faceless institutional portfolio.
 
-The tools exist. The market is ready. The builders are waiting. It is time to stack $BRIX.
+The tools exist. The market is ready. The builders are waiting. It is time to stack $BRXU.
 
 **Join us at [brixups.com](https://brixups.com)**
 
@@ -625,6 +625,6 @@ The tools exist. The market is ready. The builders are waiting. It is time to st
 
 ---
 
-**Disclaimer:** This whitepaper is provided for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any securities, tokens, or other financial instruments. The $BRIX token is a utility token designed for use within the BrixUp platform. Participation in the BrixUp platform and acquisition of $BRIX tokens involves significant risk. Prospective participants should consult their own legal, financial, and tax advisors before engaging with the platform. BrixUp Technologies LLC makes no guarantees regarding token value, platform performance, or deal returns.
+**Disclaimer:** This whitepaper is provided for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any securities, tokens, or other financial instruments. The $BRXU token is a utility token designed for use within the BrixUp platform. Participation in the BrixUp platform and acquisition of $BRXU tokens involves significant risk. Prospective participants should consult their own legal, financial, and tax advisors before engaging with the platform. BrixUp Technologies LLC makes no guarantees regarding token value, platform performance, or deal returns.
 
 **Copyright 2026 BrixUp Technologies LLC. All rights reserved.**

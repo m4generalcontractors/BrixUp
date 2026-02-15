@@ -9,12 +9,12 @@
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
-import { BrixTokenABI, BrixStakingABI, BrixDealABI, BrixFactoryABI, BrixVestingABI } from "./abis";
+import { BrxuTokenABI, BrxuStakingABI, BrxuDealABI, BrxuFactoryABI, BrxuVestingABI } from "./abis";
 import {
-  BRIX_TOKEN_ADDRESS,
-  BRIX_STAKING_ADDRESS,
-  BRIX_FACTORY_ADDRESS,
-  BRIX_VESTING_ADDRESS,
+  BRXU_TOKEN_ADDRESS,
+  BRXU_STAKING_ADDRESS,
+  BRXU_FACTORY_ADDRESS,
+  BRXU_VESTING_ADDRESS,
   CONTRACTS_DEPLOYED,
 } from "./config";
 
@@ -22,40 +22,40 @@ import {
 //  Helpers
 // ---------------------------------------------------------------------------
 
-/** Parse a human-readable BRIX amount (e.g. "1000") to wei (18 decimals). */
-export function parseBrix(amount: string): bigint {
+/** Parse a human-readable BRXU amount (e.g. "1000") to wei (18 decimals). */
+export function parseBrxu(amount: string): bigint {
   return parseUnits(amount, 18);
 }
 
-/** Format a wei amount to human-readable BRIX string. */
-export function formatBrix(wei: bigint | undefined): string {
+/** Format a wei amount to human-readable BRXU string. */
+export function formatBrxu(wei: bigint | undefined): string {
   if (!wei) return "0";
   return formatUnits(wei, 18);
 }
 
 // ---------------------------------------------------------------------------
-//  BrixToken Reads
+//  BrxuToken Reads
 // ---------------------------------------------------------------------------
 
-/** Get BRIX balance of an address. */
-export function useBrixBalance(address: `0x${string}` | undefined) {
+/** Get BRXU balance of an address. */
+export function useBrxuBalance(address: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_TOKEN_ADDRESS,
-    abi: BrixTokenABI,
+    address: BRXU_TOKEN_ADDRESS,
+    abi: BrxuTokenABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
   });
 }
 
-/** Get BRIX allowance for a spender. */
-export function useBrixAllowance(
+/** Get BRXU allowance for a spender. */
+export function useBrxuAllowance(
   owner: `0x${string}` | undefined,
   spender: `0x${string}` | undefined
 ) {
   return useReadContract({
-    address: BRIX_TOKEN_ADDRESS,
-    abi: BrixTokenABI,
+    address: BRXU_TOKEN_ADDRESS,
+    abi: BrxuTokenABI,
     functionName: "allowance",
     args: owner && spender ? [owner, spender] : undefined,
     query: { enabled: !!owner && !!spender && CONTRACTS_DEPLOYED },
@@ -63,19 +63,19 @@ export function useBrixAllowance(
 }
 
 // ---------------------------------------------------------------------------
-//  BrixToken Writes
+//  BrxuToken Writes
 // ---------------------------------------------------------------------------
 
-/** Approve a spender to use BRIX tokens. */
-export function useBrixApprove() {
+/** Approve a spender to use BRXU tokens. */
+export function useBrxuApprove() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const approve = (spender: `0x${string}`, amount: bigint) => {
-    if (!BRIX_TOKEN_ADDRESS) return;
+    if (!BRXU_TOKEN_ADDRESS) return;
     writeContract({
-      address: BRIX_TOKEN_ADDRESS,
-      abi: BrixTokenABI,
+      address: BRXU_TOKEN_ADDRESS,
+      abi: BrxuTokenABI,
       functionName: "approve",
       args: [spender, amount],
     });
@@ -84,16 +84,16 @@ export function useBrixApprove() {
   return { approve, hash, isPending, isConfirming, isSuccess, error };
 }
 
-/** Transfer BRIX tokens. */
-export function useBrixTransfer() {
+/** Transfer BRXU tokens. */
+export function useBrxuTransfer() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const transfer = (to: `0x${string}`, amount: bigint) => {
-    if (!BRIX_TOKEN_ADDRESS) return;
+    if (!BRXU_TOKEN_ADDRESS) return;
     writeContract({
-      address: BRIX_TOKEN_ADDRESS,
-      abi: BrixTokenABI,
+      address: BRXU_TOKEN_ADDRESS,
+      abi: BrxuTokenABI,
       functionName: "transfer",
       args: [to, amount],
     });
@@ -103,14 +103,14 @@ export function useBrixTransfer() {
 }
 
 // ---------------------------------------------------------------------------
-//  BrixStaking Reads
+//  BrxuStaking Reads
 // ---------------------------------------------------------------------------
 
 /** Get staked balance for an address. */
 export function useStakedBalance(address: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "stakedBalance",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
@@ -120,8 +120,8 @@ export function useStakedBalance(address: `0x${string}` | undefined) {
 /** Get pending rewards for an address. */
 export function usePendingRewards(address: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "pendingRewards",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
@@ -131,8 +131,8 @@ export function usePendingRewards(address: `0x${string}` | undefined) {
 /** Get total staked across all users. */
 export function useTotalStaked() {
   return useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "totalStaked",
     query: { enabled: CONTRACTS_DEPLOYED },
   });
@@ -141,8 +141,8 @@ export function useTotalStaked() {
 /** Get staker info (amount, rewardDebt, stakedAt, pendingClaim). */
 export function useStakerInfo(address: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_STAKING_ADDRESS,
-    abi: BrixStakingABI,
+    address: BRXU_STAKING_ADDRESS,
+    abi: BrxuStakingABI,
     functionName: "stakers",
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS_DEPLOYED },
@@ -150,19 +150,19 @@ export function useStakerInfo(address: `0x${string}` | undefined) {
 }
 
 // ---------------------------------------------------------------------------
-//  BrixStaking Writes
+//  BrxuStaking Writes
 // ---------------------------------------------------------------------------
 
-/** Stake BRIX tokens (requires prior approve to staking contract). */
+/** Stake BRXU tokens (requires prior approve to staking contract). */
 export function useStake() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const stake = (amount: bigint) => {
-    if (!BRIX_STAKING_ADDRESS) return;
+    if (!BRXU_STAKING_ADDRESS) return;
     writeContract({
-      address: BRIX_STAKING_ADDRESS,
-      abi: BrixStakingABI,
+      address: BRXU_STAKING_ADDRESS,
+      abi: BrxuStakingABI,
       functionName: "stake",
       args: [amount],
     });
@@ -171,16 +171,16 @@ export function useStake() {
   return { stake, hash, isPending, isConfirming, isSuccess, error };
 }
 
-/** Unstake BRIX tokens (no lock period). */
+/** Unstake BRXU tokens (no lock period). */
 export function useUnstake() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const unstake = (amount: bigint) => {
-    if (!BRIX_STAKING_ADDRESS) return;
+    if (!BRXU_STAKING_ADDRESS) return;
     writeContract({
-      address: BRIX_STAKING_ADDRESS,
-      abi: BrixStakingABI,
+      address: BRXU_STAKING_ADDRESS,
+      abi: BrxuStakingABI,
       functionName: "unstake",
       args: [amount],
     });
@@ -195,10 +195,10 @@ export function useClaimRewards() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const claim = () => {
-    if (!BRIX_STAKING_ADDRESS) return;
+    if (!BRXU_STAKING_ADDRESS) return;
     writeContract({
-      address: BRIX_STAKING_ADDRESS,
-      abi: BrixStakingABI,
+      address: BRXU_STAKING_ADDRESS,
+      abi: BrxuStakingABI,
       functionName: "claimRewards",
     });
   };
@@ -207,14 +207,14 @@ export function useClaimRewards() {
 }
 
 // ---------------------------------------------------------------------------
-//  BrixDeal Reads
+//  BrxuDeal Reads
 // ---------------------------------------------------------------------------
 
 /** Get total capital raised for a deal. */
 export function useDealCapitalRaised(dealAddress: `0x${string}` | undefined) {
   return useReadContract({
     address: dealAddress,
-    abi: BrixDealABI,
+    abi: BrxuDealABI,
     functionName: "totalCapitalRaised",
     query: { enabled: !!dealAddress },
   });
@@ -224,7 +224,7 @@ export function useDealCapitalRaised(dealAddress: `0x${string}` | undefined) {
 export function useDealInvestorCount(dealAddress: `0x${string}` | undefined) {
   return useReadContract({
     address: dealAddress,
-    abi: BrixDealABI,
+    abi: BrxuDealABI,
     functionName: "investorCount",
     query: { enabled: !!dealAddress },
   });
@@ -237,7 +237,7 @@ export function useDealInvestment(
 ) {
   return useReadContract({
     address: dealAddress,
-    abi: BrixDealABI,
+    abi: BrxuDealABI,
     functionName: "investments",
     args: investor ? [investor] : undefined,
     query: { enabled: !!dealAddress && !!investor },
@@ -245,10 +245,10 @@ export function useDealInvestment(
 }
 
 // ---------------------------------------------------------------------------
-//  BrixDeal Writes
+//  BrxuDeal Writes
 // ---------------------------------------------------------------------------
 
-/** Invest BRIX tokens into a deal (requires prior approve to deal contract). */
+/** Invest BRXU tokens into a deal (requires prior approve to deal contract). */
 export function useInvestInDeal() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
@@ -256,7 +256,7 @@ export function useInvestInDeal() {
   const invest = (dealAddress: `0x${string}`, amount: bigint) => {
     writeContract({
       address: dealAddress,
-      abi: BrixDealABI,
+      abi: BrxuDealABI,
       functionName: "investInDeal",
       args: [amount],
     });
@@ -266,14 +266,14 @@ export function useInvestInDeal() {
 }
 
 // ---------------------------------------------------------------------------
-//  BrixFactory Reads
+//  BrxuFactory Reads
 // ---------------------------------------------------------------------------
 
 /** Get all deployed deal addresses. */
 export function useAllDeals() {
   return useReadContract({
-    address: BRIX_FACTORY_ADDRESS,
-    abi: BrixFactoryABI,
+    address: BRXU_FACTORY_ADDRESS,
+    abi: BrxuFactoryABI,
     functionName: "getAllDeals",
     query: { enabled: CONTRACTS_DEPLOYED },
   });
@@ -282,52 +282,52 @@ export function useAllDeals() {
 /** Get total deal count. */
 export function useDealCount() {
   return useReadContract({
-    address: BRIX_FACTORY_ADDRESS,
-    abi: BrixFactoryABI,
+    address: BRXU_FACTORY_ADDRESS,
+    abi: BrxuFactoryABI,
     functionName: "dealCount",
     query: { enabled: CONTRACTS_DEPLOYED },
   });
 }
 
 // ---------------------------------------------------------------------------
-//  BRIXVesting Reads
+//  BRXUVesting Reads
 // ---------------------------------------------------------------------------
 
 /** Get vesting schedule for a beneficiary. */
 export function useVestingSchedule(beneficiary: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_VESTING_ADDRESS,
-    abi: BrixVestingABI,
+    address: BRXU_VESTING_ADDRESS,
+    abi: BrxuVestingABI,
     functionName: "schedules",
     args: beneficiary ? [beneficiary] : undefined,
-    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+    query: { enabled: !!beneficiary && !!BRXU_VESTING_ADDRESS },
   });
 }
 
 /** Get releasable vested tokens for a beneficiary. */
 export function useReleasableAmount(beneficiary: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_VESTING_ADDRESS,
-    abi: BrixVestingABI,
+    address: BRXU_VESTING_ADDRESS,
+    abi: BrxuVestingABI,
     functionName: "releasableAmount",
     args: beneficiary ? [beneficiary] : undefined,
-    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+    query: { enabled: !!beneficiary && !!BRXU_VESTING_ADDRESS },
   });
 }
 
 /** Get total vested amount for a beneficiary. */
 export function useVestedAmount(beneficiary: `0x${string}` | undefined) {
   return useReadContract({
-    address: BRIX_VESTING_ADDRESS,
-    abi: BrixVestingABI,
+    address: BRXU_VESTING_ADDRESS,
+    abi: BrxuVestingABI,
     functionName: "vestedAmount",
     args: beneficiary ? [beneficiary] : undefined,
-    query: { enabled: !!beneficiary && !!BRIX_VESTING_ADDRESS },
+    query: { enabled: !!beneficiary && !!BRXU_VESTING_ADDRESS },
   });
 }
 
 // ---------------------------------------------------------------------------
-//  BRIXVesting Writes
+//  BRXUVesting Writes
 // ---------------------------------------------------------------------------
 
 /** Release vested tokens to caller. */
@@ -336,10 +336,10 @@ export function useReleaseVested() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const release = () => {
-    if (!BRIX_VESTING_ADDRESS) return;
+    if (!BRXU_VESTING_ADDRESS) return;
     writeContract({
-      address: BRIX_VESTING_ADDRESS,
-      abi: BrixVestingABI,
+      address: BRXU_VESTING_ADDRESS,
+      abi: BrxuVestingABI,
       functionName: "release",
     });
   };

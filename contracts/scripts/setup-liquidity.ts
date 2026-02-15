@@ -5,7 +5,7 @@ import * as path from "path";
 /**
  * BrixUp — Uniswap v3 Liquidity Setup on Base
  *
- * Creates a BRIX/USDC pool on Uniswap v3 (Base) and adds initial liquidity.
+ * Creates a BRXU/USDC pool on Uniswap v3 (Base) and adds initial liquidity.
  *
  * Uniswap v3 Addresses on Base Mainnet:
  *   Factory       : 0x33128a8fC17869897dcE68Ed026d694621f6FDfD
@@ -18,9 +18,9 @@ import * as path from "path";
  *
  * Required env vars:
  *   DEPLOYER_PRIVATE_KEY
- *   INITIAL_BRIX_LIQUIDITY  — Amount of BRIX for LP (default: 50,000,000)
+ *   INITIAL_BRXU_LIQUIDITY  — Amount of BRXU for LP (default: 50,000,000)
  *   INITIAL_USDC_LIQUIDITY  — Amount of USDC for LP (default: 500,000)
- *   BRIX_PRICE_USDC         — Initial BRIX price in USDC (default: 0.01)
+ *   BRXU_PRICE_USDC         — Initial BRXU price in USDC (default: 0.01)
  */
 
 // Uniswap v3 Base Mainnet addresses
@@ -51,7 +51,7 @@ const ERC20_ABI = [
 ];
 
 // Calculate sqrtPriceX96 from price ratio
-// price = token1/token0 (USDC per BRIX)
+// price = token1/token0 (USDC per BRXU)
 // sqrtPriceX96 = sqrt(price) * 2^96
 function encodeSqrtPriceX96(
   price: number,
@@ -84,42 +84,42 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    `brix-${networkName}-latest.json`
+    `brxu-${networkName}-latest.json`
   );
 
   if (!fs.existsSync(latestPath)) {
     console.error(
-      `No deployment found at ${latestPath}. Run deploy-brix.ts first.`
+      `No deployment found at ${latestPath}. Run deploy-brxu.ts first.`
     );
     process.exit(1);
   }
 
   const deployment = JSON.parse(fs.readFileSync(latestPath, "utf-8"));
-  const brixAddress: string = deployment.contracts.BRIX;
+  const brxuAddress: string = deployment.contracts.BRXU;
 
   // Config
-  const brixLiquidity = process.env.INITIAL_BRIX_LIQUIDITY || "50000000"; // 50M BRIX
+  const brxuLiquidity = process.env.INITIAL_BRXU_LIQUIDITY || "50000000"; // 50M BRXU
   const usdcLiquidity = process.env.INITIAL_USDC_LIQUIDITY || "500000"; // 500K USDC
-  const brixPrice = parseFloat(process.env.BRIX_PRICE_USDC || "0.01"); // $0.01
+  const brxuPrice = parseFloat(process.env.BRXU_PRICE_USDC || "0.01"); // $0.01
   const poolFee = 3000; // 0.3% fee tier
 
   console.log("=".repeat(60));
   console.log("BrixUp — Uniswap v3 Liquidity Setup");
   console.log("=".repeat(60));
   console.log(`Network    : ${networkName}`);
-  console.log(`BRIX Token : ${brixAddress}`);
+  console.log(`BRXU Token : ${brxuAddress}`);
   console.log(`USDC       : ${USDC_BASE}`);
   console.log(`Pool Fee   : ${poolFee / 10000}%`);
-  console.log(`BRIX Price : $${brixPrice} USDC`);
-  console.log(`BRIX LP    : ${brixLiquidity} BRIX`);
+  console.log(`BRXU Price : $${brxuPrice} USDC`);
+  console.log(`BRXU LP    : ${brxuLiquidity} BRXU`);
   console.log(`USDC LP    : ${usdcLiquidity} USDC`);
   console.log("-".repeat(60));
 
   if (networkName === "hardhat" || networkName === "localhost") {
     console.log("\n[DRY RUN] Steps that would execute on mainnet:");
-    console.log("  1. Create BRIX/USDC pool on Uniswap v3 Factory");
+    console.log("  1. Create BRXU/USDC pool on Uniswap v3 Factory");
     console.log("  2. Initialize pool with sqrtPriceX96");
-    console.log("  3. Approve BRIX + USDC to Position Manager");
+    console.log("  3. Approve BRXU + USDC to Position Manager");
     console.log("  4. Mint full-range liquidity position");
     console.log("  5. Save pool address to deployments");
     console.log("\nDry run complete. Deploy to mainnet with --network base.");
@@ -137,14 +137,14 @@ async function main() {
     POSITION_MANAGER_ABI,
     deployer
   );
-  const brixToken = new ethers.Contract(brixAddress, ERC20_ABI, deployer);
+  const brxuToken = new ethers.Contract(brxuAddress, ERC20_ABI, deployer);
   const usdcToken = new ethers.Contract(USDC_BASE, ERC20_ABI, deployer);
 
   // Determine token0/token1 ordering (lower address = token0)
-  const brixLower =
-    brixAddress.toLowerCase() < USDC_BASE.toLowerCase();
-  const token0 = brixLower ? brixAddress : USDC_BASE;
-  const token1 = brixLower ? USDC_BASE : brixAddress;
+  const brxuLower =
+    brxuAddress.toLowerCase() < USDC_BASE.toLowerCase();
+  const token0 = brxuLower ? brxuAddress : USDC_BASE;
+  const token1 = brxuLower ? USDC_BASE : brxuAddress;
 
   console.log(`\nToken0: ${token0}`);
   console.log(`Token1: ${token1}`);
@@ -162,18 +162,18 @@ async function main() {
 
     // Step 2: Initialize pool price
     console.log("\n[2/4] Initializing pool price...");
-    const brixDecimals = Number(await brixToken.decimals());
+    const brxuDecimals = Number(await brxuToken.decimals());
     const usdcDecimals = Number(await usdcToken.decimals());
 
     // Calculate price based on token ordering
-    const price = brixLower
-      ? brixPrice // USDC per BRIX
-      : 1 / brixPrice; // BRIX per USDC
+    const price = brxuLower
+      ? brxuPrice // USDC per BRXU
+      : 1 / brxuPrice; // BRXU per USDC
 
     const sqrtPriceX96 = encodeSqrtPriceX96(
       price,
-      brixLower ? brixDecimals : usdcDecimals,
-      brixLower ? usdcDecimals : brixDecimals
+      brxuLower ? brxuDecimals : usdcDecimals,
+      brxuLower ? usdcDecimals : brxuDecimals
     );
 
     const pool = new ethers.Contract(poolAddress, POOL_ABI, deployer);
@@ -186,20 +186,20 @@ async function main() {
 
   // Step 3: Approve tokens
   console.log("\n[3/4] Approving tokens...");
-  const brixAmount = ethers.parseEther(brixLiquidity);
+  const brxuAmount = ethers.parseEther(brxuLiquidity);
   const usdcAmount = ethers.parseUnits(usdcLiquidity, 6); // USDC = 6 decimals
 
-  const brixBal = await brixToken.balanceOf(deployer.address);
+  const brxuBal = await brxuToken.balanceOf(deployer.address);
   const usdcBal = await usdcToken.balanceOf(deployer.address);
   console.log(
-    `  BRIX balance: ${ethers.formatEther(brixBal)} (need ${brixLiquidity})`
+    `  BRXU balance: ${ethers.formatEther(brxuBal)} (need ${brxuLiquidity})`
   );
   console.log(
     `  USDC balance: ${ethers.formatUnits(usdcBal, 6)} (need ${usdcLiquidity})`
   );
 
-  if (brixBal < brixAmount) {
-    console.error("  ❌ Insufficient BRIX balance. Aborting.");
+  if (brxuBal < brxuAmount) {
+    console.error("  ❌ Insufficient BRXU balance. Aborting.");
     process.exit(1);
   }
   if (usdcBal < usdcAmount) {
@@ -208,7 +208,7 @@ async function main() {
   }
 
   await (
-    await brixToken.approve(UNISWAP_POSITION_MANAGER, brixAmount)
+    await brxuToken.approve(UNISWAP_POSITION_MANAGER, brxuAmount)
   ).wait();
   await (
     await usdcToken.approve(UNISWAP_POSITION_MANAGER, usdcAmount)
@@ -217,8 +217,8 @@ async function main() {
 
   // Step 4: Add liquidity (full-range position)
   console.log("\n[4/4] Adding liquidity...");
-  const amount0Desired = brixLower ? brixAmount : usdcAmount;
-  const amount1Desired = brixLower ? usdcAmount : brixAmount;
+  const amount0Desired = brxuLower ? brxuAmount : usdcAmount;
+  const amount1Desired = brxuLower ? usdcAmount : brxuAmount;
 
   // Full range ticks for 0.3% fee (tick spacing = 60)
   const MIN_TICK = -887220;
@@ -248,7 +248,7 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    `brix-${networkName}-latest.json`
+    `brxu-${networkName}-latest.json`
   );
   fs.writeFileSync(latestPathUpdate, JSON.stringify(deployment, null, 2));
 
@@ -257,9 +257,9 @@ async function main() {
   console.log("Liquidity Setup Complete");
   console.log("=".repeat(60));
   console.log(`  Pool Address : ${poolAddress}`);
-  console.log(`  BRIX Added   : ${brixLiquidity}`);
+  console.log(`  BRXU Added   : ${brxuLiquidity}`);
   console.log(`  USDC Added   : ${usdcLiquidity}`);
-  console.log(`  Initial Price: $${brixPrice} per BRIX`);
+  console.log(`  Initial Price: $${brxuPrice} per BRXU`);
   console.log("=".repeat(60));
 }
 

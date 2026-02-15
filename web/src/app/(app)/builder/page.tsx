@@ -51,11 +51,11 @@ const sampleActiveProjects: ActiveProject[] = [
 ];
 
 const samplePayments: Payment[] = [
-  { date: "Feb 8, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRIX", status: "Paid" },
-  { date: "Jan 25, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRIX", status: "Paid" },
-  { date: "Jan 15, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRIX", status: "Paid" },
-  { date: "Jan 5, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRIX", status: "Paid" },
-  { date: "Mar 5, 2026", project: "1847 Oakwood Dr", amount: "3,200 $BRIX", status: "Pending" },
+  { date: "Feb 8, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRXU", status: "Paid" },
+  { date: "Jan 25, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRXU", status: "Paid" },
+  { date: "Jan 15, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRXU", status: "Paid" },
+  { date: "Jan 5, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRXU", status: "Paid" },
+  { date: "Mar 5, 2026", project: "1847 Oakwood Dr", amount: "3,200 $BRXU", status: "Pending" },
 ];
 
 const brixScoreBreakdown = [
@@ -108,7 +108,7 @@ export default function BuilderPage() {
   };
 
   const totalEarned = payments.filter((p) => p.status === "Paid").reduce((sum, p) => {
-    const num = parseFloat(p.amount.replace(/[$,]/g, "").replace(" $BRIX", "").replace(" BRIX", ""));
+    const num = parseFloat(p.amount.replace(/[$,]/g, "").replace(" $BRXU", "").replace(" BRXU", ""));
     return sum + (isNaN(num) ? 0 : num);
   }, 0);
 
@@ -118,7 +118,7 @@ export default function BuilderPage() {
   const builderStats = [
     { label: "Brix Score", value: String(Math.round(brixScoreAvg * 10)), icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
     { label: "Active Projects", value: String(activeProjects.length), icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
-    { label: "$BRIX Earned", value: totalEarned.toLocaleString(), icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
+    { label: "$BRXU Earned", value: totalEarned.toLocaleString(), icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
     { label: "Sweat Equity Value", value: `$${(totalEarned * 3).toLocaleString()}`, icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
   ];
 
@@ -180,9 +180,9 @@ export default function BuilderPage() {
               </p>
               <div className="mb-4 flex items-center justify-between border-t border-white/10 pt-3">
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>$BRIX Rate</p>
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>$BRXU Rate</p>
                   <p className="text-sm font-semibold" style={{ color: "#D4A843" }}>
-                    {Math.round((deal.total_capital_needed || 200000) * 0.004).toLocaleString()} $BRIX
+                    {Math.round((deal.total_capital_needed || 200000) * 0.004).toLocaleString()} $BRXU
                   </p>
                 </div>
                 <div className="text-right">

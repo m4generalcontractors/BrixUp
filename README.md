@@ -2,7 +2,7 @@
 
 **Stack Brix. Build Wealth. Together.**
 
-BrixUp is a tokenized real-estate development marketplace powered by the $BRIX utility token on the Base network. It connects investors, builders, and deal-makers through smart-contract-managed escrow deals with milestone-based draw schedules and transparent profit distribution.
+BrixUp is a tokenized real-estate development marketplace powered by the $BRXU utility token on the Base network. It connects investors, builders, and deal-makers through smart-contract-managed escrow deals with milestone-based draw schedules and transparent profit distribution.
 
 ---
 
@@ -132,10 +132,10 @@ BrixUp/
 │   └── brand-guidelines.md     # Brand identity, colors, typography, voice
 ├── contracts/
 │   ├── contracts/
-│   │   ├── BrixToken.sol       # ERC-20 $BRIX utility token
+│   │   ├── BrixToken.sol       # ERC-20 $BRXU utility token
 │   │   ├── BrixFactory.sol     # Factory for deploying BrixDeal instances
 │   │   ├── BrixDeal.sol        # Per-deal escrow with milestone draws
-│   │   └── BrixStaking.sol     # Stake $BRIX for yield and priority access
+│   │   └── BrixStaking.sol     # Stake $BRXU for yield and priority access
 │   ├── scripts/
 │   │   └── deploy.ts           # Hardhat deployment script
 │   ├── test/                   # Contract test suite
@@ -193,9 +193,9 @@ The deployment script deploys all three core contracts in order, verifies them o
 | `SUPABASE_SERVICE_ROLE_KEY`           | Yes      | Supabase service role key (server-only)      |
 | `NEXT_PUBLIC_COINBASE_APP_ID`         | Yes      | Coinbase Developer Platform app ID           |
 | `NEXT_PUBLIC_CHAIN_ID`                | Yes      | Target chain (8453 = Base, 84532 = Sepolia)  |
-| `NEXT_PUBLIC_BRIX_TOKEN_ADDRESS`      | Yes      | Deployed BrixToken contract address          |
-| `NEXT_PUBLIC_BRIX_FACTORY_ADDRESS`    | Yes      | Deployed BrixFactory contract address        |
-| `NEXT_PUBLIC_BRIX_STAKING_ADDRESS`    | Yes      | Deployed BrixStaking contract address        |
+| `NEXT_PUBLIC_BRXU_TOKEN_ADDRESS`      | Yes      | Deployed BrixToken contract address          |
+| `NEXT_PUBLIC_BRXU_FACTORY_ADDRESS`    | Yes      | Deployed BrixFactory contract address        |
+| `NEXT_PUBLIC_BRXU_STAKING_ADDRESS`    | Yes      | Deployed BrixStaking contract address        |
 | `CIRCLE_API_KEY`                      | No       | Circle API key for USDC payments             |
 | `NEXT_PUBLIC_PERSONA_TEMPLATE_ID`     | No       | Persona KYC template ID                      |
 | `NEXT_PUBLIC_APP_URL`                 | Yes      | Public URL (https://brixups.com)             |

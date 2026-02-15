@@ -63,7 +63,7 @@ describe("BrixToken", function () {
   it("should deploy with correct name, symbol, and initial supply", async function () {
     const { brixToken, owner } = await loadFixture(deployFixture);
     expect(await brixToken.name()).to.equal("BrixUp Token");
-    expect(await brixToken.symbol()).to.equal("BRIX");
+    expect(await brixToken.symbol()).to.equal("BRXU");
     const initialSupply = ethers.parseEther("1000000000"); // 1 billion
     // Owner distributed some in fixture, so check total supply
     expect(await brixToken.totalSupply()).to.equal(initialSupply);
@@ -146,7 +146,7 @@ describe("BrixToken", function () {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("BrixStaking", function () {
-  it("should allow staking BRIX tokens", async function () {
+  it("should allow staking BRXU tokens", async function () {
     const { brixToken, brixStaking, investor1, stakingAddress } =
       await loadFixture(deployFixture);
     const amount = ethers.parseEther("1000");
@@ -197,13 +197,13 @@ describe("BrixStaking", function () {
     await brixToken.connect(investor2).approve(stakingAddress, stake2);
     await brixStaking.connect(investor2).stake(stake2);
 
-    // Owner distributes 4000 BRIX as rewards
+    // Owner distributes 4000 BRXU as rewards
     const rewardAmount = ethers.parseEther("4000");
     await brixToken.approve(stakingAddress, rewardAmount);
     await brixStaking.distributeRewards(rewardAmount);
 
-    // investor1 should get 25% (1000/4000) = 1000 BRIX reward
-    // investor2 should get 75% (3000/4000) = 3000 BRIX reward
+    // investor1 should get 25% (1000/4000) = 1000 BRXU reward
+    // investor2 should get 75% (3000/4000) = 3000 BRXU reward
     const pending1 = await brixStaking.pendingRewards(investor1.address);
     const pending2 = await brixStaking.pendingRewards(investor2.address);
     expect(pending1).to.equal(ethers.parseEther("1000"));
@@ -390,14 +390,14 @@ describe("BrixDeal", function () {
     expect(await brixDeal.investorCount()).to.equal(1);
   });
 
-  it("should reject investments below 500 BRIX minimum", async function () {
+  it("should reject investments below 500 BRXU minimum", async function () {
     const { brixToken, brixDeal, investor1, dealAddress } =
       await loadFixture(deployDealFixture);
     const amount = ethers.parseEther("100"); // Below 500 minimum
     await brixToken.connect(investor1).approve(dealAddress, amount);
     await expect(
       brixDeal.connect(investor1).investInDeal(amount)
-    ).to.be.revertedWith("BrixDeal: below 500 BRIX minimum");
+    ).to.be.revertedWith("BrixDeal: below 500 BRXU minimum");
   });
 
   it("should auto-transition to Active when fully funded", async function () {
@@ -516,7 +516,7 @@ describe("BrixDeal", function () {
       .connect(investor2)
       .investInDeal(ethers.parseEther("4000"));
 
-    // Deal is now Active. Deposit profit BRIX into the deal contract.
+    // Deal is now Active. Deposit profit BRXU into the deal contract.
     // Total principal = 10000, let profit = 5000
     const totalProfit = ethers.parseEther("5000");
     // Need to send principal (10000) + profit (5000) = 15000 into the contract
