@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   const { type, amount, description, to_address, from_address } = body;
 
   // Whitelist allowed transaction types
-  const allowedTypes = ["investment", "yield", "staking_reward", "conversion", "received", "send", "stake", "unstake", "job_application"];
+  const allowedTypes = ["investment", "yield", "staking_reward", "conversion", "received", "send", "stake", "unstake", "buy", "job_application"];
   if (!type || !allowedTypes.includes(type)) {
     return NextResponse.json(
       { error: "Invalid transaction type" },

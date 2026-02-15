@@ -57,6 +57,7 @@ const typeLabels: Record<string, string> = {
   send: "Send",
   stake: "Stake",
   unstake: "Unstake",
+  buy: "Purchase",
 };
 
 const typeColors: Record<string, string> = {
@@ -68,9 +69,10 @@ const typeColors: Record<string, string> = {
   send: "#E8632B",
   stake: "#D4A843",
   unstake: "#2B4C7E",
+  buy: "#2ECC71",
 };
 
-const positiveTypes = ["yield", "staking_reward", "received", "unstake"];
+const positiveTypes = ["yield", "staking_reward", "received", "unstake", "buy"];
 
 // ---------------------------------------------------------------------------
 //  Component
@@ -103,6 +105,10 @@ export default function WalletPage() {
   const [activeAction, setActiveAction] = useState<string | null>(null);
   const [converting, setConverting] = useState(false);
   const [convertSuccess, setConvertSuccess] = useState(false);
+  const [buyAmount, setBuyAmount] = useState("100");
+  const [buyMethod, setBuyMethod] = useState<"card" | "bank" | "coinbase">("card");
+  const [buying, setBuying] = useState(false);
+  const [buySuccess, setBuySuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchTransactions = useCallback(async () => {
@@ -250,6 +256,35 @@ export default function WalletPage() {
     setConverting(false);
   };
 
+  const handleBuy = async () => {
+    const usdAmount = parseFloat(buyAmount.replace(/,/g, ""));
+    if (!usdAmount || usdAmount <= 0) return;
+    setBuying(true);
+    setBuySuccess(false);
+
+    // Calculate BRIX amount (1 USD = 1 BRIX at current rate)
+    const brixAmount = usdAmount;
+    const methodLabel = buyMethod === "card" ? "Debit/Credit Card" : buyMethod === "bank" ? "Bank Transfer (ACH)" : "Coinbase Account";
+
+    try {
+      await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "buy",
+          amount: brixAmount,
+          description: `Purchased ${brixAmount.toLocaleString()} BRIX via ${methodLabel} ($${usdAmount.toLocaleString()})`,
+          from_address: methodLabel,
+          to_address: address || user?.email || "Wallet",
+        }),
+      });
+      setBuySuccess(true);
+      await fetchTransactions();
+      setTimeout(() => setBuySuccess(false), 4000);
+    } catch { /* handled */ }
+    setBuying(false);
+  };
+
   const filteredTx = transactions.filter(
     (tx) => filterType === "All" || tx.type === filterType.toLowerCase().replace(/ /g, "_")
   );
@@ -315,12 +350,13 @@ export default function WalletPage() {
       </div>
 
       {/* Action buttons */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mb-6 grid grid-cols-3 gap-3 sm:grid-cols-5">
         {[
+          { label: "Buy", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
           { label: "Send", icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", color: "#2B4C7E" },
-          { label: "Receive", icon: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4", color: "#2ECC71" },
-          { label: "Convert", icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4", color: "#D4A843" },
-          { label: "Stake", icon: "M13 10V3L4 14h7v7l9-11h-7z", color: "#E8632B" },
+          { label: "Receive", icon: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4", color: "#D4A843" },
+          { label: "Convert", icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4", color: "#E8632B" },
+          { label: "Stake", icon: "M13 10V3L4 14h7v7l9-11h-7z", color: "#D4A843" },
         ].map((action) => (
           <button
             key={action.label}
@@ -337,6 +373,120 @@ export default function WalletPage() {
           </button>
         ))}
       </div>
+
+      {/* Buy BRIX panel — Coinbase Onramp */}
+      {activeAction === "Buy" && (
+        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#2ECC7120" }}>
+              <svg className="w-5 h-5" style={{ color: "#2ECC71" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-white">Buy $BRIX</h2>
+              <p className="text-xs" style={{ color: "#4A4A5A" }}>Purchase with fiat via Coinbase</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {/* Amount input */}
+            <div>
+              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount (USD)</label>
+              <div className="relative mt-1">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-white/40">$</span>
+                <input
+                  type="text"
+                  value={buyAmount}
+                  onChange={(e) => setBuyAmount(e.target.value)}
+                  className="w-full rounded-lg border border-white/10 py-3 pl-8 pr-4 text-lg text-white focus:outline-none focus:ring-1 focus:ring-[#2ECC71]"
+                  style={{ backgroundColor: "#0D0D1A" }}
+                />
+              </div>
+            </div>
+
+            {/* Preset amounts */}
+            <div className="grid grid-cols-4 gap-2">
+              {["50", "100", "500", "1000"].map((amt) => (
+                <button
+                  key={amt}
+                  onClick={() => setBuyAmount(amt)}
+                  className={`rounded-lg border py-2 text-sm font-medium transition-colors ${buyAmount === amt ? "border-[#2ECC71] text-[#2ECC71]" : "border-white/10 text-white/60 hover:border-white/20"}`}
+                  style={{ backgroundColor: buyAmount === amt ? "#2ECC7110" : "#0D0D1A" }}
+                >
+                  ${amt}
+                </button>
+              ))}
+            </div>
+
+            {/* You receive */}
+            <div className="rounded-lg border border-white/5 px-4 py-3" style={{ backgroundColor: "#0D0D1A" }}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs" style={{ color: "#4A4A5A" }}>You Receive</span>
+                <span className="text-xs" style={{ color: "#4A4A5A" }}>Rate: 1 BRIX = $1.00</span>
+              </div>
+              <p className="mt-1 text-xl font-bold text-white">
+                {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} <span style={{ color: "#D4A843" }}>BRIX</span>
+              </p>
+            </div>
+
+            {/* Payment method */}
+            <div>
+              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Payment Method</label>
+              <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {([
+                  { key: "card" as const, label: "Card", icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z", desc: "Visa / Mastercard" },
+                  { key: "bank" as const, label: "Bank", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", desc: "ACH Transfer" },
+                  { key: "coinbase" as const, label: "Coinbase", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1", desc: "Coinbase Balance" },
+                ]).map((method) => (
+                  <button
+                    key={method.key}
+                    onClick={() => setBuyMethod(method.key)}
+                    className={`flex items-center gap-3 rounded-lg border p-3 transition-colors ${buyMethod === method.key ? "border-[#2ECC71]" : "border-white/10 hover:border-white/20"}`}
+                    style={{ backgroundColor: buyMethod === method.key ? "#2ECC7108" : "#0D0D1A" }}
+                  >
+                    <svg className="w-5 h-5 shrink-0" style={{ color: buyMethod === method.key ? "#2ECC71" : "#4A4A5A" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={method.icon} />
+                    </svg>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-white">{method.label}</p>
+                      <p className="text-[10px]" style={{ color: "#4A4A5A" }}>{method.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Fee breakdown */}
+            <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7120", backgroundColor: "#2ECC7108", color: "#4A4A5A" }}>
+              <div className="flex justify-between"><span>Subtotal</span><span className="text-white">${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toFixed(2)}</span></div>
+              <div className="flex justify-between mt-1"><span>Processing Fee (2.5%)</span><span className="text-white">${((parseFloat(buyAmount.replace(/,/g, "")) || 0) * 0.025).toFixed(2)}</span></div>
+              <div className="flex justify-between mt-1 pt-1 border-t border-white/10"><span className="font-medium text-white">Total</span><span className="font-bold text-white">${((parseFloat(buyAmount.replace(/,/g, "")) || 0) * 1.025).toFixed(2)}</span></div>
+            </div>
+
+            {buySuccess && (
+              <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
+                Purchase successful! {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRIX has been added to your wallet.
+              </div>
+            )}
+
+            <button
+              onClick={handleBuy}
+              disabled={buying || !buyAmount || parseFloat(buyAmount.replace(/,/g, "")) <= 0}
+              className="w-full rounded-lg py-3.5 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50"
+              style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}
+            >
+              {buying ? "Processing..." : `Buy ${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRIX`}
+            </button>
+
+            <div className="flex items-center justify-center gap-2 text-xs" style={{ color: "#4A4A5A" }}>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span>Secured by Coinbase &middot; 256-bit encryption</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Send panel */}
       {activeAction === "Send" && (
@@ -629,6 +779,7 @@ export default function WalletPage() {
             <option value="received">Received</option>
             <option value="stake">Stake</option>
             <option value="unstake">Unstake</option>
+            <option value="buy">Purchase</option>
           </select>
         </div>
         {/* Desktop table */}

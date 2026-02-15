@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   full_name TEXT NOT NULL DEFAULT '',
   phone TEXT,
   avatar_url TEXT,
-  user_role TEXT NOT NULL DEFAULT 'investor' CHECK (user_role IN ('investor', 'builder', 'dealmaker')),
+  user_role TEXT NOT NULL DEFAULT 'investor' CHECK (user_role IN ('investor', 'builder', 'dealmaker', 'admin', 'manager')),
   wallet_address TEXT,
   kyc_status TEXT NOT NULL DEFAULT 'pending' CHECK (kyc_status IN ('pending', 'verified', 'rejected')),
   email_notifications BOOLEAN NOT NULL DEFAULT true,
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.contractors (
 CREATE TABLE IF NOT EXISTS public.transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id),
-  type TEXT NOT NULL CHECK (type IN ('investment', 'yield', 'staking_reward', 'conversion', 'received', 'send')),
+  type TEXT NOT NULL CHECK (type IN ('investment', 'yield', 'staking_reward', 'conversion', 'received', 'send', 'stake', 'unstake', 'buy')),
   amount NUMERIC NOT NULL,
   description TEXT,
   from_address TEXT,
@@ -151,3 +151,23 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- =============================================================================
+-- Admin Account Setup
+-- =============================================================================
+-- Run this AFTER signing up with your admin email to promote to admin role.
+-- Replace the email below with your admin email address.
+--
+-- UPDATE public.profiles
+--   SET user_role = 'admin', kyc_status = 'verified'
+--   WHERE email = 'mph.cordero@gmail.com';
+--
+-- If you need to update the CHECK constraint on an existing database:
+-- ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_user_role_check;
+-- ALTER TABLE public.profiles ADD CONSTRAINT profiles_user_role_check
+--   CHECK (user_role IN ('investor', 'builder', 'dealmaker', 'admin', 'manager'));
+--
+-- ALTER TABLE public.transactions DROP CONSTRAINT IF EXISTS transactions_type_check;
+-- ALTER TABLE public.transactions ADD CONSTRAINT transactions_type_check
+--   CHECK (type IN ('investment', 'yield', 'staking_reward', 'conversion', 'received', 'send', 'stake', 'unstake', 'buy'));
+-- =============================================================================
