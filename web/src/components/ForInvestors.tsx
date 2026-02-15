@@ -26,7 +26,7 @@ function MockDashboard() {
       {/* Dashboard Header */}
       <div className="flex items-center justify-between border-b border-offwhite/10 pb-4">
         <div>
-          <p className="text-sm text-offwhite/50">Portfolio Value</p>
+          <p className="text-sm text-offwhite/70">Portfolio Value</p>
           <p className="font-[var(--font-display)] text-2xl font-bold text-offwhite">
             $12,450<span className="text-sm text-success">.00</span>
           </p>
@@ -38,7 +38,7 @@ function MockDashboard() {
 
       {/* Active Deals */}
       <div className="mt-4 space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-offwhite/40">
+        <p className="text-xs font-semibold uppercase tracking-wider text-offwhite/60">
           Active Deals
         </p>
         {[
@@ -59,7 +59,7 @@ function MockDashboard() {
                     style={{ width: `${deal.progress}%` }}
                   />
                 </div>
-                <span className="text-xs text-offwhite/40">{deal.status}</span>
+                <span className="text-xs text-offwhite/60">{deal.status}</span>
               </div>
             </div>
             <p className="ml-4 text-sm font-semibold text-gold">{deal.amount}</p>
@@ -70,11 +70,11 @@ function MockDashboard() {
       {/* Quick Stats */}
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-lg bg-charcoal/50 p-3">
-          <p className="text-xs text-offwhite/40">Avg Return</p>
+          <p className="text-xs text-offwhite/60">Avg Return</p>
           <p className="font-[var(--font-display)] text-lg font-bold text-success">11.2%</p>
         </div>
         <div className="rounded-lg bg-charcoal/50 p-3">
-          <p className="text-xs text-offwhite/40">$BRIX Balance</p>
+          <p className="text-xs text-offwhite/60">$BRIX Balance</p>
           <p className="font-[var(--font-display)] text-lg font-bold text-gold">12,450</p>
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function ForInvestors() {
               {benefits.map((benefit) => (
                 <li key={benefit} className="flex items-start gap-3">
                   <CheckIcon />
-                  <span className="text-base text-offwhite/70">{benefit}</span>
+                  <span className="text-base text-offwhite/80">{benefit}</span>
                 </li>
               ))}
             </ul>

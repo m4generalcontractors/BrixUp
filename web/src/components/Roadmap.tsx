@@ -42,7 +42,7 @@ export default function Roadmap() {
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             <span className="text-gradient-gold">Roadmap</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/50">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
             Our path from concept to scale. Building block by block.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function Roadmap() {
                       className={`h-4 w-4 rounded-full border-2 ${
                         milestone.status === "active"
                           ? "border-gold bg-gold shadow-lg shadow-gold/30"
-                          : "border-offwhite/30 bg-dark"
+                          : "border-offwhite/40 bg-dark"
                       }`}
                     />
                   </div>
@@ -93,7 +93,7 @@ export default function Roadmap() {
                         className={`h-4 w-4 rounded-full border-2 ${
                           milestone.status === "active"
                             ? "border-gold bg-gold shadow-lg shadow-gold/30"
-                            : "border-offwhite/30 bg-dark"
+                            : "border-offwhite/40 bg-dark"
                         }`}
                       />
                     </div>
@@ -129,7 +129,7 @@ function TimelineCard({
           className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
             milestone.status === "active"
               ? "bg-gold/20 text-gold"
-              : "bg-offwhite/10 text-offwhite/50"
+              : "bg-offwhite/10 text-offwhite/70"
           }`}
         >
           {milestone.quarter}
@@ -149,7 +149,7 @@ function TimelineCard({
         {milestone.title}
       </h3>
       <p
-        className={`mt-2 text-sm text-offwhite/50 ${align === "right" ? "text-right" : ""}`}
+        className={`mt-2 text-sm text-offwhite/70 ${align === "right" ? "text-right" : ""}`}
       >
         {milestone.description}
       </p>
@@ -157,7 +157,7 @@ function TimelineCard({
         {milestone.items.map((item) => (
           <li
             key={item}
-            className={`flex items-center gap-2 text-sm text-offwhite/40 ${
+            className={`flex items-center gap-2 text-sm text-offwhite/70 ${
               align === "right" ? "justify-end" : ""
             }`}
           >

@@ -54,7 +54,7 @@ export default function HowItWorks() {
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             How <span className="text-gradient-gold">BrixUp</span> Works
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/50">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
             From deal discovery to profit distribution — all on-chain, all transparent.
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function HowItWorks() {
               <h3 className="mt-4 font-[var(--font-display)] text-lg font-semibold text-offwhite">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-offwhite/50">
+              <p className="mt-2 text-sm leading-relaxed text-offwhite/70">
                 {step.description}
               </p>
             </div>

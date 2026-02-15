@@ -46,7 +46,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-offwhite/70 transition-colors hover:text-gold"
+                className="text-sm font-medium text-offwhite/90 transition-colors hover:text-gold"
               >
                 {link.label}
               </a>
@@ -106,7 +106,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="block py-3 text-base font-medium text-offwhite/70 transition-colors hover:text-gold"
+              className="block py-3 text-base font-medium text-offwhite/90 transition-colors hover:text-gold"
             >
               {link.label}
             </a>

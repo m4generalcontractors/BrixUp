@@ -61,7 +61,7 @@ export default function CTA() {
                 You&apos;re on the list!
               </span>
             </div>
-            <p className="mt-2 text-sm text-dark/60">
+            <p className="mt-2 text-sm text-dark/80">
               We&apos;ll be in touch with early access details soon.
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function CTA() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="flex-1 rounded-lg border border-dark/20 bg-dark/10 px-4 py-3 text-dark placeholder:text-dark/40 focus:border-dark/40 focus:outline-none focus:ring-2 focus:ring-dark/20"
+                className="flex-1 rounded-lg border border-dark/20 bg-dark/10 px-4 py-3 text-dark placeholder:text-dark/60 focus:border-dark/40 focus:outline-none focus:ring-2 focus:ring-dark/20"
               />
               <button
                 type="submit"
@@ -90,7 +90,7 @@ export default function CTA() {
           </form>
         )}
 
-        <p className="mt-6 text-sm text-dark/50">
+        <p className="mt-6 text-sm text-dark/70">
           Join 2,000+ builders and investors on the waitlist
         </p>
       </div>

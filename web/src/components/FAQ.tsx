@@ -45,7 +45,7 @@ export default function FAQ() {
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl">
             Frequently Asked <span className="text-gradient-gold">Questions</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/50">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
             Everything you need to know about BrixUp and $BRIX.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function FAQ() {
                 <span className="pr-4 text-base font-medium text-offwhite">
                   {faq.question}
                 </span>
-                <span className="faq-chevron shrink-0 text-offwhite/40">
+                <span className="faq-chevron shrink-0 text-offwhite/60">
                   <svg
                     className="h-5 w-5"
                     fill="none"
@@ -78,7 +78,7 @@ export default function FAQ() {
                 </span>
               </summary>
               <div className="px-6 pb-6">
-                <p className="text-sm leading-relaxed text-offwhite/50">
+                <p className="text-sm leading-relaxed text-offwhite/70">
                   {faq.answer}
                 </p>
               </div>

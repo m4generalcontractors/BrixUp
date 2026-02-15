@@ -94,7 +94,7 @@ export default function Hero() {
         </h1>
 
         {/* Subheadline */}
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-offwhite/60 sm:text-xl">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-offwhite/80 sm:text-xl">
           The first tokenized real estate marketplace where investors, builders,
           and dealmakers unite under smart contracts to develop property — and
           share the profits.
@@ -122,19 +122,19 @@ export default function Hero() {
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               $12M+
             </p>
-            <p className="mt-1 text-sm text-offwhite/50">Deal Pipeline</p>
+            <p className="mt-1 text-sm text-offwhite/70">Deal Pipeline</p>
           </div>
           <div className="animate-count-up delay-200">
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               200+
             </p>
-            <p className="mt-1 text-sm text-offwhite/50">Contractors</p>
+            <p className="mt-1 text-sm text-offwhite/70">Contractors</p>
           </div>
           <div className="animate-count-up delay-400">
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               3
             </p>
-            <p className="mt-1 text-sm text-offwhite/50">State Licenses</p>
+            <p className="mt-1 text-sm text-offwhite/70">State Licenses</p>
           </div>
         </div>
       </div>

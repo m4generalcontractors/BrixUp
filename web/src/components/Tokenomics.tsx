@@ -29,14 +29,14 @@ export default function Tokenomics() {
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             The <span className="text-gradient-gold">$BRIX</span> Token
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/50">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/90">
             ERC-20 on Base L2 &middot; 1B Total Supply
           </p>
         </div>
 
         {/* Allocation Bar */}
         <div className="mt-16">
-          <h3 className="mb-6 text-center font-[var(--font-display)] text-lg font-semibold text-offwhite/70">
+          <h3 className="mb-6 text-center font-[var(--font-display)] text-lg font-semibold text-offwhite/90">
             Token Allocation
           </h3>
 
@@ -61,7 +61,7 @@ export default function Tokenomics() {
             {allocations.map((alloc) => (
               <div key={alloc.label} className="flex items-center gap-2">
                 <div className={`h-3 w-3 rounded-sm ${alloc.color}`} />
-                <span className="text-sm text-offwhite/60">
+                <span className="text-sm text-offwhite/80">
                   {alloc.label} ({alloc.pct}%)
                 </span>
               </div>
@@ -83,7 +83,7 @@ export default function Tokenomics() {
                   className="flex items-center gap-3 rounded-xl border border-offwhite/5 bg-dark/50 p-4"
                 >
                   <span className="text-2xl">{util.icon}</span>
-                  <span className="text-sm font-medium text-offwhite/70">
+                  <span className="text-sm font-medium text-offwhite/90">
                     {util.label}
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export default function Tokenomics() {
                   key={metric.label}
                   className="flex items-center justify-between rounded-xl border border-offwhite/5 bg-dark/50 p-4"
                 >
-                  <span className="text-sm text-offwhite/50">{metric.label}</span>
+                  <span className="text-sm text-offwhite/90">{metric.label}</span>
                   <span className="font-[var(--font-display)] text-lg font-bold text-gold">
                     {metric.value}
                   </span>

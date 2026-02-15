@@ -46,7 +46,7 @@ export default function ForBuilders() {
             Your Skills. Your Equity.{" "}
             <span className="text-gradient-gold">Your Future.</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/50">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
             Stop trading time for money. Start building ownership.
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function ForBuilders() {
               <h3 className="mt-6 font-[var(--font-display)] text-xl font-semibold text-offwhite">
                 {feature.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-offwhite/50">
+              <p className="mt-3 text-sm leading-relaxed text-offwhite/70">
                 {feature.description}
               </p>
             </div>
@@ -82,7 +82,7 @@ export default function ForBuilders() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </a>
-          <p className="mt-4 text-sm text-offwhite/40 italic">
+          <p className="mt-4 text-sm text-offwhite/60 italic">
             Tambi&eacute;n disponible en espa&ntilde;ol
           </p>
         </div>
