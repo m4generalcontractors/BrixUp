@@ -15,7 +15,7 @@ export default function Hero() {
 
       {/* Building silhouette skyline — bottom */}
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[1]">
-        <svg viewBox="0 0 1440 320" className="w-full" preserveAspectRatio="none" style={{ height: "280px" }}>
+        <svg viewBox="0 0 1440 320" className="w-full h-[140px] sm:h-[200px] lg:h-[280px]" preserveAspectRatio="none">
           <defs>
             <linearGradient id="skyline-grad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#1A1A2E" stopOpacity="0" />
@@ -58,8 +58,8 @@ export default function Hero() {
         background: "radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%)",
       }} />
 
-      {/* Floating brick elements */}
-      <div className="pointer-events-none absolute inset-0">
+      {/* Floating brick elements - hidden on very small screens */}
+      <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="animate-float-brick absolute left-[10%] top-[20%] h-12 w-20 rounded-sm bg-gold/10" />
         <div className="animate-float-brick-slow absolute right-[15%] top-[30%] h-8 w-14 rounded-sm bg-blueprint/10" />
         <div className="animate-float-brick-reverse absolute left-[20%] bottom-[25%] h-10 w-16 rounded-sm bg-gold/8" />

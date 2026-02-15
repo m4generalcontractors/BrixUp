@@ -204,13 +204,13 @@ export default function DealFinderDashboard() {
                         {listing.city}, {listing.state} · Listed {listing.listed_date ? new Date(listing.listed_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recently"}
                       </p>
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-3 sm:gap-6">
                       <div className="text-right">
                         <p className="text-xs text-white/40">Capital</p>
                         <p className="text-sm font-semibold text-white">${listing.total_capital_needed.toLocaleString()}</p>
                       </div>
                       {funded > 0 && (
-                        <div className="w-24">
+                        <div className="hidden sm:block w-24">
                           <div className="mb-1 flex justify-between">
                             <span className="text-xs text-white/40">Funded</span>
                             <span className="text-xs font-semibold" style={{ color: "#D4A843" }}>{funded}%</span>
@@ -220,8 +220,11 @@ export default function DealFinderDashboard() {
                           </div>
                         </div>
                       )}
+                      {funded > 0 && (
+                        <span className="sm:hidden text-xs font-semibold" style={{ color: "#D4A843" }}>{funded}%</span>
+                      )}
                       <div className="text-right">
-                        <p className="text-xs text-white/40">Commission</p>
+                        <p className="text-xs text-white/40">Comm.</p>
                         <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>${commission.toLocaleString()}</p>
                       </div>
                     </div>
@@ -294,13 +297,13 @@ export default function DealFinderDashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">Recent Activity</h2>
             <div className="space-y-3">
               {activity.map((item, i) => (
-                <div key={i} className="flex items-center justify-between rounded-lg px-3 py-2.5" style={{ backgroundColor: "#0D0D1A" }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-white/30">{item.date}</span>
-                    <span className="text-sm text-white/70">{item.event}</span>
+                <div key={i} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between rounded-lg px-3 py-2.5" style={{ backgroundColor: "#0D0D1A" }}>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="shrink-0 text-xs text-white/30">{item.date}</span>
+                    <span className="text-sm text-white/70 truncate">{item.event}</span>
                   </div>
                   {item.amount !== "-" && (
-                    <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{item.amount}</span>
+                    <span className="shrink-0 text-sm font-semibold pl-8 sm:pl-0" style={{ color: "#2ECC71" }}>{item.amount}</span>
                   )}
                 </div>
               ))}

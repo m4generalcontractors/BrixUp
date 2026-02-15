@@ -181,8 +181,8 @@ export default function UsersPage() {
         </select>
       </div>
 
-      {/* Users Table */}
-      <div className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1A2E" }}>
+      {/* Users Table - Desktop */}
+      <div className="hidden md:block rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1A2E" }}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -248,6 +248,63 @@ export default function UsersPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Users Cards - Mobile */}
+      <div className="md:hidden space-y-3">
+        {filtered.map((user) => {
+          const roleColor = ROLE_COLORS[user.user_role] || "#4A4A5A";
+          return (
+            <div key={user.id} className="rounded-xl border border-white/10 p-4" style={{ backgroundColor: "#1A1A2E" }}>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-semibold text-white">{user.full_name || "—"}</p>
+                <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ backgroundColor: roleColor + "20", color: roleColor }}>
+                  {user.user_role}
+                </span>
+              </div>
+              <p className="text-xs text-white/60 mb-2 truncate">{user.email}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{
+                    backgroundColor: user.kyc_status === "verified" ? "#2ECC7120" : user.kyc_status === "rejected" ? "#E8632B20" : "#D4A84320",
+                    color: user.kyc_status === "verified" ? "#2ECC71" : user.kyc_status === "rejected" ? "#E8632B" : "#D4A843",
+                  }}>
+                    {user.kyc_status}
+                  </span>
+                  <span className="text-xs text-white/40">{new Date(user.created_at).toLocaleDateString()}</span>
+                </div>
+                {isAdmin && editingUser !== user.id && (
+                  <button
+                    onClick={() => { setEditingUser(user.id); setEditRole(user.user_role); }}
+                    className="text-xs font-medium hover:opacity-80"
+                    style={{ color: "#D4A843" }}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+              {editingUser === user.id && (
+                <div className="mt-3 flex items-center gap-2 border-t border-white/5 pt-3">
+                  <select
+                    value={editRole}
+                    onChange={(e) => setEditRole(e.target.value)}
+                    className="flex-1 rounded border border-white/20 px-2 py-1.5 text-xs text-white"
+                    style={{ backgroundColor: "#0D0D1A" }}
+                  >
+                    {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                  <button onClick={() => handleRoleChange(user.id, editRole)} disabled={saving} className="rounded px-3 py-1.5 text-xs font-medium" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>Save</button>
+                  <button onClick={() => setEditingUser(null)} className="rounded px-2 py-1.5 text-xs text-white/40">Cancel</button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="rounded-xl border border-white/10 p-8 text-center" style={{ backgroundColor: "#1A1A2E" }}>
+            <p className="text-sm" style={{ color: "#4A4A5A" }}>No users found</p>
+          </div>
+        )}
       </div>
     </div>
   );

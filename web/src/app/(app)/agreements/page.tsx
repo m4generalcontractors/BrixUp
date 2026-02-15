@@ -112,10 +112,10 @@ export default function AgreementsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Agreements</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Legal documents and e-signatures for your investments</p>
+          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Legal documents and e-signatures</p>
         </div>
         {pendingCount > 0 && (
           <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#E8632B20", color: "#E8632B" }}>
@@ -164,7 +164,7 @@ export default function AgreementsPage() {
             className="rounded-xl border border-white/10 p-5 transition-colors hover:border-white/20"
             style={{ backgroundColor: "#1A1A2E" }}
           >
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span

@@ -257,7 +257,8 @@ export default function BuilderPage() {
         {/* Payment History */}
         <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Payment History</h2>
-          <div className="overflow-x-auto">
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/10">
@@ -288,6 +289,21 @@ export default function BuilderPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+          {/* Mobile cards */}
+          <div className="sm:hidden space-y-2">
+            {payments.map((payment, i) => (
+              <div key={i} className="flex items-center justify-between rounded-lg border border-white/5 px-3 py-2.5">
+                <div>
+                  <p className="text-sm font-medium text-white">{payment.project}</p>
+                  <p className="text-xs text-white/40">{payment.date}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold" style={{ color: "#D4A843" }}>{payment.amount}</p>
+                  <span className="text-xs font-medium" style={{ color: payment.status === "Paid" ? "#2ECC71" : "#D4A843" }}>{payment.status}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

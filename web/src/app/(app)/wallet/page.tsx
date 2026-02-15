@@ -282,10 +282,10 @@ export default function WalletPage() {
         style={{ backgroundColor: "#1A1A2E", borderColor: "#D4A84340", background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 50%, #1A1A2E 100%)" }}
       >
         <p className="text-sm font-medium" style={{ color: "#4A4A5A" }}>Total Balance</p>
-        <p className="mt-2 text-5xl font-bold text-white">
+        <p className="mt-2 text-3xl sm:text-5xl font-bold text-white">
           {Math.max(0, brixBalance).toLocaleString()} <span style={{ color: "#D4A843" }}>BRIX</span>
         </p>
-        <p className="mt-2 text-lg" style={{ color: "#4A4A5A" }}>
+        <p className="mt-2 text-base sm:text-lg" style={{ color: "#4A4A5A" }}>
           ≈ ${Math.max(0, brixBalance).toLocaleString()} USD
         </p>
         {isConnected && address && (
@@ -298,7 +298,7 @@ export default function WalletPage() {
         {[
           { label: "Send", icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", color: "#2B4C7E" },
           { label: "Receive", icon: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4", color: "#2ECC71" },
-          { label: "Convert to USDC", icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4", color: "#D4A843" },
+          { label: "Convert", icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4", color: "#D4A843" },
           { label: "Stake", icon: "M13 10V3L4 14h7v7l9-11h-7z", color: "#E8632B" },
         ].map((action) => (
           <button
@@ -495,7 +495,8 @@ export default function WalletPage() {
             <option value="unstake">Unstake</option>
           </select>
         </div>
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10">
@@ -536,6 +537,33 @@ export default function WalletPage() {
               )}
             </tbody>
           </table>
+        </div>
+        {/* Mobile card layout */}
+        <div className="lg:hidden space-y-2">
+          {filteredTx.map((tx) => {
+            const isPositive = positiveTypes.includes(tx.type);
+            const color = typeColors[tx.type] || "#4A4A5A";
+            return (
+              <div key={tx.id} className="flex items-center gap-3 rounded-lg border border-white/5 px-3 py-2.5">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold" style={{ backgroundColor: color + "20", color }}>
+                  {isPositive ? "+" : "-"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-white truncate">{tx.description}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: color + "20", color }}>{typeLabels[tx.type] || tx.type}</span>
+                    <span className="text-[10px]" style={{ color: "#4A4A5A" }}>{new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                  </div>
+                </div>
+                <span className="text-sm font-semibold shrink-0" style={{ color: isPositive ? "#2ECC71" : "#E8632B" }}>
+                  {isPositive ? "+" : "-"}${tx.amount.toLocaleString()}
+                </span>
+              </div>
+            );
+          })}
+          {filteredTx.length === 0 && (
+            <div className="py-8 text-center text-sm text-white/40">No transactions found</div>
+          )}
         </div>
       </div>
     </div>

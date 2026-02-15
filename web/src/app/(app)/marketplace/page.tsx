@@ -444,8 +444,8 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        {/* Row 2: Filter chips */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Row 2: Filter chips — horizontally scrollable on mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mb-1 scrollbar-hide">
           {/* Property Type */}
           <select
             value={propertyType}
@@ -537,11 +537,11 @@ export default function MarketplacePage() {
       </div>
 
       {/* ── Main Content Area ── */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Map Panel */}
+      <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
+        {/* Map Panel — hidden on mobile in split mode, show only in map mode */}
         {(viewMode === "split" || viewMode === "map") && (
           <div
-            className={`relative ${viewMode === "map" ? "w-full" : "w-1/2"} flex-shrink-0`}
+            className={`relative flex-shrink-0 ${viewMode === "map" ? "w-full h-full" : "hidden lg:block lg:w-1/2 h-full"}`}
             style={{ backgroundColor: "#0D0D1A" }}
           >
             <MapView
@@ -564,10 +564,10 @@ export default function MarketplacePage() {
           </div>
         )}
 
-        {/* Cards Panel */}
+        {/* Cards Panel — full width on mobile in split mode */}
         {(viewMode === "split" || viewMode === "grid") && (
           <div
-            className={`${viewMode === "grid" ? "w-full" : "w-1/2"} overflow-y-auto`}
+            className={`${viewMode === "grid" ? "w-full" : "w-full lg:w-1/2"} overflow-y-auto`}
             style={{ backgroundColor: "#0D0D1A" }}
           >
             <div

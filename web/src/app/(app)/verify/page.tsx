@@ -198,7 +198,7 @@ export default function VerifyPage() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 p-6" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-white/10 p-4 sm:p-6" style={{ backgroundColor: "#1A1A2E" }}>
         {/* Step 1: Personal Info */}
         {currentStep === "info" && (
           <div className="space-y-4">
@@ -264,7 +264,7 @@ export default function VerifyPage() {
               <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Apt / Suite</label>
               <input value={form.addressLine2} onChange={(e) => update("addressLine2", e.target.value)} className={inputClass} style={inputStyle} placeholder="Apt 4B" />
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               <div>
                 <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>City *</label>
                 <input value={form.city} onChange={(e) => update("city", e.target.value)} className={inputClass} style={inputStyle} placeholder="Charlotte" />
@@ -273,7 +273,7 @@ export default function VerifyPage() {
                 <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>State *</label>
                 <input value={form.state} onChange={(e) => update("state", e.target.value)} className={inputClass} style={inputStyle} placeholder="NC" />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>ZIP *</label>
                 <input value={form.zip} onChange={(e) => update("zip", e.target.value)} className={inputClass} style={inputStyle} placeholder="28202" />
               </div>

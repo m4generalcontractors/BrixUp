@@ -122,7 +122,8 @@ function InvestorDashboard({ investments, transactions, brixBalance }: { investm
           <h2 className="text-lg font-semibold text-white">Active Deals</h2>
           <Link href="/marketplace" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: "#D4A843" }}>View Marketplace</Link>
         </div>
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="border-b border-white/10">{["Property", "Location", "Invested", "Status", "Progress", "ROI", "Action"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
@@ -144,6 +145,35 @@ function InvestorDashboard({ investments, transactions, brixBalance }: { investm
               })}
             </tbody>
           </table>
+        </div>
+        {/* Mobile card layout */}
+        <div className="md:hidden space-y-3">
+          {investments.map((inv) => {
+            const deal = inv.deals;
+            if (!deal) return null;
+            const progress = deal.total_capital_needed > 0 ? Math.round((deal.funded_amount / deal.total_capital_needed) * 100) : 0;
+            return (
+              <Link key={inv.id} href={`/marketplace/${inv.deals?.id || inv.deal_id || "deal-001"}`} className="block rounded-lg border border-white/5 p-3 transition-colors active:bg-white/5">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-white">{deal.address}</p>
+                    <p className="text-xs" style={{ color: "#4A4A5A" }}>{deal.city}, {deal.state}</p>
+                  </div>
+                  <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={{ backgroundColor: deal.status === "Active" ? "#D4A84330" : "#2B4C7E30", color: deal.status === "Active" ? "#D4A843" : "#2B4C7E" }}>{deal.status}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-white">${inv.amount.toLocaleString()}</span>
+                    <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{deal.projected_roi}% ROI</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div>
+                    <span className="text-xs text-white/60">{progress}%</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

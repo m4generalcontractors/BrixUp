@@ -154,7 +154,8 @@ export default function TokenManagementPage() {
       {/* Recent Token Actions */}
       <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
         <h3 className="mb-4 text-sm font-semibold text-white">Recent Token Actions</h3>
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="border-b border-white/10">{["Action", "Amount", "To", "Date", "By"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
@@ -169,6 +170,18 @@ export default function TokenManagementPage() {
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Mobile cards */}
+        <div className="sm:hidden space-y-2">
+          {recentActions.map((a, i) => (
+            <div key={i} className="flex items-center justify-between rounded-lg border border-white/5 px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: a.action === "Mint" ? "#2ECC7120" : a.action === "Burn" ? "#E8632B20" : "#2B4C7E20", color: a.action === "Mint" ? "#2ECC71" : a.action === "Burn" ? "#E8632B" : "#2B4C7E" }}>{a.action}</span>
+                <span className="text-sm font-medium text-white">{a.amount}</span>
+              </div>
+              <span className="text-xs text-white/40">{a.date}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
