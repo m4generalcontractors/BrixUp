@@ -90,6 +90,7 @@ async function main() {
     await cdp.evm.requestFaucet({
       address: deployer.address,
       network: "base-sepolia",
+      token: "eth",
     });
     console.log("  Faucet request sent! ETH should arrive in ~30 seconds.");
   } catch (error: unknown) {
