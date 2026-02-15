@@ -55,7 +55,7 @@ export default function PlatformSettingsPage() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Platform Settings</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Deployment, backend config, and controls</p>
+          <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Deployment, backend config, and controls</p>
         </div>
         {isAdmin && (
           <button
@@ -71,22 +71,22 @@ export default function PlatformSettingsPage() {
 
       <div className="space-y-6">
         {/* General Settings */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-sm font-semibold text-white uppercase tracking-wider">General</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>Platform Name</label>
-              <input value={settings.platformName} onChange={(e) => update("platformName", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "#0D0D1A" }} />
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Platform Name</label>
+              <input value={settings.platformName} onChange={(e) => update("platformName", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "var(--brix-bg)" }} />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>Tagline</label>
-              <input value={settings.tagline} onChange={(e) => update("tagline", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "#0D0D1A" }} />
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Tagline</label>
+              <input value={settings.tagline} onChange={(e) => update("tagline", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "var(--brix-bg)" }} />
             </div>
           </div>
         </div>
 
         {/* Financial Settings */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-sm font-semibold text-white uppercase tracking-wider">Financial</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -97,15 +97,15 @@ export default function PlatformSettingsPage() {
               { key: "stakingAPY", label: "Staking APY (%)", type: "number" },
             ].map((f) => (
               <div key={f.key}>
-                <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>{f.label}</label>
-                <input type={f.type} value={(settings as Record<string, string | boolean>)[f.key] as string} onChange={(e) => update(f.key, e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{f.label}</label>
+                <input type={f.type} value={(settings as Record<string, string | boolean>)[f.key] as string} onChange={(e) => update(f.key, e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
             ))}
           </div>
         </div>
 
         {/* Approval & Access Controls */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-sm font-semibold text-white uppercase tracking-wider">Approval & Access</h2>
           <div className="space-y-4">
             {[
@@ -119,7 +119,7 @@ export default function PlatformSettingsPage() {
               <div key={toggle.key} className="flex items-center justify-between rounded-lg border border-white/5 px-4 py-3">
                 <div>
                   <p className="text-sm font-medium text-white">{toggle.label}</p>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{toggle.desc}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{toggle.desc}</p>
                 </div>
                 <button
                   onClick={() => isAdmin && update(toggle.key, !(settings as Record<string, string | boolean>)[toggle.key])}
@@ -138,19 +138,19 @@ export default function PlatformSettingsPage() {
         </div>
 
         {/* Deployment / Contract Addresses */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-sm font-semibold text-white uppercase tracking-wider">Blockchain Deployment</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>Network</label>
-              <select value={settings.network} onChange={(e) => update("network", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none" style={{ backgroundColor: "#0D0D1A" }}>
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Network</label>
+              <select value={settings.network} onChange={(e) => update("network", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }}>
                 <option value="base-sepolia">Base Sepolia (Testnet)</option>
                 <option value="base">Base (Mainnet)</option>
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>RPC URL</label>
-              <input value={settings.rpcUrl} onChange={(e) => update("rpcUrl", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white font-mono disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "#0D0D1A" }} />
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>RPC URL</label>
+              <input value={settings.rpcUrl} onChange={(e) => update("rpcUrl", e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white font-mono disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "var(--brix-bg)" }} />
             </div>
             {[
               { key: "brixTokenAddress", label: "BrixToken Address" },
@@ -158,8 +158,8 @@ export default function PlatformSettingsPage() {
               { key: "stakingAddress", label: "BrixStaking Address" },
             ].map((c) => (
               <div key={c.key} className="sm:col-span-2">
-                <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>{c.label}</label>
-                <input value={(settings as Record<string, string | boolean>)[c.key] as string} onChange={(e) => update(c.key, e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white font-mono disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{c.label}</label>
+                <input value={(settings as Record<string, string | boolean>)[c.key] as string} onChange={(e) => update(c.key, e.target.value)} disabled={!isAdmin} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white font-mono disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-[#D4A843]" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
             ))}
           </div>

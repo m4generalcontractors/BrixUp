@@ -366,7 +366,7 @@ export default function WalletPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Wallet</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Manage your $BRXU tokens</p>
+          <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Manage your $BRXU tokens</p>
         </div>
         {/* Wallet connect — user-initiated via Coinbase Smart Wallet */}
         {!isConnected ? (
@@ -379,7 +379,7 @@ export default function WalletPage() {
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </button>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex items-center gap-2 rounded-lg border border-[var(--brix-border)] px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
             <span className="font-mono text-xs text-white/60">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
           </div>
@@ -399,13 +399,13 @@ export default function WalletPage() {
       {/* Balance card */}
       <div
         className="mb-6 rounded-xl border p-8 text-center"
-        style={{ backgroundColor: "#1A1A2E", borderColor: "#D4A84340", background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 50%, #1A1A2E 100%)" }}
+        style={{ backgroundColor: "var(--brix-surface)", borderColor: "#D4A84340", background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 50%, #1A1A2E 100%)" }}
       >
-        <p className="text-sm font-medium" style={{ color: "#4A4A5A" }}>Total Balance</p>
+        <p className="text-sm font-medium" style={{ color: "var(--brix-fg-muted)" }}>Total Balance</p>
         <p className="mt-2 text-3xl sm:text-5xl font-bold text-white">
           {Math.max(0, brixBalance).toLocaleString()} <span style={{ color: "#D4A843" }}>BRXU</span>
         </p>
-        <p className="mt-2 text-base sm:text-lg" style={{ color: "#4A4A5A" }}>
+        <p className="mt-2 text-base sm:text-lg" style={{ color: "var(--brix-fg-muted)" }}>
           ≈ ${Math.max(0, brixBalance).toLocaleString()} USD
         </p>
         {isConnected && address && (
@@ -425,8 +425,8 @@ export default function WalletPage() {
           <button
             key={action.label}
             onClick={() => setActiveAction(activeAction === action.label ? null : action.label)}
-            className={`flex flex-col items-center gap-2 rounded-xl border p-4 transition-colors hover:bg-white/5 ${activeAction === action.label ? "border-white/30" : "border-white/10"}`}
-            style={{ backgroundColor: "#1A1A2E" }}
+            className={`flex flex-col items-center gap-2 rounded-xl border p-4 transition-colors hover:bg-white/5 ${activeAction === action.label ? "border-white/30" : "border-[var(--brix-border)]"}`}
+            style={{ backgroundColor: "var(--brix-surface)" }}
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: action.color + "20" }}>
               <svg className="w-5 h-5" style={{ color: action.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -440,7 +440,7 @@ export default function WalletPage() {
 
       {/* Buy BRXU panel — Coinbase Onramp */}
       {activeAction === "Buy" && (
-        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <div className="flex items-center gap-3 mb-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#2ECC7120" }}>
               <svg className="w-5 h-5" style={{ color: "#2ECC71" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,13 +449,13 @@ export default function WalletPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-white">Buy $BRXU</h2>
-              <p className="text-xs" style={{ color: "#4A4A5A" }}>Purchase with fiat via Coinbase</p>
+              <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Purchase with fiat via Coinbase</p>
             </div>
           </div>
           <div className="space-y-4">
             {/* Amount input */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount (USD)</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Amount (USD)</label>
               <div className="relative mt-1">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-white/40">$</span>
                 <input
@@ -464,7 +464,7 @@ export default function WalletPage() {
                   value={buyAmount}
                   onChange={(e) => { setBuyAmount(sanitizeAmountInput(e.target.value)); setBuyError(null); }}
                   className="w-full rounded-lg border py-3 pl-8 pr-4 text-lg text-white focus:outline-none focus:ring-1 focus:ring-[#2ECC71]"
-                  style={{ backgroundColor: "#0D0D1A", borderColor: buyError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  style={{ backgroundColor: "var(--brix-bg)", borderColor: buyError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                 />
               </div>
               {buyError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{buyError}</p>}
@@ -476,7 +476,7 @@ export default function WalletPage() {
                 <button
                   key={amt}
                   onClick={() => setBuyAmount(amt)}
-                  className={`rounded-lg border py-2 text-sm font-medium transition-colors ${buyAmount === amt ? "border-[#2ECC71] text-[#2ECC71]" : "border-white/10 text-white/60 hover:border-white/20"}`}
+                  className={`rounded-lg border py-2 text-sm font-medium transition-colors ${buyAmount === amt ? "border-[#2ECC71] text-[#2ECC71]" : "border-[var(--brix-border)] text-white/60 hover:border-white/20"}`}
                   style={{ backgroundColor: buyAmount === amt ? "#2ECC7110" : "#0D0D1A" }}
                 >
                   ${amt}
@@ -485,10 +485,10 @@ export default function WalletPage() {
             </div>
 
             {/* You receive */}
-            <div className="rounded-lg border border-white/5 px-4 py-3" style={{ backgroundColor: "#0D0D1A" }}>
+            <div className="rounded-lg border border-white/5 px-4 py-3" style={{ backgroundColor: "var(--brix-bg)" }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>You Receive</span>
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>Rate: 1 BRXU = $1.00</span>
+                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>You Receive</span>
+                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Rate: 1 BRXU = $1.00</span>
               </div>
               <p className="mt-1 text-xl font-bold text-white">
                 {(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} <span style={{ color: "#D4A843" }}>BRXU</span>
@@ -497,7 +497,7 @@ export default function WalletPage() {
 
             {/* Payment method */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Payment Method</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Payment Method</label>
               <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
                 {([
                   { key: "card" as const, label: "Card", icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z", desc: "Visa / Mastercard" },
@@ -507,7 +507,7 @@ export default function WalletPage() {
                   <button
                     key={method.key}
                     onClick={() => setBuyMethod(method.key)}
-                    className={`flex items-center gap-3 rounded-lg border p-3 transition-colors ${buyMethod === method.key ? "border-[#2ECC71]" : "border-white/10 hover:border-white/20"}`}
+                    className={`flex items-center gap-3 rounded-lg border p-3 transition-colors ${buyMethod === method.key ? "border-[#2ECC71]" : "border-[var(--brix-border)] hover:border-white/20"}`}
                     style={{ backgroundColor: buyMethod === method.key ? "#2ECC7108" : "#0D0D1A" }}
                   >
                     <svg className="w-5 h-5 shrink-0" style={{ color: buyMethod === method.key ? "#2ECC71" : "#4A4A5A" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -515,7 +515,7 @@ export default function WalletPage() {
                     </svg>
                     <div className="text-left">
                       <p className="text-sm font-medium text-white">{method.label}</p>
-                      <p className="text-[10px]" style={{ color: "#4A4A5A" }}>{method.desc}</p>
+                      <p className="text-[10px]" style={{ color: "var(--brix-fg-muted)" }}>{method.desc}</p>
                     </div>
                   </button>
                 ))}
@@ -523,10 +523,10 @@ export default function WalletPage() {
             </div>
 
             {/* Fee breakdown */}
-            <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7120", backgroundColor: "#2ECC7108", color: "#4A4A5A" }}>
+            <div className="rounded-lg border px-3 py-2 text-xs" style={{ borderColor: "#2ECC7120", backgroundColor: "#2ECC7108", color: "var(--brix-fg-muted)" }}>
               <div className="flex justify-between"><span>Subtotal</span><span className="text-white">${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toFixed(2)}</span></div>
               <div className="flex justify-between mt-1"><span>Processing Fee (2.5%)</span><span className="text-white">${((parseFloat(buyAmount.replace(/,/g, "")) || 0) * 0.025).toFixed(2)}</span></div>
-              <div className="flex justify-between mt-1 pt-1 border-t border-white/10"><span className="font-medium text-white">Total</span><span className="font-bold text-white">${((parseFloat(buyAmount.replace(/,/g, "")) || 0) * 1.025).toFixed(2)}</span></div>
+              <div className="flex justify-between mt-1 pt-1 border-t border-[var(--brix-border)]"><span className="font-medium text-white">Total</span><span className="font-bold text-white">${((parseFloat(buyAmount.replace(/,/g, "")) || 0) * 1.025).toFixed(2)}</span></div>
             </div>
 
             {buySuccess && (
@@ -544,7 +544,7 @@ export default function WalletPage() {
               {buying ? "Processing..." : `Buy ${(parseFloat(buyAmount.replace(/,/g, "")) || 0).toLocaleString()} BRXU`}
             </button>
 
-            <div className="flex items-center justify-center gap-2 text-xs" style={{ color: "#4A4A5A" }}>
+            <div className="flex items-center justify-center gap-2 text-xs" style={{ color: "var(--brix-fg-muted)" }}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -556,24 +556,24 @@ export default function WalletPage() {
 
       {/* Send panel */}
       {activeAction === "Send" && (
-        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Send $BRXU</h2>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Recipient Address</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Recipient Address</label>
               <input
                 type="text"
                 value={sendTo}
                 onChange={(e) => { setSendTo(e.target.value); setSendToError(null); }}
                 placeholder="0x..."
                 className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: sendToError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: sendToError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
               />
               {sendToError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{sendToError}</p>}
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRXU)</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Amount ($BRXU)</label>
                 <button onClick={() => setSendAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
               </div>
               <input
@@ -583,7 +583,7 @@ export default function WalletPage() {
                 onChange={(e) => { setSendAmount(sanitizeAmountInput(e.target.value)); setSendAmountError(null); }}
                 placeholder="1000"
                 className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: sendAmountError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: sendAmountError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
               />
               {sendAmountError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{sendAmountError}</p>}
             </div>
@@ -604,7 +604,7 @@ export default function WalletPage() {
 
       {/* Receive panel */}
       {activeAction === "Receive" && (
-        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Receive $BRXU</h2>
           <div className="space-y-4">
             {/* QR Code */}
@@ -645,11 +645,11 @@ export default function WalletPage() {
 
             {/* Wallet address */}
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Your Wallet Address</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Your Wallet Address</label>
               <div className="mt-1 flex items-center gap-2">
                 <div
                   className="flex-1 rounded-lg px-4 py-3 font-mono text-sm text-white/80 overflow-hidden text-ellipsis whitespace-nowrap"
-                  style={{ backgroundColor: "#0D0D1A" }}
+                  style={{ backgroundColor: "var(--brix-bg)" }}
                 >
                   {isConnected && address ? address : user?.id ? `0x${user.id.replace(/-/g, "").slice(0, 40)}` : "Connect wallet to receive"}
                 </div>
@@ -689,7 +689,7 @@ export default function WalletPage() {
                     navigator.clipboard.writeText(addr);
                   }
                 }}
-                className="rounded-lg border border-white/10 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5"
+                className="rounded-lg border border-[var(--brix-border)] py-3 text-sm font-medium text-white transition-colors hover:bg-white/5"
               >
                 Share Address
               </button>
@@ -710,12 +710,12 @@ export default function WalletPage() {
 
       {/* Convert panel */}
       {activeAction === "Convert" && (
-        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Convert $BRXU to USDC</h2>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Amount ($BRXU)</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Amount ($BRXU)</label>
                 <button onClick={() => setConvertAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
               </div>
               <div className="relative mt-1">
@@ -725,23 +725,23 @@ export default function WalletPage() {
                   value={convertAmount}
                   onChange={(e) => { setConvertAmount(sanitizeAmountInput(e.target.value)); setConvertError(null); }}
                   className="w-full rounded-lg border py-3 px-4 text-lg text-white focus:outline-none focus:ring-1"
-                  style={{ backgroundColor: "#0D0D1A", borderColor: convertError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  style={{ backgroundColor: "var(--brix-bg)", borderColor: convertError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "#D4A843" }}>BRXU</span>
               </div>
               {convertError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{convertError}</p>}
             </div>
             <div className="flex justify-center">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
-                <svg className="w-4 h-4" style={{ color: "#4A4A5A" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
+                <svg className="w-4 h-4" style={{ color: "var(--brix-fg-muted)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>You Receive (USDC)</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>You Receive (USDC)</label>
               <div className="relative mt-1">
-                <input type="text" value={usdcEquivalent} readOnly className="w-full rounded-lg border border-white/10 py-3 px-4 text-lg text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }} />
+                <input type="text" value={usdcEquivalent} readOnly className="w-full rounded-lg border border-[var(--brix-border)] py-3 px-4 text-lg text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }} />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: "#2ECC71" }}>USDC</span>
               </div>
             </div>
@@ -756,7 +756,7 @@ export default function WalletPage() {
             <button onClick={handleConvert} disabled={converting || !convertAmount || parseAmount(convertAmount) <= 0 || parseAmount(convertAmount) > brixBalance} className="w-full rounded-lg py-3 text-sm font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
               {converting ? "Converting..." : "Convert to USDC"}
             </button>
-            <p className="text-center text-xs" style={{ color: "#4A4A5A" }}>Funds arrive via ACH in 1-2 business days</p>
+            <p className="text-center text-xs" style={{ color: "var(--brix-fg-muted)" }}>Funds arrive via ACH in 1-2 business days</p>
           </div>
         </div>
       )}
@@ -764,32 +764,32 @@ export default function WalletPage() {
       {/* Staking panel */}
       <div className="mb-6">
         {/* Staking panel */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Staking</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "#0D0D1A" }}>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>Currently Staked</p>
+              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "var(--brix-bg)" }}>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Currently Staked</p>
                 <p className="mt-1 text-xl font-bold text-white">{Math.max(0, stakedAmount).toLocaleString()}</p>
                 <p className="text-xs" style={{ color: "#D4A843" }}>BRXU</p>
               </div>
-              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "#0D0D1A" }}>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>APY</p>
+              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "var(--brix-bg)" }}>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>APY</p>
                 <p className="mt-1 text-xl font-bold" style={{ color: "#2ECC71" }}>12.5%</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>Annual</p>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Annual</p>
               </div>
             </div>
 
-            <div className="rounded-lg p-4" style={{ backgroundColor: "#0D0D1A" }}>
+            <div className="rounded-lg p-4" style={{ backgroundColor: "var(--brix-bg)" }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Pending Rewards</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Pending Rewards</p>
                   <p className="mt-1 text-lg font-bold" style={{ color: "#2ECC71" }}>
                     +{pendingRewardsAmount.toLocaleString()} BRXU
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Status</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Status</p>
                   <p className="mt-1 text-sm font-medium" style={{ color: "#2ECC71" }}>{isLocked ? "Locked" : "Unlocked"}</p>
                 </div>
               </div>
@@ -803,7 +803,7 @@ export default function WalletPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Stake Amount</label>
+                  <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Stake Amount</label>
                   <button onClick={() => setStakeAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
                 </div>
                 <input
@@ -812,7 +812,7 @@ export default function WalletPage() {
                   value={stakeAmount}
                   onChange={(e) => { setStakeAmount(sanitizeAmountInput(e.target.value)); setStakeError(null); }}
                   className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                  style={{ backgroundColor: "#0D0D1A", borderColor: stakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  style={{ backgroundColor: "var(--brix-bg)", borderColor: stakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                   placeholder="Amount to stake"
                 />
                 {stakeError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{stakeError}</p>}
@@ -822,7 +822,7 @@ export default function WalletPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Unstake Amount</label>
+                  <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Unstake Amount</label>
                   <button onClick={() => setUnstakeAmount(String(Math.floor(stakedAmount)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
                 </div>
                 <input
@@ -831,7 +831,7 @@ export default function WalletPage() {
                   value={unstakeAmount}
                   onChange={(e) => { setUnstakeAmount(sanitizeAmountInput(e.target.value)); setUnstakeError(null); }}
                   className="mt-1 w-full rounded-lg border py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                  style={{ backgroundColor: "#0D0D1A", borderColor: unstakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
+                  style={{ backgroundColor: "var(--brix-bg)", borderColor: unstakeError ? "#E8632B" : "rgba(255,255,255,0.1)" }}
                   placeholder="Amount to unstake"
                 />
                 {unstakeError && <p className="mt-1 text-xs" style={{ color: "#E8632B" }}>{unstakeError}</p>}
@@ -851,14 +851,14 @@ export default function WalletPage() {
       </div>
 
       {/* Transaction History */}
-      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-white">Transaction History</h2>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1"
-            style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+            className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none focus:ring-1"
+            style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
           >
             <option value="All">All Types</option>
             <option value="investment">Investment</option>
@@ -875,9 +875,9 @@ export default function WalletPage() {
         <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--brix-border)]">
                 {["Date", "Type", "Amount", "From", "To", "Status"].map((h) => (
-                  <th key={h} className="pb-3 text-left text-xs font-medium whitespace-nowrap pr-4" style={{ color: "#4A4A5A" }}>{h}</th>
+                  <th key={h} className="pb-3 text-left text-xs font-medium whitespace-nowrap pr-4" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -928,7 +928,7 @@ export default function WalletPage() {
                   <p className="text-sm text-white truncate">{tx.description}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: color + "20", color }}>{typeLabels[tx.type] || tx.type}</span>
-                    <span className="text-[10px]" style={{ color: "#4A4A5A" }}>{new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                    <span className="text-[10px]" style={{ color: "var(--brix-fg-muted)" }}>{new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                   </div>
                 </div>
                 <span className="text-sm font-semibold shrink-0" style={{ color: isPositive ? "#2ECC71" : "#E8632B" }}>

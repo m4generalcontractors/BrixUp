@@ -132,9 +132,9 @@ export default function Hero() {
           </div>
           <div>
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
-              3
+              $500
             </p>
-            <p className="mt-1 text-sm text-offwhite/70">State Licenses</p>
+            <p className="mt-1 text-sm text-offwhite/70">Min Investment</p>
           </div>
         </div>
       </div>

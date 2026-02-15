@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div
       className="relative flex min-h-screen flex-col items-center justify-center px-4"
-      style={{ backgroundColor: "#0D0D1A" }}
+      style={{ backgroundColor: "var(--brix-bg)" }}
     >
       {/* Logo */}
       <Link href="/" className="mb-12 flex items-center gap-3">

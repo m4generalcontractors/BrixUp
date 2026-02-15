@@ -61,7 +61,7 @@ function AdminLoginForm() {
   return (
     <div
       className="flex min-h-screen items-center justify-center px-4"
-      style={{ backgroundColor: "#0D0D1A" }}
+      style={{ backgroundColor: "var(--brix-bg)" }}
     >
       <div className="w-full max-w-md">
         {/* Admin Logo */}
@@ -74,15 +74,15 @@ function AdminLoginForm() {
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Admin Portal
           </h1>
-          <p className="mt-2 text-sm" style={{ color: "#4A4A5A" }}>
+          <p className="mt-2 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
             BrixUp Administration — Authorized personnel only
           </p>
         </div>
 
         {/* Card */}
         <div
-          className="rounded-2xl border border-white/10 p-8"
-          style={{ backgroundColor: "#1A1A2E" }}
+          className="rounded-2xl border border-[var(--brix-border)] p-8"
+          style={{ backgroundColor: "var(--brix-surface)" }}
         >
           {/* Security badge */}
           <div className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2" style={{ backgroundColor: "#E8632B10", borderLeft: "3px solid #E8632B" }}>
@@ -108,7 +108,7 @@ function AdminLoginForm() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                 Admin Email
               </label>
               <input
@@ -118,13 +118,13 @@ function AdminLoginForm() {
                 placeholder="admin@brixups.com"
                 required
                 autoComplete="email"
-                className="w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                 Password
               </label>
               <input
@@ -135,8 +135,8 @@ function AdminLoginForm() {
                 required
                 minLength={6}
                 autoComplete="current-password"
-                className="w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
               />
             </div>
 
@@ -170,7 +170,7 @@ function AdminLoginForm() {
           <Link
             href="/"
             className="block text-xs transition-colors hover:opacity-80"
-            style={{ color: "#4A4A5A" }}
+            style={{ color: "var(--brix-fg-muted)" }}
           >
             Back to Homepage
           </Link>
@@ -184,7 +184,7 @@ export default function AdminLoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+        <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#E8632B]" />
         </div>
       }

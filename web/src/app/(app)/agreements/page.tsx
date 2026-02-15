@@ -115,7 +115,7 @@ export default function AgreementsPage() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Agreements</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Legal documents and e-signatures</p>
+          <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Legal documents and e-signatures</p>
         </div>
         {pendingCount > 0 && (
           <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#E8632B20", color: "#E8632B" }}>
@@ -133,14 +133,14 @@ export default function AgreementsPage() {
             </svg>
             <div>
               <p className="text-sm font-medium" style={{ color: "#D4A843" }}>Action Required</p>
-              <p className="text-xs" style={{ color: "#4A4A5A" }}>You have {pendingCount} document{pendingCount > 1 ? "s" : ""} awaiting your electronic signature.</p>
+              <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>You have {pendingCount} document{pendingCount > 1 ? "s" : ""} awaiting your electronic signature.</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Compliance info */}
-      <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: "#2B4C7E20" }}>
             <svg className="w-5 h-5" style={{ color: "#6B9FE8" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ export default function AgreementsPage() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">Legal Compliance</h3>
-            <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>
+            <p className="mt-1 text-xs" style={{ color: "var(--brix-fg-muted)" }}>
               All agreements use ESIGN Act and UETA compliant electronic signatures. Documents are timestamped, hashed, and stored with full audit trails. Signatures are legally binding under US federal and state law.
             </p>
           </div>
@@ -161,8 +161,8 @@ export default function AgreementsPage() {
         {agreements.map((agreement) => (
           <div
             key={agreement.id}
-            className="rounded-xl border border-white/10 p-5 transition-colors hover:border-white/20"
-            style={{ backgroundColor: "#1A1A2E" }}
+            className="rounded-xl border border-[var(--brix-border)] p-5 transition-colors hover:border-white/20"
+            style={{ backgroundColor: "var(--brix-surface)" }}
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex-1 min-w-0">
@@ -184,11 +184,11 @@ export default function AgreementsPage() {
                   </span>
                 </div>
                 <h3 className="text-sm font-semibold text-white">{agreement.title}</h3>
-                <p className="mt-0.5 text-xs" style={{ color: "#4A4A5A" }}>
+                <p className="mt-0.5 text-xs" style={{ color: "var(--brix-fg-muted)" }}>
                   {TYPE_LABELS[agreement.type]}
                   {agreement.dealAddress && ` - ${agreement.dealAddress}`}
                 </p>
-                <div className="mt-2 flex items-center gap-4 text-[10px]" style={{ color: "#4A4A5A" }}>
+                <div className="mt-2 flex items-center gap-4 text-[10px]" style={{ color: "var(--brix-fg-muted)" }}>
                   <span>Created: {new Date(agreement.createdAt).toLocaleDateString()}</span>
                   {agreement.signedAt && (
                     <span>Signed: {new Date(agreement.signedAt).toLocaleDateString()}</span>
@@ -219,12 +219,12 @@ export default function AgreementsPage() {
 
             {/* Document preview (expandable) */}
             {viewingDoc?.id === agreement.id && (
-              <div className="mt-4 rounded-lg border border-white/5 p-4" style={{ backgroundColor: "#0D0D1A" }}>
+              <div className="mt-4 rounded-lg border border-white/5 p-4" style={{ backgroundColor: "var(--brix-bg)" }}>
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Document Preview</h4>
                   <button onClick={() => setViewingDoc(null)} className="text-xs text-white/40 hover:text-white">Close</button>
                 </div>
-                <div className="space-y-2 text-xs" style={{ color: "#4A4A5A" }}>
+                <div className="space-y-2 text-xs" style={{ color: "var(--brix-fg-muted)" }}>
                   {agreement.type === "tos" && (
                     <>
                       <p className="text-white font-semibold">BrixUp Platform Terms of Service</p>
@@ -293,7 +293,7 @@ export default function AgreementsPage() {
       </div>
 
       {agreements.length === 0 && (
-        <div className="rounded-xl border border-white/10 p-12 text-center" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-12 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
           <svg className="mx-auto w-12 h-12 text-white/10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>

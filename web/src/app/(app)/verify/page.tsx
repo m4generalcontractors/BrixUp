@@ -157,14 +157,14 @@ export default function VerifyPage() {
     );
   }
 
-  const inputClass = "mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]";
-  const inputStyle = { backgroundColor: "#0D0D1A" };
+  const inputClass = "mt-1 w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]";
+  const inputStyle = { backgroundColor: "var(--brix-bg)" };
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Identity Verification</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
           Complete KYC/AML verification to invest in deals
         </p>
       </div>
@@ -198,33 +198,33 @@ export default function VerifyPage() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 p-4 sm:p-6" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-4 sm:p-6" style={{ backgroundColor: "var(--brix-surface)" }}>
         {/* Step 1: Personal Info */}
         {currentStep === "info" && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white">Personal Information</h2>
-            <p className="text-xs" style={{ color: "#4A4A5A" }}>Required by federal regulations (BSA/AML). Your data is encrypted and stored securely.</p>
+            <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Required by federal regulations (BSA/AML). Your data is encrypted and stored securely.</p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Legal First Name *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Legal First Name *</label>
                 <input value={form.legalFirstName} onChange={(e) => update("legalFirstName", e.target.value)} className={inputClass} style={inputStyle} placeholder="John" />
               </div>
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Legal Last Name *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Legal Last Name *</label>
                 <input value={form.legalLastName} onChange={(e) => update("legalLastName", e.target.value)} className={inputClass} style={inputStyle} placeholder="Smith" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Date of Birth *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Date of Birth *</label>
                 <input type="date" value={form.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} className={inputClass} style={inputStyle} />
               </div>
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>SSN (last 4 digits)</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>SSN (last 4 digits)</label>
                 <input type="text" maxLength={4} value={form.ssn4} onChange={(e) => update("ssn4", e.target.value.replace(/\D/g, ""))} className={inputClass} style={inputStyle} placeholder="1234" />
-                <p className="mt-1 text-[10px]" style={{ color: "#4A4A5A" }}>For OFAC/sanctions screening only</p>
+                <p className="mt-1 text-[10px]" style={{ color: "var(--brix-fg-muted)" }}>For OFAC/sanctions screening only</p>
               </div>
             </div>
 
@@ -242,7 +242,7 @@ export default function VerifyPage() {
             )}
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Country of Tax Residency</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Country of Tax Residency</label>
               <select value={form.taxResidency} onChange={(e) => update("taxResidency", e.target.value)} className={inputClass} style={inputStyle}>
                 <option value="US">United States</option>
                 <option value="CA">Canada</option>
@@ -257,24 +257,24 @@ export default function VerifyPage() {
             </div>
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Street Address *</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Street Address *</label>
               <input value={form.addressLine1} onChange={(e) => update("addressLine1", e.target.value)} className={inputClass} style={inputStyle} placeholder="123 Main Street" />
             </div>
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Apt / Suite</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Apt / Suite</label>
               <input value={form.addressLine2} onChange={(e) => update("addressLine2", e.target.value)} className={inputClass} style={inputStyle} placeholder="Apt 4B" />
             </div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>City *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>City *</label>
                 <input value={form.city} onChange={(e) => update("city", e.target.value)} className={inputClass} style={inputStyle} placeholder="Charlotte" />
               </div>
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>State *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>State *</label>
                 <input value={form.state} onChange={(e) => update("state", e.target.value)} className={inputClass} style={inputStyle} placeholder="NC" />
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>ZIP *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>ZIP *</label>
                 <input value={form.zip} onChange={(e) => update("zip", e.target.value)} className={inputClass} style={inputStyle} placeholder="28202" />
               </div>
             </div>
@@ -285,10 +285,10 @@ export default function VerifyPage() {
         {currentStep === "identity" && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white">Identity Document</h2>
-            <p className="text-xs" style={{ color: "#4A4A5A" }}>Upload a government-issued photo ID for verification (FATF/FinCEN requirements).</p>
+            <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Upload a government-issued photo ID for verification (FATF/FinCEN requirements).</p>
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Document Type</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Document Type</label>
               <select value={form.idType} onChange={(e) => update("idType", e.target.value)} className={inputClass} style={inputStyle}>
                 <option value="drivers_license">Driver&apos;s License</option>
                 <option value="passport">Passport</option>
@@ -298,11 +298,11 @@ export default function VerifyPage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Document Number *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Document Number *</label>
                 <input value={form.idNumber} onChange={(e) => update("idNumber", e.target.value)} className={inputClass} style={inputStyle} placeholder="DL or passport number" />
               </div>
               <div>
-                <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Expiration Date *</label>
+                <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Expiration Date *</label>
                 <input type="date" value={form.idExpiry} onChange={(e) => update("idExpiry", e.target.value)} className={inputClass} style={inputStyle} />
               </div>
             </div>
@@ -316,7 +316,7 @@ export default function VerifyPage() {
                 <div key={doc.key} className="flex items-center justify-between rounded-lg border border-white/5 px-4 py-3">
                   <div>
                     <p className="text-sm font-medium text-white">{doc.label}</p>
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>{doc.desc}</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{doc.desc}</p>
                   </div>
                   {(form as Record<string, string | boolean>)[doc.key] ? (
                     <span className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#2ECC7130", color: "#2ECC71" }}>
@@ -348,7 +348,7 @@ export default function VerifyPage() {
         {currentStep === "accreditation" && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white">Investor Accreditation</h2>
-            <p className="text-xs" style={{ color: "#4A4A5A" }}>
+            <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>
               Under SEC Regulation D Rule 506(c), we must take reasonable steps to verify accredited investor status.
             </p>
 
@@ -372,7 +372,7 @@ export default function VerifyPage() {
             {form.isAccredited && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Accreditation Basis</label>
+                  <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Accreditation Basis</label>
                   <select value={form.accreditationType} onChange={(e) => update("accreditationType", e.target.value)} className={inputClass} style={inputStyle}>
                     <option value="">Select...</option>
                     <option value="income">Annual Income ($200K+ individual / $300K+ joint)</option>
@@ -384,7 +384,7 @@ export default function VerifyPage() {
 
                 {form.accreditationType === "income" && (
                   <div>
-                    <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Approximate Annual Income</label>
+                    <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Approximate Annual Income</label>
                     <select value={form.annualIncome} onChange={(e) => update("annualIncome", e.target.value)} className={inputClass} style={inputStyle}>
                       <option value="">Select range...</option>
                       <option value="200-300k">$200,000 - $300,000</option>
@@ -397,7 +397,7 @@ export default function VerifyPage() {
 
                 {form.accreditationType === "net_worth" && (
                   <div>
-                    <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Approximate Net Worth (excl. primary residence)</label>
+                    <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Approximate Net Worth (excl. primary residence)</label>
                     <select value={form.netWorth} onChange={(e) => update("netWorth", e.target.value)} className={inputClass} style={inputStyle}>
                       <option value="">Select range...</option>
                       <option value="1-2m">$1,000,000 - $2,000,000</option>
@@ -416,7 +416,7 @@ export default function VerifyPage() {
             )}
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Investment Experience</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Investment Experience</label>
               <select value={form.investmentExperience} onChange={(e) => update("investmentExperience", e.target.value)} className={inputClass} style={inputStyle}>
                 <option value="beginner">Beginner (0-2 years)</option>
                 <option value="intermediate">Intermediate (2-5 years)</option>
@@ -428,7 +428,7 @@ export default function VerifyPage() {
               <h3 className="text-sm font-semibold text-white">Risk Acknowledgment</h3>
               <label className="flex items-start gap-2 cursor-pointer">
                 <input type="checkbox" checked={form.acknowledgeRisks} onChange={(e) => update("acknowledgeRisks", e.target.checked)} className="mt-0.5 rounded border-white/20" />
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>
+                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>
                   I understand that investing in real estate securities involves significant risk, including potential loss of principal. These securities are illiquid and not publicly traded. Past performance does not guarantee future results. I have read and agree to the terms of the Private Placement Memorandum (PPM).
                 </span>
               </label>
@@ -440,7 +440,7 @@ export default function VerifyPage() {
         {currentStep === "review" && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white">Review & Submit</h2>
-            <p className="text-xs" style={{ color: "#4A4A5A" }}>Please review your information before submitting.</p>
+            <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Please review your information before submitting.</p>
 
             <div className="space-y-3">
               {[
@@ -456,7 +456,7 @@ export default function VerifyPage() {
                 ] : []),
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between rounded-lg border border-white/5 px-4 py-2.5">
-                  <span className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{item.label}</span>
+                  <span className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{item.label}</span>
                   <span className="text-sm text-white">{item.value}</span>
                 </div>
               ))}
@@ -480,7 +480,7 @@ export default function VerifyPage() {
         )}
 
         {/* Navigation buttons */}
-        <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+        <div className="mt-6 flex items-center justify-between border-t border-[var(--brix-border)] pt-4">
           {stepIndex > 0 ? (
             <button
               onClick={prevStep}

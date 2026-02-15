@@ -87,13 +87,13 @@ function DashboardSkeleton() {
     <div className="animate-pulse space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div key={i} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="h-4 w-20 rounded bg-white/10 mb-2" />
             <div className="h-8 w-28 rounded bg-white/10" />
           </div>
         ))}
       </div>
-      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="h-5 w-32 rounded bg-white/10 mb-4" />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
@@ -102,13 +102,13 @@ function DashboardSkeleton() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <div className="h-5 w-40 rounded bg-white/10 mb-4" />
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (<div key={i} className="h-10 rounded bg-white/5" />))}
           </div>
         </div>
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <div className="h-5 w-32 rounded bg-white/10 mb-4" />
           <div className="flex items-end justify-between gap-3 h-48">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -127,26 +127,26 @@ function DashboardSkeleton() {
 
 function DashboardWalletCard({ brixBalance, usdcBalance, stakedAmount = 0 }: { brixBalance: number; usdcBalance: number; stakedAmount?: number }) {
   return (
-    <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+    <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-white/60">My Wallet</h3>
+        <h3 className="text-sm font-semibold text-[var(--brix-fg)]/60">My Wallet</h3>
         <Link href="/wallet" className="text-xs font-medium hover:underline" style={{ color: "#D4A843" }}>Full Wallet →</Link>
       </div>
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-bold text-white">{brixBalance.toLocaleString()}</span>
+          <span className="text-2xl font-bold text-[var(--brix-fg)]">{brixBalance.toLocaleString()}</span>
           <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>$BRXU</span>
         </div>
-        <p className="mt-0.5 text-xs text-white/40">≈ ${brixBalance.toLocaleString()} USD</p>
+        <p className="mt-0.5 text-xs text-[var(--brix-fg)]/40">≈ ${brixBalance.toLocaleString()} USD</p>
       </div>
       <div className="space-y-2">
-        <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
-          <span className="text-xs text-white/50">USDC Balance</span>
-          <span className="text-sm font-semibold text-white">${usdcBalance.toLocaleString()}</span>
+        <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
+          <span className="text-xs text-[var(--brix-fg)]/50">USDC Balance</span>
+          <span className="text-sm font-semibold text-[var(--brix-fg)]">${usdcBalance.toLocaleString()}</span>
         </div>
         {stakedAmount > 0 && (
-          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
-            <span className="text-xs text-white/50">Staked $BRXU</span>
+          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
+            <span className="text-xs text-[var(--brix-fg)]/50">Staked $BRXU</span>
             <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{stakedAmount.toLocaleString()}</span>
           </div>
         )}
@@ -187,11 +187,11 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div key={stat.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
-                <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--brix-fg)]">{stat.value}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
                 <svg className="w-5 h-5" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
@@ -201,15 +201,15 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
         ))}
       </div>
 
-      <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Active Deals</h2>
+          <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Active Deals</h2>
           <Link href="/marketplace" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: "#D4A843" }}>View Marketplace</Link>
         </div>
         {/* Desktop table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-white/10">{["Property", "Location", "Invested", "Status", "Progress", "ROI", "Action"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>))}</tr></thead>
+            <thead><tr className="border-b border-[var(--brix-border)]">{["Property", "Location", "Invested", "Status", "Progress", "ROI", "Action"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
               {investments.map((inv) => {
                 const deal = inv.deals;
@@ -217,11 +217,11 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
                 const progress = deal.total_capital_needed > 0 ? Math.round((deal.funded_amount / deal.total_capital_needed) * 100) : 0;
                 return (
                   <tr key={inv.id} className="hover:bg-white/5 transition-colors">
-                    <td className="py-3"><div><p className="font-medium text-white">{deal.address}</p><p className="text-xs" style={{ color: "#4A4A5A" }}>{deal.property_type || deal.type}</p></div></td>
-                    <td className="py-3 text-white/80">{deal.city}, {deal.state}</td>
-                    <td className="py-3 font-medium text-white">${inv.amount.toLocaleString()}</td>
+                    <td className="py-3"><div><p className="font-medium text-[var(--brix-fg)]">{deal.address}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.property_type || deal.type}</p></div></td>
+                    <td className="py-3 text-[var(--brix-fg)]/80">{deal.city}, {deal.state}</td>
+                    <td className="py-3 font-medium text-[var(--brix-fg)]">${inv.amount.toLocaleString()}</td>
                     <td className="py-3"><span className="rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ backgroundColor: deal.status === "Active" ? "#D4A84330" : "#2B4C7E30", color: deal.status === "Active" ? "#D4A843" : "#2B4C7E" }}>{deal.status}</span></td>
-                    <td className="py-3"><div className="flex items-center gap-2"><div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div><span className="text-xs text-white/60">{progress}%</span></div></td>
+                    <td className="py-3"><div className="flex items-center gap-2"><div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div><span className="text-xs text-[var(--brix-fg)]/60">{progress}%</span></div></td>
                     <td className="py-3 font-semibold" style={{ color: "#2ECC71" }}>{deal.projected_roi}%</td>
                     <td className="py-3"><Link href={`/marketplace/${inv.deals?.id || inv.deal_id || "deal-001"}`} className="text-xs font-medium" style={{ color: "#D4A843" }}>View</Link></td>
                   </tr>
@@ -240,19 +240,19 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
               <Link key={inv.id} href={`/marketplace/${inv.deals?.id || inv.deal_id || "deal-001"}`} className="block rounded-lg border border-white/5 p-3 transition-colors active:bg-white/5">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-white">{deal.address}</p>
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>{deal.city}, {deal.state}</p>
+                    <p className="text-sm font-medium text-[var(--brix-fg)]">{deal.address}</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.city}, {deal.state}</p>
                   </div>
                   <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={{ backgroundColor: deal.status === "Active" ? "#D4A84330" : "#2B4C7E30", color: deal.status === "Active" ? "#D4A843" : "#2B4C7E" }}>{deal.status}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-white">${inv.amount.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-[var(--brix-fg)]">${inv.amount.toLocaleString()}</span>
                     <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{deal.projected_roi}% ROI</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div>
-                    <span className="text-xs text-white/60">{progress}%</span>
+                    <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}><div className="h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: "#D4A843" }} /></div>
+                    <span className="text-xs text-[var(--brix-fg)]/60">{progress}%</span>
                   </div>
                 </div>
               </Link>
@@ -264,8 +264,8 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
       <div className="mb-6"><DashboardWalletCard brixBalance={brixBalance} usdcBalance={3200} stakedAmount={stakedBalance} /></div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Recent Transactions</h2>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+          <h2 className="mb-4 text-lg font-semibold text-[var(--brix-fg)]">Recent Transactions</h2>
           <div className="space-y-3">
             {transactions.map((tx) => {
               const isPositive = ["yield", "staking_reward", "received"].includes(tx.type);
@@ -276,7 +276,7 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
                     <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold" style={{ backgroundColor: color + "20", color }}>
                       {isPositive ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg> : <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" /></svg>}
                     </div>
-                    <div><p className="text-sm text-white">{tx.description}</p><p className="text-xs" style={{ color: "#4A4A5A" }}>{new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p></div>
+                    <div><p className="text-sm text-[var(--brix-fg)]">{tx.description}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{new Date(tx.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p></div>
                   </div>
                   <span className="text-sm font-semibold" style={{ color: isPositive ? "#2ECC71" : "#E8632B" }}>{isPositive ? "+" : "-"}${tx.amount.toLocaleString()}</span>
                 </div>
@@ -285,29 +285,29 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Yield Tracker</h2>
-          <p className="mb-4 text-xs" style={{ color: "#4A4A5A" }}>Monthly returns over the last 6 months</p>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+          <h2 className="mb-4 text-lg font-semibold text-[var(--brix-fg)]">Yield Tracker</h2>
+          <p className="mb-4 text-xs" style={{ color: "var(--brix-fg-muted)" }}>Monthly returns over the last 6 months</p>
           <div className="flex items-end justify-between gap-3 h-48">
             {monthlyReturns.map((m) => (
               <div key={m.month} className="flex flex-1 flex-col items-center gap-2">
-                <span className="text-xs font-medium text-white">${m.amount}</span>
+                <span className="text-xs font-medium text-[var(--brix-fg)]">${m.amount}</span>
                 <div className="w-full flex-1 flex items-end"><div className="w-full rounded-t-md" style={{ height: `${(m.amount / m.max) * 100}%`, backgroundColor: "#D4A843", minHeight: "8px" }} /></div>
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>{m.month}</span>
+                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{m.month}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-        <h2 className="mb-4 text-lg font-semibold text-white">Portfolio Allocation</h2>
+      <div className="mt-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+        <h2 className="mb-4 text-lg font-semibold text-[var(--brix-fg)]">Portfolio Allocation</h2>
         <div className="space-y-4">
           <div className="flex h-6 w-full overflow-hidden rounded-full">
             {allocations.map((a) => (<div key={a.label} className="flex items-center justify-center text-xs font-semibold" style={{ width: `${a.pct}%`, backgroundColor: a.color, color: a.label === "Value-Add" ? "#0D0D1A" : "#FFFFFF" }}>{a.pct > 10 ? `${a.pct}%` : ""}</div>))}
           </div>
           <div className="flex flex-wrap items-center gap-6">
-            {allocations.map((item) => (<div key={item.label} className="flex items-center gap-2"><div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} /><span className="text-sm text-white">{item.label}</span><span className="text-xs" style={{ color: "#4A4A5A" }}>{item.pct}% (${item.amount.toLocaleString()})</span></div>))}
+            {allocations.map((item) => (<div key={item.label} className="flex items-center gap-2"><div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} /><span className="text-sm text-[var(--brix-fg)]">{item.label}</span><span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{item.pct}% (${item.amount.toLocaleString()})</span></div>))}
           </div>
         </div>
       </div>
@@ -336,11 +336,11 @@ const BuilderDashboard = memo(function BuilderDashboard() {
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {builderStats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div key={stat.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
-                <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--brix-fg)]">{stat.value}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
                 <svg className="w-5 h-5" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
@@ -350,28 +350,28 @@ const BuilderDashboard = memo(function BuilderDashboard() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Current Projects</h2>
+          <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Current Projects</h2>
           <Link href="/builder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
         <div className="space-y-4">
           {builderProjects.map((p) => (
             <div key={p.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold text-white">{p.address}</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>{p.city} &middot; {p.trade}</p>
+                <p className="text-sm font-semibold text-[var(--brix-fg)]">{p.address}</p>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{p.city} &middot; {p.trade}</p>
               </div>
               <div className="flex items-center gap-6">
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{p.milestone}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{p.milestone}</p>
                   <div className="mt-1 flex items-center gap-2">
-                    <div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${p.progress}%`, backgroundColor: "#D4A843" }} /></div>
+                    <div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}><div className="h-full rounded-full" style={{ width: `${p.progress}%`, backgroundColor: "#D4A843" }} /></div>
                     <span className="text-xs" style={{ color: "#D4A843" }}>{p.progress}%</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Next Draw</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Next Draw</p>
                   <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{p.nextDraw}</p>
                 </div>
               </div>
@@ -407,11 +407,11 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {dealmakerStats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div key={stat.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
-                <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--brix-fg)]">{stat.value}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
                 <svg className="w-5 h-5" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
@@ -421,9 +421,9 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Recent Deals</h2>
+          <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Recent Deals</h2>
           <Link href="/dealfinder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
         <div className="space-y-3">
@@ -433,18 +433,18 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
               <div key={d.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-white">{d.address}</p>
+                    <p className="text-sm font-semibold text-[var(--brix-fg)]">{d.address}</p>
                     <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${sColor}20`, color: sColor }}>{d.status}</span>
                   </div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{d.city}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{d.city}</p>
                 </div>
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Capital</p>
-                    <p className="text-sm font-semibold text-white">{d.capital}</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Capital</p>
+                    <p className="text-sm font-semibold text-[var(--brix-fg)]">{d.capital}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Commission</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Commission</p>
                     <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{d.commission}</p>
                   </div>
                 </div>
@@ -520,8 +520,8 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Welcome back, {displayName}</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>{roleGreetings[userRole] || today}</p>
+        <h1 className="text-2xl font-bold text-[var(--brix-fg)]">Welcome back, {displayName}</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>{roleGreetings[userRole] || today}</p>
       </div>
 
       {userRole === "builder" && <BuilderDashboard />}

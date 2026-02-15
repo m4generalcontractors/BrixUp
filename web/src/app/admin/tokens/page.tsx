@@ -47,16 +47,16 @@ export default function TokenManagementPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Token Management</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>$BRXU token controls and contract management</p>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>$BRXU token controls and contract management</p>
       </div>
 
       {/* Token Stats */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {tokenStats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-            <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{s.label}</p>
+          <div key={s.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+            <p className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{s.label}</p>
             <p className="mt-1 text-2xl font-bold text-white">{s.value}</p>
-            <div className="mt-2 h-1 w-full rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
+            <div className="mt-2 h-1 w-full rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
               <div className="h-full rounded-full" style={{ backgroundColor: s.color, width: "60%" }} />
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function TokenManagementPage() {
       </div>
 
       {/* Contract Addresses */}
-      <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <h2 className="mb-4 text-lg font-semibold text-white">Deployed Contracts (Base Mainnet)</h2>
         <div className="space-y-3">
           {Object.entries(CONTRACT_ADDRESSES).map(([name, addr]) => (
@@ -96,7 +96,7 @@ export default function TokenManagementPage() {
       {/* Mint / Burn Controls */}
       {isAdmin && (
         <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-4 text-sm font-semibold text-white">Mint $BRXU</h3>
             <div className="space-y-3">
               <input
@@ -104,16 +104,16 @@ export default function TokenManagementPage() {
                 placeholder="Recipient address (0x...)"
                 value={mintTo}
                 onChange={(e) => setMintTo(e.target.value)}
-                className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+                style={{ backgroundColor: "var(--brix-bg)" }}
               />
               <input
                 type="number"
                 placeholder="Amount"
                 value={mintAmount}
                 onChange={(e) => setMintAmount(e.target.value)}
-                className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+                style={{ backgroundColor: "var(--brix-bg)" }}
               />
               <button
                 onClick={() => handleAction("mint")}
@@ -126,7 +126,7 @@ export default function TokenManagementPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-4 text-sm font-semibold text-white">Burn $BRXU</h3>
             <div className="space-y-3">
               <input
@@ -134,10 +134,10 @@ export default function TokenManagementPage() {
                 placeholder="Amount to burn"
                 value={burnAmount}
                 onChange={(e) => setBurnAmount(e.target.value)}
-                className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+                style={{ backgroundColor: "var(--brix-bg)" }}
               />
-              <p className="text-xs" style={{ color: "#4A4A5A" }}>Tokens will be burned from treasury wallet. This action is irreversible.</p>
+              <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Tokens will be burned from treasury wallet. This action is irreversible.</p>
               <button
                 onClick={() => handleAction("burn")}
                 disabled={!burnAmount || actionLoading === "burn"}
@@ -152,12 +152,12 @@ export default function TokenManagementPage() {
       )}
 
       {/* Recent Token Actions */}
-      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
         <h3 className="mb-4 text-sm font-semibold text-white">Recent Token Actions</h3>
         {/* Desktop table */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-white/10">{["Action", "Amount", "To", "Date", "By"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>))}</tr></thead>
+            <thead><tr className="border-b border-[var(--brix-border)]">{["Action", "Amount", "To", "Date", "By"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
               {recentActions.map((a, i) => (
                 <tr key={i}>

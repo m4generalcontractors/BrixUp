@@ -100,7 +100,7 @@ export default function UsersPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Users & Team</h1>
-          <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>{users.length} total users</p>
+          <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>{users.length} total users</p>
         </div>
         {isAdmin && (
           <button
@@ -115,7 +115,7 @@ export default function UsersPage() {
 
       {/* Create Team Member Form */}
       {showCreate && (
-        <div className="mb-6 rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-6 rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h3 className="mb-4 text-sm font-semibold text-white">Create Team Member</h3>
           {createError && <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">{createError}</div>}
           <form onSubmit={handleCreateMember} className="grid grid-cols-1 gap-4 sm:grid-cols-4">
@@ -125,8 +125,8 @@ export default function UsersPage() {
               value={newMember.full_name}
               onChange={(e) => setNewMember((p) => ({ ...p, full_name: e.target.value }))}
               required
-              className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-              style={{ backgroundColor: "#0D0D1A" }}
+              className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+              style={{ backgroundColor: "var(--brix-bg)" }}
             />
             <input
               type="email"
@@ -134,14 +134,14 @@ export default function UsersPage() {
               value={newMember.email}
               onChange={(e) => setNewMember((p) => ({ ...p, email: e.target.value }))}
               required
-              className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-              style={{ backgroundColor: "#0D0D1A" }}
+              className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+              style={{ backgroundColor: "var(--brix-bg)" }}
             />
             <select
               value={newMember.user_role}
               onChange={(e) => setNewMember((p) => ({ ...p, user_role: e.target.value }))}
-              className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-              style={{ backgroundColor: "#0D0D1A" }}
+              className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+              style={{ backgroundColor: "var(--brix-bg)" }}
             >
               <option value="manager">Manager</option>
               <option value="admin">Admin</option>
@@ -152,7 +152,7 @@ export default function UsersPage() {
               <button type="submit" disabled={saving} className="flex-1 rounded-lg py-2 text-sm font-semibold disabled:opacity-50" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>
                 {saving ? "Creating..." : "Create"}
               </button>
-              <button type="button" onClick={() => setShowCreate(false)} className="rounded-lg px-3 py-2 text-sm text-white/60 hover:text-white border border-white/10">
+              <button type="button" onClick={() => setShowCreate(false)} className="rounded-lg px-3 py-2 text-sm text-white/60 hover:text-white border border-[var(--brix-border)]">
                 Cancel
               </button>
             </div>
@@ -167,14 +167,14 @@ export default function UsersPage() {
           placeholder="Search users..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-lg border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-          style={{ backgroundColor: "#1A1A2E" }}
+          className="flex-1 rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+          style={{ backgroundColor: "var(--brix-surface)" }}
         />
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
-          style={{ backgroundColor: "#1A1A2E" }}
+          className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none"
+          style={{ backgroundColor: "var(--brix-surface)" }}
         >
           <option value="all">All Roles</option>
           {ROLES.map((r) => <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
@@ -182,13 +182,13 @@ export default function UsersPage() {
       </div>
 
       {/* Users Table - Desktop */}
-      <div className="hidden md:block rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="hidden md:block rounded-xl border border-[var(--brix-border)] overflow-hidden" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--brix-border)]">
                 {["Name", "Email", "Role", "KYC", "Joined", "Actions"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -206,7 +206,7 @@ export default function UsersPage() {
                             value={editRole}
                             onChange={(e) => setEditRole(e.target.value)}
                             className="rounded border border-white/20 px-2 py-1 text-xs text-white"
-                            style={{ backgroundColor: "#0D0D1A" }}
+                            style={{ backgroundColor: "var(--brix-bg)" }}
                           >
                             {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
                           </select>
@@ -243,7 +243,7 @@ export default function UsersPage() {
                 );
               })}
               {filtered.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-sm" style={{ color: "#4A4A5A" }}>No users found</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-sm" style={{ color: "var(--brix-fg-muted)" }}>No users found</td></tr>
               )}
             </tbody>
           </table>
@@ -255,7 +255,7 @@ export default function UsersPage() {
         {filtered.map((user) => {
           const roleColor = ROLE_COLORS[user.user_role] || "#4A4A5A";
           return (
-            <div key={user.id} className="rounded-xl border border-white/10 p-4" style={{ backgroundColor: "#1A1A2E" }}>
+            <div key={user.id} className="rounded-xl border border-[var(--brix-border)] p-4" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm font-semibold text-white">{user.full_name || "—"}</p>
                 <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ backgroundColor: roleColor + "20", color: roleColor }}>
@@ -289,7 +289,7 @@ export default function UsersPage() {
                     value={editRole}
                     onChange={(e) => setEditRole(e.target.value)}
                     className="flex-1 rounded border border-white/20 px-2 py-1.5 text-xs text-white"
-                    style={{ backgroundColor: "#0D0D1A" }}
+                    style={{ backgroundColor: "var(--brix-bg)" }}
                   >
                     {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -301,8 +301,8 @@ export default function UsersPage() {
           );
         })}
         {filtered.length === 0 && (
-          <div className="rounded-xl border border-white/10 p-8 text-center" style={{ backgroundColor: "#1A1A2E" }}>
-            <p className="text-sm" style={{ color: "#4A4A5A" }}>No users found</p>
+          <div className="rounded-xl border border-[var(--brix-border)] p-8 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
+            <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No users found</p>
           </div>
         )}
       </div>

@@ -60,7 +60,7 @@ function LoginForm() {
   return (
     <div
       className="flex min-h-screen items-center justify-center px-4"
-      style={{ backgroundColor: "#0D0D1A" }}
+      style={{ backgroundColor: "var(--brix-bg)" }}
     >
       <div className="w-full max-w-md">
         {/* Logo */}
@@ -76,7 +76,7 @@ function LoginForm() {
               Brix<span style={{ color: "#D4A843" }}>Up</span>
             </span>
           </Link>
-          <p className="mt-3 text-sm" style={{ color: "#4A4A5A" }}>
+          <p className="mt-3 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
             {mode === "login"
               ? "Sign in to your account"
               : "Create your BrixUp account"}
@@ -85,11 +85,11 @@ function LoginForm() {
 
         {/* Card */}
         <div
-          className="rounded-2xl border border-white/10 p-8"
-          style={{ backgroundColor: "#1A1A2E" }}
+          className="rounded-2xl border border-[var(--brix-border)] p-8"
+          style={{ backgroundColor: "var(--brix-surface)" }}
         >
           {/* Toggle */}
-          <div className="mb-6 flex rounded-lg overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="mb-6 flex rounded-lg overflow-hidden" style={{ backgroundColor: "var(--brix-bg)" }}>
             <button
               onClick={() => { setMode("login"); setError(null); }}
               className="flex-1 py-2.5 text-sm font-semibold transition-colors"
@@ -131,7 +131,7 @@ function LoginForm() {
             {mode === "signup" && (
               <>
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                     Full Name
                   </label>
                   <input
@@ -140,13 +140,13 @@ function LoginForm() {
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Miguel H. Peña"
                     required
-                    className="w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                    style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                    className="w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+                    style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                     I am a...
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -175,7 +175,7 @@ function LoginForm() {
             )}
 
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                 Email Address
               </label>
               <input
@@ -184,13 +184,13 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium" style={{ color: "#4A4A5A" }}>
+              <label className="mb-1 block text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>
                 Password
               </label>
               <input
@@ -200,8 +200,8 @@ function LoginForm() {
                 placeholder="Min 6 characters"
                 required
                 minLength={6}
-                className="w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A", borderColor: "rgba(255,255,255,0.1)" }}
+                className="w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+                style={{ backgroundColor: "var(--brix-bg)", borderColor: "rgba(255,255,255,0.1)" }}
               />
             </div>
 
@@ -221,9 +221,9 @@ function LoginForm() {
 
           {/* Divider */}
           <div className="my-5 flex items-center gap-3">
-            <div className="flex-1 border-t border-white/10" />
-            <span className="text-xs" style={{ color: "#4A4A5A" }}>or</span>
-            <div className="flex-1 border-t border-white/10" />
+            <div className="flex-1 border-t border-[var(--brix-border)]" />
+            <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>or</span>
+            <div className="flex-1 border-t border-[var(--brix-border)]" />
           </div>
 
           {/* Google Sign In */}
@@ -238,7 +238,7 @@ function LoginForm() {
               }
             }}
             disabled={googleLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-white/10 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-[var(--brix-border)] py-3 text-sm font-medium text-white transition-colors hover:bg-white/5 disabled:opacity-50"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -262,7 +262,7 @@ function LoginForm() {
           </button>
 
           {mode === "login" && (
-            <p className="mt-4 text-center text-xs" style={{ color: "#4A4A5A" }}>
+            <p className="mt-4 text-center text-xs" style={{ color: "var(--brix-fg-muted)" }}>
               Don&apos;t have an account?{" "}
               <button
                 onClick={() => setMode("signup")}
@@ -275,7 +275,7 @@ function LoginForm() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-xs" style={{ color: "#4A4A5A" }}>
+        <p className="mt-6 text-center text-xs" style={{ color: "var(--brix-fg-muted)" }}>
           By continuing, you agree to the BrixUp{" "}
           <Link href="/terms" className="underline" style={{ color: "#D4A843" }}>Terms of Service</Link>
           {" "}and{" "}
@@ -290,7 +290,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+        <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
         </div>
       }

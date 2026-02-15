@@ -128,16 +128,16 @@ export default function BuilderPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Welcome back, {displayName}</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Your skills build wealth. Keep going.</p>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Your skills build wealth. Keep going.</p>
       </div>
 
       {/* Stats row */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {builderStats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div key={stat.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
+                <p className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{stat.label}</p>
                 <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
@@ -157,19 +157,19 @@ export default function BuilderPage() {
           <select
             value={selectedTrade}
             onChange={(e) => setSelectedTrade(e.target.value)}
-            className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
-            style={{ backgroundColor: "#0D0D1A" }}
+            className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none"
+            style={{ backgroundColor: "var(--brix-bg)" }}
           >
             {tradeOptions.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {availableDeals.length > 0 ? availableDeals.map((deal) => (
-            <div key={deal.id} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div key={deal.id} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="mb-3 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-white">{deal.address}</p>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{deal.city}, {deal.state}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.city}, {deal.state}</p>
                 </div>
                 <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: (tradeColors[selectedTrade] || "#D4A843") + "20", color: tradeColors[selectedTrade] || "#D4A843" }}>
                   {selectedTrade}
@@ -178,15 +178,15 @@ export default function BuilderPage() {
               <p className="mb-3 text-sm leading-relaxed" style={{ color: "#F8F6F0" }}>
                 {deal.description || `${selectedTrade} work needed for ${deal.property_type || "property"} project.`}
               </p>
-              <div className="mb-4 flex items-center justify-between border-t border-white/10 pt-3">
+              <div className="mb-4 flex items-center justify-between border-t border-[var(--brix-border)] pt-3">
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>$BRXU Rate</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>$BRXU Rate</p>
                   <p className="text-sm font-semibold" style={{ color: "#D4A843" }}>
                     {Math.round((deal.total_capital_needed || 200000) * 0.004).toLocaleString()} $BRXU
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Timeline</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Timeline</p>
                   <p className="text-sm font-medium text-white">3-4 weeks</p>
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function BuilderPage() {
               </button>
             </div>
           )) : (
-            <div className="col-span-full rounded-xl border border-white/10 p-8 text-center" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="col-span-full rounded-xl border border-[var(--brix-border)] p-8 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
               <p className="text-white/60">No deals available right now. Check back soon!</p>
             </div>
           )}
@@ -212,11 +212,11 @@ export default function BuilderPage() {
         <h2 className="mb-4 text-lg font-semibold text-white">My Active Projects</h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {activeProjects.map((project) => (
-            <div key={project.address} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div key={project.address} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <p className="text-base font-semibold text-white">{project.address}</p>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{project.city} - {project.trade}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{project.city} - {project.trade}</p>
                 </div>
                 <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#2ECC7130", color: "#2ECC71" }}>Active</span>
               </div>
@@ -225,21 +225,21 @@ export default function BuilderPage() {
                   <span className="text-xs font-medium text-white">{project.milestone}</span>
                   <span className="text-xs" style={{ color: "#D4A843" }}>{project.milestoneProgress}%</span>
                 </div>
-                <div className="h-2 w-full rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
+                <div className="h-2 w-full rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
                   <div className="h-full rounded-full" style={{ width: `${project.milestoneProgress}%`, backgroundColor: "#D4A843" }} />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-3">
+              <div className="grid grid-cols-3 gap-3 border-t border-[var(--brix-border)] pt-3">
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Next Draw</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Next Draw</p>
                   <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{project.nextDraw}</p>
                 </div>
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Total Earned</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Total Earned</p>
                   <p className="text-sm font-semibold text-white">{project.totalEarned}</p>
                 </div>
                 <div>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Due Date</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Due Date</p>
                   <p className="text-sm font-medium text-white">{project.dueDate}</p>
                 </div>
               </div>
@@ -255,15 +255,15 @@ export default function BuilderPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Payment History */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Payment History</h2>
           {/* Desktop table */}
           <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-[var(--brix-border)]">
                   {["Date", "Project", "Amount", "Status", ""].map((h) => (
-                    <th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>
+                    <th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -308,7 +308,7 @@ export default function BuilderPage() {
         </div>
 
         {/* Brix Score Breakdown */}
-        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-white">Brix Score Breakdown</h2>
           <div className="flex flex-col items-center">
             <div className="relative mb-6 flex h-40 w-40 items-center justify-center">
@@ -318,7 +318,7 @@ export default function BuilderPage() {
               </svg>
               <div className="absolute flex flex-col items-center">
                 <span className="text-3xl font-bold text-white">{brixScoreAvg * 10}</span>
-                <span className="text-xs" style={{ color: "#4A4A5A" }}>/ 1000</span>
+                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>/ 1000</span>
               </div>
             </div>
             <div className="w-full space-y-4">
@@ -328,7 +328,7 @@ export default function BuilderPage() {
                     <span className="text-sm text-white">{cat.label}</span>
                     <span className="text-sm font-semibold" style={{ color: cat.color }}>{cat.score}/100</span>
                   </div>
-                  <div className="h-2 w-full rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
+                  <div className="h-2 w-full rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
                     <div className="h-full rounded-full transition-all" style={{ width: `${cat.score}%`, backgroundColor: cat.color }} />
                   </div>
                 </div>

@@ -159,7 +159,7 @@ export default function DealFinderDashboard() {
               { label: "Total Commission", value: `$${totalCommission.toLocaleString()}`, color: "#D4A843", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
               { label: "Referrals", value: "18", color: "#E8632B", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
             ].map((stat) => (
-              <div key={stat.label} className="rounded-xl border border-white/10 p-4" style={{ backgroundColor: "#1A1A2E" }}>
+              <div key={stat.label} className="rounded-xl border border-[var(--brix-border)] p-4" style={{ backgroundColor: "var(--brix-surface)" }}>
                 <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
                   <svg className="w-4 h-4" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} />
@@ -172,7 +172,7 @@ export default function DealFinderDashboard() {
           </div>
 
           {/* My Listed Deals */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">My Listed Deals</h2>
               <button
@@ -192,7 +192,7 @@ export default function DealFinderDashboard() {
                 const commission = Math.round(listing.total_capital_needed * 0.03);
                 const sColor = statusColors[listing.status] || "#4A4A5A";
                 return (
-                  <div key={listing.id} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between" style={{ backgroundColor: "#0D0D1A" }}>
+                  <div key={listing.id} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between" style={{ backgroundColor: "var(--brix-bg)" }}>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="text-sm font-semibold text-white">{listing.address}</h3>
@@ -215,7 +215,7 @@ export default function DealFinderDashboard() {
                             <span className="text-xs text-white/40">Funded</span>
                             <span className="text-xs font-semibold" style={{ color: "#D4A843" }}>{funded}%</span>
                           </div>
-                          <div className="h-1.5 w-full rounded-full" style={{ backgroundColor: "#1A1A2E" }}>
+                          <div className="h-1.5 w-full rounded-full" style={{ backgroundColor: "var(--brix-surface)" }}>
                             <div className="h-full rounded-full" style={{ width: `${funded}%`, backgroundColor: "#D4A843" }} />
                           </div>
                         </div>
@@ -239,7 +239,7 @@ export default function DealFinderDashboard() {
 
           {/* Submit New Deal Form */}
           {showForm && (
-            <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <h2 className="mb-4 text-lg font-semibold text-white">Submit a New Deal</h2>
               {submitSuccess && (
                 <div className="mb-4 rounded-lg border px-4 py-3 text-sm" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
@@ -252,15 +252,15 @@ export default function DealFinderDashboard() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-xs text-white/50">Property Address</label>
-                  <input type="text" placeholder="123 Main St" value={dealForm.address} onChange={(e) => setDealForm({ ...dealForm, address: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <input type="text" placeholder="123 Main St" value={dealForm.address} onChange={(e) => setDealForm({ ...dealForm, address: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/50">City, State</label>
-                  <input type="text" placeholder="Charlotte, NC" value={dealForm.cityState} onChange={(e) => setDealForm({ ...dealForm, cityState: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <input type="text" placeholder="Charlotte, NC" value={dealForm.cityState} onChange={(e) => setDealForm({ ...dealForm, cityState: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/50">Property Type</label>
-                  <select value={dealForm.propertyType} onChange={(e) => setDealForm({ ...dealForm, propertyType: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }}>
+                  <select value={dealForm.propertyType} onChange={(e) => setDealForm({ ...dealForm, propertyType: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }}>
                     <option>Flip</option>
                     <option>New Build</option>
                     <option>Value-Add</option>
@@ -269,19 +269,19 @@ export default function DealFinderDashboard() {
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/50">Asking Price</label>
-                  <input type="text" placeholder="$150,000" value={dealForm.askingPrice} onChange={(e) => setDealForm({ ...dealForm, askingPrice: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <input type="text" placeholder="$150,000" value={dealForm.askingPrice} onChange={(e) => setDealForm({ ...dealForm, askingPrice: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/50">Estimated Rehab</label>
-                  <input type="text" placeholder="$80,000" value={dealForm.rehabBudget} onChange={(e) => setDealForm({ ...dealForm, rehabBudget: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <input type="text" placeholder="$80,000" value={dealForm.rehabBudget} onChange={(e) => setDealForm({ ...dealForm, rehabBudget: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/50">ARV (After Repair Value)</label>
-                  <input type="text" placeholder="$310,000" value={dealForm.arv} onChange={(e) => setDealForm({ ...dealForm, arv: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <input type="text" placeholder="$310,000" value={dealForm.arv} onChange={(e) => setDealForm({ ...dealForm, arv: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div className="sm:col-span-2">
                   <label className="mb-1 block text-xs text-white/50">Deal Description</label>
-                  <textarea rows={3} placeholder="Describe the opportunity, property condition, neighborhood..." value={dealForm.description} onChange={(e) => setDealForm({ ...dealForm, description: e.target.value })} className="w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "#0D0D1A" }} />
+                  <textarea rows={3} placeholder="Describe the opportunity, property condition, neighborhood..." value={dealForm.description} onChange={(e) => setDealForm({ ...dealForm, description: e.target.value })} className="w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1" style={{ backgroundColor: "var(--brix-bg)" }} />
                 </div>
                 <div className="sm:col-span-2">
                   <button onClick={handleDealSubmit} disabled={submitting || !dealForm.address || !dealForm.cityState} className="w-full rounded-lg py-3 text-sm font-semibold transition-colors hover:opacity-80 disabled:opacity-50" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
@@ -293,11 +293,11 @@ export default function DealFinderDashboard() {
           )}
 
           {/* Recent Activity */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h2 className="mb-4 text-lg font-semibold text-white">Recent Activity</h2>
             <div className="space-y-3">
               {activity.map((item, i) => (
-                <div key={i} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between rounded-lg px-3 py-2.5" style={{ backgroundColor: "#0D0D1A" }}>
+                <div key={i} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between rounded-lg px-3 py-2.5" style={{ backgroundColor: "var(--brix-bg)" }}>
                   <div className="flex items-center gap-3 min-w-0">
                     <span className="shrink-0 text-xs text-white/30">{item.date}</span>
                     <span className="text-sm text-white/70 truncate">{item.event}</span>
@@ -316,7 +316,7 @@ export default function DealFinderDashboard() {
           <WalletWidget brixBalance={totalCommission || 24500} usdcBalance={8200} stakedAmount={5000} />
 
           {/* Commission Summary */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-3 text-sm font-semibold text-white/60">Commission Rate</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
@@ -335,7 +335,7 @@ export default function DealFinderDashboard() {
           </div>
 
           {/* Deal Finder Score */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-3 text-sm font-semibold text-white/60">Deal Finder Score</h3>
             <div className="mb-3 flex items-center gap-3">
               <div className="flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold" style={{ backgroundColor: "#D4A84320", color: "#D4A843" }}>
@@ -358,7 +358,7 @@ export default function DealFinderDashboard() {
                     <span className="text-xs text-white/40">{metric.label}</span>
                     <span className="text-xs text-white/60">{metric.value}%</span>
                   </div>
-                  <div className="h-1 w-full rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
+                  <div className="h-1 w-full rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
                     <div className="h-full rounded-full" style={{ width: `${metric.value}%`, backgroundColor: "#D4A843" }} />
                   </div>
                 </div>

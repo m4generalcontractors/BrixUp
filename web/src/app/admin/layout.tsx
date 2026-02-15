@@ -49,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
       </div>
     );
@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!isAdmin) {
     return (
-      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
         <div className="text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl mb-4" style={{ backgroundColor: "#E8632B20" }}>
             <svg className="w-8 h-8" style={{ color: "#E8632B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </svg>
           </div>
           <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-sm mb-4" style={{ color: "#4A4A5A" }}>You need admin or manager privileges to access this area.</p>
+          <p className="text-sm mb-4" style={{ color: "var(--brix-fg-muted)" }}>You need admin or manager privileges to access this area.</p>
           <div className="flex flex-col items-center gap-3">
             <Link href="/admin/login" className="rounded-lg px-6 py-2.5 text-sm font-semibold" style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}>
               Admin Login
@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
+    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "var(--brix-bg)" }}>
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={() => setMobileOpen(false)} />
@@ -91,16 +91,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col transition-transform duration-300 lg:static lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ backgroundColor: "#1A1A2E" }}
+        style={{ backgroundColor: "var(--brix-surface)" }}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center gap-3 px-6 border-b border-white/10">
+        <div className="flex h-16 items-center gap-3 px-6 border-b border-[var(--brix-border)]">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg font-bold text-sm" style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}>
             AD
           </div>
           <div>
             <span className="text-lg font-bold text-white tracking-tight">Admin</span>
-            <p className="text-xs" style={{ color: "#4A4A5A" }}>{userRole === "admin" ? "Full Access" : "Manager"}</p>
+            <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{userRole === "admin" ? "Full Access" : "Manager"}</p>
           </div>
           <button className="ml-auto lg:hidden text-white/60 hover:text-white" onClick={() => setMobileOpen(false)}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Back to App */}
-        <div className="border-t border-white/10 p-4 space-y-2">
+        <div className="border-t border-[var(--brix-border)] p-4 space-y-2">
           <Link
             href="/dashboard"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/50 hover:text-white/80 hover:bg-white/5 transition-colors"
@@ -158,7 +158,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile header */}
-        <header className="flex h-14 items-center gap-4 border-b border-white/10 px-4 lg:hidden" style={{ backgroundColor: "#0D0D1A" }}>
+        <header className="flex h-14 items-center gap-4 border-b border-[var(--brix-border)] px-4 lg:hidden" style={{ backgroundColor: "var(--brix-bg)" }}>
           <button className="text-white/60 hover:text-white" onClick={() => setMobileOpen(true)}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />

@@ -83,17 +83,17 @@ export default function DealApprovalPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Deal Approval</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>{pendingCount} deal{pendingCount !== 1 ? "s" : ""} awaiting review</p>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>{pendingCount} deal{pendingCount !== 1 ? "s" : ""} awaiting review</p>
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg p-1" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-6 flex gap-1 rounded-lg p-1" style={{ backgroundColor: "var(--brix-surface)" }}>
         {(["pending", "approved", "rejected", "all"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
-            style={tab === t ? { backgroundColor: "#E8632B", color: "#FFFFFF" } : { color: "#4A4A5A" }}
+            style={tab === t ? { backgroundColor: "#E8632B", color: "#FFFFFF" } : { color: "var(--brix-fg-muted)" }}
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
             {t === "pending" && pendingCount > 0 && (
@@ -109,7 +109,7 @@ export default function DealApprovalPage() {
           const statusColor = STATUS_COLORS[deal.status] || "#4A4A5A";
           const isExpanded = expandedDeal === deal.id;
           return (
-            <div key={deal.id} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1A2E" }}>
+            <div key={deal.id} className="rounded-xl border border-[var(--brix-border)] overflow-hidden" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div
                 className="flex cursor-pointer items-center justify-between p-4 hover:bg-white/5 transition-colors"
                 onClick={() => setExpandedDeal(isExpanded ? null : deal.id)}
@@ -120,16 +120,16 @@ export default function DealApprovalPage() {
                       <p className="text-sm font-semibold text-white">{deal.address}</p>
                       <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: statusColor + "20", color: statusColor }}>{deal.status}</span>
                     </div>
-                    <p className="mt-0.5 text-xs" style={{ color: "#4A4A5A" }}>{deal.city}, {deal.state} &middot; {deal.property_type}</p>
+                    <p className="mt-0.5 text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.city}, {deal.state} &middot; {deal.property_type}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Capital Needed</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Capital Needed</p>
                     <p className="text-sm font-semibold text-white">${deal.total_capital_needed?.toLocaleString()}</p>
                   </div>
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Proj. ROI</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Proj. ROI</p>
                     <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{deal.projected_roi}%</p>
                   </div>
                   <svg className={`w-5 h-5 text-white/40 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,13 +141,13 @@ export default function DealApprovalPage() {
               {isExpanded && (
                 <div className="border-t border-white/5 p-4">
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-4">
-                    <div><p className="text-xs" style={{ color: "#4A4A5A" }}>Asking Price</p><p className="text-sm font-semibold text-white">${deal.asking_price?.toLocaleString()}</p></div>
-                    <div><p className="text-xs" style={{ color: "#4A4A5A" }}>Rehab Budget</p><p className="text-sm font-semibold text-white">${deal.rehab_budget?.toLocaleString()}</p></div>
-                    <div><p className="text-xs" style={{ color: "#4A4A5A" }}>ARV</p><p className="text-sm font-semibold text-white">${deal.arv?.toLocaleString()}</p></div>
-                    <div><p className="text-xs" style={{ color: "#4A4A5A" }}>Min Investment</p><p className="text-sm font-semibold text-white">${deal.min_investment?.toLocaleString()}</p></div>
+                    <div><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Asking Price</p><p className="text-sm font-semibold text-white">${deal.asking_price?.toLocaleString()}</p></div>
+                    <div><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Rehab Budget</p><p className="text-sm font-semibold text-white">${deal.rehab_budget?.toLocaleString()}</p></div>
+                    <div><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>ARV</p><p className="text-sm font-semibold text-white">${deal.arv?.toLocaleString()}</p></div>
+                    <div><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Min Investment</p><p className="text-sm font-semibold text-white">${deal.min_investment?.toLocaleString()}</p></div>
                   </div>
                   <div className="mb-4">
-                    <p className="text-xs mb-1" style={{ color: "#4A4A5A" }}>Description</p>
+                    <p className="text-xs mb-1" style={{ color: "var(--brix-fg-muted)" }}>Description</p>
                     <p className="text-sm text-white/80">{deal.description}</p>
                   </div>
                   {deal.status === "Pending Review" && (
@@ -176,8 +176,8 @@ export default function DealApprovalPage() {
           );
         })}
         {filtered.length === 0 && (
-          <div className="rounded-xl border border-white/10 p-12 text-center" style={{ backgroundColor: "#1A1A2E" }}>
-            <p className="text-sm" style={{ color: "#4A4A5A" }}>No deals in this category</p>
+          <div className="rounded-xl border border-[var(--brix-border)] p-12 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
+            <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No deals in this category</p>
           </div>
         )}
       </div>

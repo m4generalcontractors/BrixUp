@@ -56,7 +56,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
       href={`/marketplace/${deal.id}`}
       className="group block overflow-hidden rounded-xl border transition-all duration-200"
       style={{
-        backgroundColor: "#1A1A2E",
+        backgroundColor: "var(--brix-surface)",
         borderColor: isSelected ? "#D4A843" : "rgba(255,255,255,0.08)",
         boxShadow: isSelected ? "0 0 0 1px #D4A843" : "none",
       }}
@@ -166,7 +166,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
           <span className="text-lg font-bold text-white">
             ${deal.askingPrice.toLocaleString()}
           </span>
-          <span className="text-xs" style={{ color: "#4A4A5A" }}>
+          <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>
             ARV: ${deal.arv.toLocaleString()}
           </span>
         </div>
@@ -174,7 +174,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
         {/* Location */}
         <div>
           <p className="text-sm font-medium text-white/90 truncate">{deal.address}</p>
-          <p className="text-xs truncate" style={{ color: "#4A4A5A" }}>
+          <p className="text-xs truncate" style={{ color: "var(--brix-fg-muted)" }}>
             {deal.county} County &middot; {deal.city}, {deal.state} {deal.zip}
           </p>
         </div>
@@ -182,34 +182,34 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
         {/* Specs row */}
         <div className="flex items-center gap-3 pt-1 border-t border-white/5">
           <div className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" style={{ color: "#4A4A5A" }} fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z" />
             </svg>
             <span className="text-xs font-medium text-white/80">{deal.beds} bd</span>
           </div>
           <div className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" style={{ color: "#4A4A5A" }} fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 7c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM3 17v2h4v-2c0-1.1-.9-2-2-2s-2 .9-2 2zm14-6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 6v2h-4v-2c0-1.1.9-2 2-2s2 .9 2 2z" />
             </svg>
             <span className="text-xs font-medium text-white/80">{deal.baths} ba</span>
           </div>
           <div className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" style={{ color: "#4A4A5A" }} fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="currentColor" viewBox="0 0 24 24">
               <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm4 4H9v-2h2v2zm0-4H9V9h2v2zm0-4H9V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
             </svg>
             <span className="text-xs font-medium text-white/80">{deal.sqft.toLocaleString()} sqft</span>
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" style={{ color: "#4A4A5A" }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs" style={{ color: "#4A4A5A" }}>{deal.timeline}</span>
+            <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.timeline}</span>
           </div>
         </div>
 
         {/* Funding bar */}
         <div className="flex items-center gap-2.5">
-          <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
             <div
               className="h-full rounded-full"
               style={{ width: `${deal.funded}%`, backgroundColor: "#D4A843" }}

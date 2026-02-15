@@ -56,8 +56,8 @@ export default function WalletWidget({
 
   return (
     <div
-      className="rounded-xl border border-white/10 p-5"
-      style={{ backgroundColor: "#1A1A2E" }}
+      className="rounded-xl border border-[var(--brix-border)] p-5"
+      style={{ backgroundColor: "var(--brix-surface)" }}
     >
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
@@ -105,14 +105,14 @@ export default function WalletWidget({
 
       {/* Balance Rows */}
       <div className="mb-4 space-y-2">
-        <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+        <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
           <span className="text-xs text-white/50">USDC Balance</span>
           <span className="text-sm font-semibold text-white">
             ${usdcBalance.toLocaleString()}
           </span>
         </div>
         {stakedAmount > 0 && (
-          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
             <span className="text-xs text-white/50">Staked $BRXU</span>
             <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>
               {stakedAmount.toLocaleString()}
@@ -120,7 +120,7 @@ export default function WalletWidget({
           </div>
         )}
         {pendingRewards > 0 && (
-          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
             <span className="text-xs text-white/50">Pending Rewards</span>
             <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>
               +{pendingRewards.toLocaleString()}
@@ -155,8 +155,8 @@ export default function WalletWidget({
       {/* Convert Panel */}
       {showConvert && (
         <div
-          className="mt-3 rounded-lg border border-white/10 p-3"
-          style={{ backgroundColor: "#0D0D1A" }}
+          className="mt-3 rounded-lg border border-[var(--brix-border)] p-3"
+          style={{ backgroundColor: "var(--brix-bg)" }}
         >
           <p className="mb-2 text-xs text-white/50">Convert $BRXU → USDC</p>
           <div className="flex gap-2">
@@ -165,7 +165,7 @@ export default function WalletWidget({
               placeholder="Amount"
               value={convertAmount}
               onChange={(e) => setConvertAmount(e.target.value)}
-              className="flex-1 rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
+              className="flex-1 rounded-lg border border-[var(--brix-border)] bg-transparent px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1"
               style={{ borderColor: "rgba(255,255,255,0.1)" }}
             />
             <button

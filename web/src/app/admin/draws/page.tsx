@@ -79,19 +79,19 @@ export default function DrawRequestsPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Draw Requests</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
           {pendingCount} pending &middot; ${pendingTotal.toLocaleString()} total pending
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg p-1" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-6 flex gap-1 rounded-lg p-1" style={{ backgroundColor: "var(--brix-surface)" }}>
         {(["pending", "approved", "paid", "all"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
-            style={tab === t ? { backgroundColor: "#E8632B", color: "#FFFFFF" } : { color: "#4A4A5A" }}
+            style={tab === t ? { backgroundColor: "#E8632B", color: "#FFFFFF" } : { color: "var(--brix-fg-muted)" }}
           >
             {t === "paid" ? "Completed" : t.charAt(0).toUpperCase() + t.slice(1)}
           </button>
@@ -103,16 +103,16 @@ export default function DrawRequestsPage() {
         {filtered.map((draw) => {
           const statusColor = STATUS_COLORS[draw.status];
           return (
-            <div key={draw.id} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div key={draw.id} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="text-sm font-semibold text-white">{draw.contractor_name}</p>
                     <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: statusColor + "20", color: statusColor }}>{draw.status}</span>
                   </div>
-                  <p className="text-xs mb-2" style={{ color: "#4A4A5A" }}>{draw.deal_address} &middot; {draw.milestone}</p>
+                  <p className="text-xs mb-2" style={{ color: "var(--brix-fg-muted)" }}>{draw.deal_address} &middot; {draw.milestone}</p>
                   <p className="text-sm text-white/70">{draw.notes}</p>
-                  <p className="mt-2 text-xs" style={{ color: "#4A4A5A" }}>Submitted {new Date(draw.submitted_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
+                  <p className="mt-2 text-xs" style={{ color: "var(--brix-fg-muted)" }}>Submitted {new Date(draw.submitted_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
                 </div>
                 <div className="flex flex-col items-end gap-3">
                   <p className="text-xl font-bold text-white">${draw.amount.toLocaleString()}</p>
@@ -152,8 +152,8 @@ export default function DrawRequestsPage() {
           );
         })}
         {filtered.length === 0 && (
-          <div className="rounded-xl border border-white/10 p-12 text-center" style={{ backgroundColor: "#1A1A2E" }}>
-            <p className="text-sm" style={{ color: "#4A4A5A" }}>No draw requests in this category</p>
+          <div className="rounded-xl border border-[var(--brix-border)] p-12 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
+            <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No draw requests in this category</p>
           </div>
         )}
       </div>

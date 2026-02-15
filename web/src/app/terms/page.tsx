@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0D0D1A" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "var(--brix-bg)" }}>
       {/* Header */}
-      <header className="border-b border-white/10" style={{ backgroundColor: "#1A1A2E" }}>
+      <header className="border-b border-[var(--brix-border)]" style={{ backgroundColor: "var(--brix-surface)" }}>
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
             <div

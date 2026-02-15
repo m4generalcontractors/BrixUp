@@ -203,7 +203,7 @@ export default function AdminPortal() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Platform management &middot; Token operations &middot; Deal approvals</p>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Platform management &middot; Token operations &middot; Deal approvals</p>
       </div>
 
       {/* Tabs */}
@@ -232,15 +232,15 @@ export default function AdminPortal() {
               { label: "Funding Deals", value: String(fundingDeals), color: "#2B4C7E" },
               { label: "Verified Users", value: String(verifiedUsers), color: "#D4A843" },
             ].map(s => (
-              <div key={s.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>{s.label}</p>
+              <div key={s.label} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{s.label}</p>
                 <p className="mt-2 text-2xl font-bold text-white">{s.value}</p>
               </div>
             ))}
           </div>
 
           {/* Contract status */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h2 className="mb-4 text-lg font-semibold text-white">Smart Contract Status</h2>
             <div className="space-y-3">
               {[
@@ -248,7 +248,7 @@ export default function AdminPortal() {
                 { label: "BrixStaking", addr: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || process.env.NEXT_PUBLIC_BRXU_STAKING_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRXU_STAKING_ADDRESS },
                 { label: "BrixFactory (Deal Pool)", addr: process.env.NEXT_PUBLIC_BRXU_FACTORY_ADDRESS || process.env.NEXT_PUBLIC_DEAL_POOL_ADDRESS, deployed: !!process.env.NEXT_PUBLIC_BRXU_FACTORY_ADDRESS },
               ].map(c => (
-                <div key={c.label} className="flex items-center justify-between rounded-lg px-4 py-3" style={{ backgroundColor: "#0D0D1A" }}>
+                <div key={c.label} className="flex items-center justify-between rounded-lg px-4 py-3" style={{ backgroundColor: "var(--brix-bg)" }}>
                   <div className="flex items-center gap-3">
                     <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: c.deployed ? "#2ECC71" : "#E8632B" }} />
                     <div>
@@ -271,23 +271,23 @@ export default function AdminPortal() {
 
           {/* Quick actions */}
           <div className="grid gap-4 sm:grid-cols-3">
-            <button onClick={() => setActiveTab("deals")} className="flex items-center gap-3 rounded-xl border border-white/10 p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "#1A1A2E" }}>
+            <button onClick={() => setActiveTab("deals")} className="flex items-center gap-3 rounded-xl border border-[var(--brix-border)] p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#2B4C7E20" }}>
                 <svg className="w-5 h-5" style={{ color: "#2B4C7E" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
               </div>
-              <div><p className="text-sm font-medium text-white">Create Deal</p><p className="text-xs" style={{ color: "#4A4A5A" }}>Deploy new deal contract</p></div>
+              <div><p className="text-sm font-medium text-white">Create Deal</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Deploy new deal contract</p></div>
             </button>
-            <button onClick={() => setActiveTab("contracts")} className="flex items-center gap-3 rounded-xl border border-white/10 p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "#1A1A2E" }}>
+            <button onClick={() => setActiveTab("contracts")} className="flex items-center gap-3 rounded-xl border border-[var(--brix-border)] p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#D4A84320" }}>
                 <svg className="w-5 h-5" style={{ color: "#D4A843" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1" /></svg>
               </div>
-              <div><p className="text-sm font-medium text-white">Mint Tokens</p><p className="text-xs" style={{ color: "#4A4A5A" }}>Mint BRXU to an address</p></div>
+              <div><p className="text-sm font-medium text-white">Mint Tokens</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Mint BRXU to an address</p></div>
             </button>
-            <button onClick={() => setActiveTab("documents")} className="flex items-center gap-3 rounded-xl border border-white/10 p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "#1A1A2E" }}>
+            <button onClick={() => setActiveTab("documents")} className="flex items-center gap-3 rounded-xl border border-[var(--brix-border)] p-4 text-left transition-colors hover:bg-white/5" style={{ backgroundColor: "var(--brix-surface)" }}>
               <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: "#2ECC7120" }}>
                 <svg className="w-5 h-5" style={{ color: "#2ECC71" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
               </div>
-              <div><p className="text-sm font-medium text-white">Upload Documents</p><p className="text-xs" style={{ color: "#4A4A5A" }}>Add deal contracts & docs</p></div>
+              <div><p className="text-sm font-medium text-white">Upload Documents</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Add deal contracts & docs</p></div>
             </button>
           </div>
         </div>
@@ -304,22 +304,22 @@ export default function AdminPortal() {
           </div>
 
           {showCreateDeal && (
-            <div className="rounded-xl border border-white/10 p-5 space-y-4" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="rounded-xl border border-[var(--brix-border)] p-5 space-y-4" style={{ backgroundColor: "var(--brix-surface)" }}>
               <h3 className="text-base font-semibold text-white">Create New Deal</h3>
               <div className="grid gap-4 sm:grid-cols-3">
-                <div><label className="text-xs" style={{ color: "#4A4A5A" }}>Property Address</label><input value={newDeal.address} onChange={e => setNewDeal(p => ({ ...p, address: e.target.value }))} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
-                <div><label className="text-xs" style={{ color: "#4A4A5A" }}>City</label><input value={newDeal.city} onChange={e => setNewDeal(p => ({ ...p, city: e.target.value }))} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
-                <div><label className="text-xs" style={{ color: "#4A4A5A" }}>State</label><input value={newDeal.state} onChange={e => setNewDeal(p => ({ ...p, state: e.target.value }))} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
+                <div><label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Property Address</label><input value={newDeal.address} onChange={e => setNewDeal(p => ({ ...p, address: e.target.value }))} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
+                <div><label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>City</label><input value={newDeal.city} onChange={e => setNewDeal(p => ({ ...p, city: e.target.value }))} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
+                <div><label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>State</label><input value={newDeal.state} onChange={e => setNewDeal(p => ({ ...p, state: e.target.value }))} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div><label className="text-xs" style={{ color: "#4A4A5A" }}>Capital Needed ($)</label><input type="text" inputMode="numeric" value={newDeal.capitalNeeded} onChange={e => setNewDeal(p => ({ ...p, capitalNeeded: e.target.value }))} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
-                <div><label className="text-xs" style={{ color: "#4A4A5A" }}>Milestones</label><input type="number" value={newDeal.milestones} onChange={e => setNewDeal(p => ({ ...p, milestones: e.target.value }))} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
+                <div><label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Capital Needed ($)</label><input type="text" inputMode="numeric" value={newDeal.capitalNeeded} onChange={e => setNewDeal(p => ({ ...p, capitalNeeded: e.target.value }))} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
+                <div><label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Milestones</label><input type="number" value={newDeal.milestones} onChange={e => setNewDeal(p => ({ ...p, milestones: e.target.value }))} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
               </div>
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Profit Splits (%)</label>
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Profit Splits (%)</label>
                 <div className="mt-1 grid grid-cols-4 gap-2">
                   {(["investorSplit", "builderSplit", "platformSplit", "dealMakerSplit"] as const).map(k => (
-                    <div key={k}><label className="text-[10px] capitalize" style={{ color: "#4A4A5A" }}>{k.replace("Split", "")}</label><input type="number" value={newDeal[k]} onChange={e => setNewDeal(p => ({ ...p, [k]: e.target.value }))} className="w-full rounded-lg border border-white/10 px-2 py-1.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} /></div>
+                    <div key={k}><label className="text-[10px] capitalize" style={{ color: "var(--brix-fg-muted)" }}>{k.replace("Split", "")}</label><input type="number" value={newDeal[k]} onChange={e => setNewDeal(p => ({ ...p, [k]: e.target.value }))} className="w-full rounded-lg border border-[var(--brix-border)] px-2 py-1.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} /></div>
                   ))}
                 </div>
                 {parseInt(newDeal.investorSplit) + parseInt(newDeal.builderSplit) + parseInt(newDeal.platformSplit) + parseInt(newDeal.dealMakerSplit) !== 100 && (
@@ -328,19 +328,19 @@ export default function AdminPortal() {
               </div>
               <div className="flex gap-3">
                 <button onClick={handleCreateDeal} className="rounded-lg px-6 py-2.5 text-sm font-bold transition-colors hover:opacity-90" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>Create Deal</button>
-                <button onClick={() => setShowCreateDeal(false)} className="rounded-lg border border-white/10 px-6 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/5">Cancel</button>
+                <button onClick={() => setShowCreateDeal(false)} className="rounded-lg border border-[var(--brix-border)] px-6 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/5">Cancel</button>
               </div>
             </div>
           )}
 
           {/* Deal list */}
-          <div className="rounded-xl border border-white/10" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)]" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10">
+                  <tr className="border-b border-[var(--brix-border)]">
                     {["Deal ID", "Property", "Status", "Funded", "Progress", "Actions"].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>
+                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -351,10 +351,10 @@ export default function AdminPortal() {
                     return (
                       <tr key={deal.id} className="hover:bg-white/5">
                         <td className="px-4 py-3 font-mono text-xs text-white/60">{deal.id}</td>
-                        <td className="px-4 py-3"><p className="text-sm font-medium text-white">{deal.address}</p><p className="text-xs" style={{ color: "#4A4A5A" }}>{deal.city}, {deal.state}</p></td>
+                        <td className="px-4 py-3"><p className="text-sm font-medium text-white">{deal.address}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.city}, {deal.state}</p></td>
                         <td className="px-4 py-3"><span className="rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ backgroundColor: statusColor + "20", color: statusColor }}>{deal.status}</span></td>
                         <td className="px-4 py-3 text-sm text-white">${deal.funded_amount.toLocaleString()} / ${deal.total_capital_needed.toLocaleString()}</td>
-                        <td className="px-4 py-3"><div className="h-2 w-20 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: statusColor }} /></div></td>
+                        <td className="px-4 py-3"><div className="h-2 w-20 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}><div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: statusColor }} /></div></td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2">
                             {deal.status === "Funding" && (
@@ -377,13 +377,13 @@ export default function AdminPortal() {
       {activeTab === "users" && (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-white">User Management</h2>
-          <div className="rounded-xl border border-white/10" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)]" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10">
+                  <tr className="border-b border-[var(--brix-border)]">
                     {["Name", "Email", "Role", "Wallet", "KYC", "Joined"].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#4A4A5A" }}>{h}</th>
+                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -414,16 +414,16 @@ export default function AdminPortal() {
           <h2 className="text-lg font-semibold text-white">Token & Contract Operations</h2>
 
           {/* Mint tokens */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-4 text-base font-semibold text-white">Mint $BRXU Tokens</h3>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Recipient Address</label>
-                <input value={mintAddress} onChange={e => setMintAddress(e.target.value)} placeholder="0x..." className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Recipient Address</label>
+                <input value={mintAddress} onChange={e => setMintAddress(e.target.value)} placeholder="0x..." className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Amount (BRXU)</label>
-                <input type="text" inputMode="numeric" value={mintAmount} onChange={e => setMintAmount(e.target.value)} placeholder="10000" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Amount (BRXU)</label>
+                <input type="text" inputMode="numeric" value={mintAmount} onChange={e => setMintAmount(e.target.value)} placeholder="10000" className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
             </div>
             {mintResult && (
@@ -437,14 +437,14 @@ export default function AdminPortal() {
           </div>
 
           {/* Token controls */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-4 text-base font-semibold text-white">Token Controls</h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-lg p-4" style={{ backgroundColor: "#0D0D1A" }}>
+              <div className="rounded-lg p-4" style={{ backgroundColor: "var(--brix-bg)" }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-white">Token Transfers</p>
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Pause/unpause all transfers</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Pause/unpause all transfers</p>
                   </div>
                   <button
                     onClick={() => setPauseStatus(!pauseStatus)}
@@ -455,11 +455,11 @@ export default function AdminPortal() {
                   </button>
                 </div>
               </div>
-              <div className="rounded-lg p-4" style={{ backgroundColor: "#0D0D1A" }}>
+              <div className="rounded-lg p-4" style={{ backgroundColor: "var(--brix-bg)" }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-white">Staking Rewards</p>
-                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Distribute to staking pool</p>
+                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Distribute to staking pool</p>
                   </div>
                   <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ backgroundColor: "#D4A84320", color: "#D4A843" }}>
                     Distribute
@@ -470,7 +470,7 @@ export default function AdminPortal() {
           </div>
 
           {/* Deployment info */}
-          <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="mb-4 text-base font-semibold text-white">Deployment Instructions</h3>
             <div className="space-y-2 text-sm text-white/60">
               <p>1. Set <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs text-white/80">DEPLOYER_PRIVATE_KEY</code> in <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs text-white/80">contracts/.env</code></p>
@@ -488,7 +488,7 @@ export default function AdminPortal() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Deal Documents</h2>
             <div className="flex items-center gap-3">
-              <select value={docDealId} onChange={e => setDocDealId(e.target.value)} className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }}>
+              <select value={docDealId} onChange={e => setDocDealId(e.target.value)} className="rounded-lg border border-[var(--brix-border)] px-3 py-2 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }}>
                 {deals.map(d => <option key={d.id} value={d.id}>{d.address}</option>)}
               </select>
               <label className="cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold transition-colors hover:opacity-90" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
@@ -498,7 +498,7 @@ export default function AdminPortal() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)]" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="space-y-1 p-2">
               {documents.map(doc => (
                 <div key={doc.id} className="flex items-center justify-between rounded-lg px-4 py-3 hover:bg-white/5 transition-colors">
@@ -506,10 +506,10 @@ export default function AdminPortal() {
                     <svg className="w-5 h-5 shrink-0" style={{ color: "#E8632B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                     <div>
                       <p className="text-sm font-medium text-white">{doc.name}</p>
-                      <p className="text-xs" style={{ color: "#4A4A5A" }}>{doc.deal_id} &middot; {doc.type} &middot; {doc.size} &middot; {doc.uploaded_at}</p>
+                      <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{doc.deal_id} &middot; {doc.type} &middot; {doc.size} &middot; {doc.uploaded_at}</p>
                     </div>
                   </div>
-                  <span className="text-xs" style={{ color: "#4A4A5A" }}>{doc.uploaded_by}</span>
+                  <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{doc.uploaded_by}</span>
                 </div>
               ))}
               {documents.length === 0 && (
@@ -524,31 +524,31 @@ export default function AdminPortal() {
       {activeTab === "settings" && (
         <div className="space-y-6">
           <h2 className="text-lg font-semibold text-white">Platform Settings</h2>
-          <div className="rounded-xl border border-white/10 p-5 space-y-4" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="rounded-xl border border-[var(--brix-border)] p-5 space-y-4" style={{ backgroundColor: "var(--brix-surface)" }}>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Platform Fee (%)</label>
-                <input type="number" defaultValue="10" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Platform Fee (%)</label>
+                <input type="number" defaultValue="10" className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Platform Wallet</label>
-                <input type="text" defaultValue={process.env.NEXT_PUBLIC_PLATFORM_WALLET || "0x..."} className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm font-mono text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Platform Wallet</label>
+                <input type="text" defaultValue={process.env.NEXT_PUBLIC_PLATFORM_WALLET || "0x..."} className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm font-mono text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Min Investment (BRXU)</label>
-                <input type="number" defaultValue="500" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Min Investment (BRXU)</label>
+                <input type="number" defaultValue="500" className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
               <div>
-                <label className="text-xs" style={{ color: "#4A4A5A" }}>Staking APY (%)</label>
-                <input type="number" defaultValue="12.5" step="0.1" className="mt-1 w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "#0D0D1A" }} />
+                <label className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Staking APY (%)</label>
+                <input type="number" defaultValue="12.5" step="0.1" className="mt-1 w-full rounded-lg border border-[var(--brix-border)] px-3 py-2.5 text-sm text-white focus:outline-none" style={{ backgroundColor: "var(--brix-bg)" }} />
               </div>
             </div>
             <button className="rounded-lg px-6 py-2.5 text-sm font-bold transition-colors hover:opacity-90" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>Save Settings</button>
           </div>
 
-          <div className="rounded-xl border p-5" style={{ backgroundColor: "#1A1A2E", borderColor: "#E8632B30" }}>
+          <div className="rounded-xl border p-5" style={{ backgroundColor: "var(--brix-surface)", borderColor: "#E8632B30" }}>
             <h3 className="text-base font-semibold" style={{ color: "#E8632B" }}>Danger Zone</h3>
             <p className="mt-1 text-xs text-white/40">Emergency actions — use with caution</p>
             <div className="mt-4 flex gap-3">
