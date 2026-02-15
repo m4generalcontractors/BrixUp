@@ -8,7 +8,7 @@
     "test": "npx hardhat test",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network baseSepolia",
     "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network base",
-    "setup:wallet": "npx ts-node scripts/setup-wallet.ts"
+    "setup:wallet": "npx tsx scripts/setup-wallet.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
