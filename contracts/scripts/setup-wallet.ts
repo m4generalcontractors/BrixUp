@@ -16,6 +16,7 @@
  */
 
 import { CdpClient } from "@coinbase/cdp-sdk";
+import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 import * as dotenv from "dotenv";
@@ -31,10 +32,16 @@ async function main() {
   console.log("BrixUp — CDP Wallet Setup");
   console.log("=".repeat(60));
 
-  // Convert raw base64 DER key to PEM format if needed
-  let apiKeySecret = process.env.CDP_API_KEY_SECRET || "";
+  // Normalize the API key secret into PKCS#8 PEM format
+  let apiKeySecret = (process.env.CDP_API_KEY_SECRET || "").replace(/\\n/g, "\n");
   if (apiKeySecret && !apiKeySecret.includes("-----BEGIN")) {
+    // Raw base64 DER key — wrap in PKCS#8 PEM headers
     apiKeySecret = `-----BEGIN PRIVATE KEY-----\n${apiKeySecret}\n-----END PRIVATE KEY-----`;
+  }
+  if (apiKeySecret.includes("-----BEGIN EC PRIVATE KEY-----")) {
+    // SEC1 format → convert to PKCS#8 (required by CDP SDK / jose)
+    const keyObj = crypto.createPrivateKey(apiKeySecret);
+    apiKeySecret = keyObj.export({ type: "pkcs8", format: "pem" }) as string;
   }
 
   // Initialize CDP client
