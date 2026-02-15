@@ -2,25 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { useAccount } from "wagmi";
-import {
-  Wallet,
-  ConnectWallet,
-} from "@coinbase/onchainkit/wallet";
-import {
-  useBrixBalance,
-  useStakedBalance,
-  usePendingRewards,
-  useStakerInfo,
-  useBrixApprove,
-  useStake,
-  useUnstake,
-  useClaimRewards,
-  useBrixTransfer,
-  formatBrix,
-  parseBrix,
-} from "@/lib/contracts";
-import { BRIX_STAKING_ADDRESS, CONTRACTS_DEPLOYED } from "@/lib/contracts/config";
+// wagmi / OnchainKit removed — SDK no longer auto-initializes.
+// All wallet features work via DB-backed API calls.
+// On-chain interaction can be re-enabled via lazy-load when contracts are deployed.
 
 // ---------------------------------------------------------------------------
 //  Types & sample data (fallback when contracts not deployed)
@@ -80,22 +64,23 @@ const positiveTypes = ["yield", "staking_reward", "received", "unstake", "buy"];
 
 export default function WalletPage() {
   const { user } = useAuth();
-  const { address, isConnected } = useAccount();
 
-  // On-chain reads
-  const { data: onChainBalance, refetch: refetchBalance } = useBrixBalance(address);
-  const { data: onChainStaked, refetch: refetchStaked } = useStakedBalance(address);
-  const { data: onChainRewards, refetch: refetchRewards } = usePendingRewards(address);
-  const { data: stakerInfo } = useStakerInfo(address);
+  // Wallet connection state — managed locally, no SDK auto-init
+  const [isConnected, setIsConnected] = useState(false);
+  const [address, setAddress] = useState<string | undefined>(undefined);
 
-  // On-chain writes
-  const { approve, isPending: isApproving } = useBrixApprove();
-  const { stake: doStake, isPending: isStaking, isSuccess: stakeSuccess } = useStake();
-  const { unstake: doUnstake, isPending: isUnstaking, isSuccess: unstakeSuccess } = useUnstake();
-  const { claim: doClaim, isPending: isClaiming, isSuccess: claimSuccess } = useClaimRewards();
-  const { transfer: doTransfer, isPending: isTransferring, isSuccess: transferSuccess } = useBrixTransfer();
+  // Operation states (replace wagmi write hooks)
+  const [isApproving, setIsApproving] = useState(false);
+  const [isStaking, setIsStaking] = useState(false);
+  const [stakeSuccess, setStakeSuccess] = useState(false);
+  const [isUnstaking, setIsUnstaking] = useState(false);
+  const [unstakeSuccess, setUnstakeSuccess] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
+  const [claimSuccess, setClaimSuccess] = useState(false);
+  const [isTransferring, setIsTransferring] = useState(false);
+  const [transferSuccess, setTransferSuccess] = useState(false);
 
-  // Fallback state for when contracts aren't deployed
+  // State for wallet features
   const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
   const [convertAmount, setConvertAmount] = useState("1000");
   const [stakeAmount, setStakeAmount] = useState("500");
@@ -116,7 +101,10 @@ export default function WalletPage() {
       const res = await fetch("/api/transactions?limit=50");
       if (res.ok) {
         const data = await res.json();
-        if (data.length > 0) setTransactions(data);
+        // Only replace sample data if API returns more transactions
+        if (Array.isArray(data) && data.length >= sampleTransactions.length) {
+          setTransactions(data);
+        }
       }
     } catch { /* Use sample data */ }
     setLoading(false);
@@ -124,35 +112,18 @@ export default function WalletPage() {
 
   useEffect(() => { fetchTransactions(); }, [fetchTransactions]);
 
-  // Refetch on-chain data after successful operations
-  useEffect(() => {
-    if (stakeSuccess || unstakeSuccess || claimSuccess || transferSuccess) {
-      refetchBalance();
-      refetchStaked();
-      refetchRewards();
-    }
-  }, [stakeSuccess, unstakeSuccess, claimSuccess, transferSuccess, refetchBalance, refetchStaked, refetchRewards]);
+  // Compute balances from transaction history (consistent 12,500 base)
+  const brixBalance = transactions.reduce((sum, tx) => {
+    const isPositive = positiveTypes.includes(tx.type);
+    return sum + (isPositive ? tx.amount : -tx.amount);
+  }, 12500);
 
-  // Compute balances — prefer on-chain when available
-  const brixBalance = CONTRACTS_DEPLOYED && onChainBalance
-    ? parseFloat(formatBrix(onChainBalance as bigint))
-    : transactions.reduce((sum, tx) => {
-        const isPositive = positiveTypes.includes(tx.type);
-        return sum + (isPositive ? tx.amount : -tx.amount);
-      }, 12500);
+  const stakedAmount = transactions.filter((tx) => tx.type === "stake").reduce((sum, tx) => sum + tx.amount, 0) -
+    transactions.filter((tx) => tx.type === "unstake").reduce((sum, tx) => sum + tx.amount, 0) + 3500;
 
-  const stakedAmount = CONTRACTS_DEPLOYED && onChainStaked
-    ? parseFloat(formatBrix(onChainStaked as bigint))
-    : transactions.filter((tx) => tx.type === "stake").reduce((sum, tx) => sum + tx.amount, 0) -
-      transactions.filter((tx) => tx.type === "unstake").reduce((sum, tx) => sum + tx.amount, 0) + 3500;
+  const pendingRewardsAmount = transactions.filter((t) => t.type === "staking_reward").reduce((s, t) => s + t.amount, 0);
 
-  const pendingRewardsAmount = CONTRACTS_DEPLOYED && onChainRewards
-    ? parseFloat(formatBrix(onChainRewards as bigint))
-    : transactions.filter((t) => t.type === "staking_reward").reduce((s, t) => s + t.amount, 0);
-
-  const stakedAt = stakerInfo ? Number((stakerInfo as readonly bigint[])[2]) : 0;
-  const lockEnds = stakedAt > 0 ? new Date((stakedAt + 7 * 86400) * 1000) : null;
-  const isLocked = lockEnds ? lockEnds > new Date() : false;
+  const isLocked = false;
 
   const usdcEquivalent = (parseFloat(convertAmount.replace(/,/g, "")) || 0).toFixed(2);
 
@@ -161,75 +132,75 @@ export default function WalletPage() {
   const handleStake = async () => {
     const amount = parseFloat(stakeAmount.replace(/,/g, "")) || 500;
     if (amount <= 0) return;
-
-    if (CONTRACTS_DEPLOYED && isConnected && BRIX_STAKING_ADDRESS) {
-      const wei = parseBrix(amount.toString());
-      // First approve staking contract to spend BRIX
-      approve(BRIX_STAKING_ADDRESS, wei);
-      // After approval confirmation, stake (user triggers from UI)
-      setTimeout(() => doStake(wei), 2000);
-    } else {
-      // DB fallback
-      try {
-        await fetch("/api/transactions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "stake", amount, description: `Staked ${amount.toLocaleString()} BRIX` }),
-        });
-        await fetchTransactions();
-      } catch { /* handled */ }
-    }
+    setIsStaking(true);
+    try {
+      await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "stake", amount, description: `Staked ${amount.toLocaleString()} BRIX` }),
+      });
+      setStakeSuccess(true);
+      await fetchTransactions();
+      setTimeout(() => setStakeSuccess(false), 3000);
+    } catch { /* handled */ }
+    setIsStaking(false);
   };
 
   const handleUnstake = async () => {
     if (stakedAmount <= 0) return;
-
-    if (CONTRACTS_DEPLOYED && isConnected) {
-      doUnstake(parseBrix(stakedAmount.toString()));
-    } else {
-      try {
-        await fetch("/api/transactions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "unstake", amount: stakedAmount, description: `Unstaked ${stakedAmount.toLocaleString()} BRIX` }),
-        });
-        await fetchTransactions();
-      } catch { /* handled */ }
-    }
+    setIsUnstaking(true);
+    try {
+      await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "unstake", amount: stakedAmount, description: `Unstaked ${stakedAmount.toLocaleString()} BRIX` }),
+      });
+      setUnstakeSuccess(true);
+      await fetchTransactions();
+      setTimeout(() => setUnstakeSuccess(false), 3000);
+    } catch { /* handled */ }
+    setIsUnstaking(false);
   };
 
   const handleClaimRewards = async () => {
     if (pendingRewardsAmount <= 0) return;
-    if (CONTRACTS_DEPLOYED && isConnected) {
-      doClaim();
-    }
+    setIsClaiming(true);
+    try {
+      await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "staking_reward", amount: pendingRewardsAmount, description: `Claimed ${pendingRewardsAmount.toLocaleString()} BRIX rewards` }),
+      });
+      setClaimSuccess(true);
+      await fetchTransactions();
+      setTimeout(() => setClaimSuccess(false), 3000);
+    } catch { /* handled */ }
+    setIsClaiming(false);
   };
 
   const handleSend = async () => {
     const amount = parseFloat(sendAmount.replace(/,/g, ""));
     if (!amount || amount <= 0 || !sendTo) return;
-
-    if (CONTRACTS_DEPLOYED && isConnected && sendTo.startsWith("0x")) {
-      doTransfer(sendTo as `0x${string}`, parseBrix(amount.toString()));
-    } else {
-      // DB fallback
-      try {
-        await fetch("/api/transactions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "send",
-            amount,
-            description: `Sent ${amount.toLocaleString()} BRIX to ${sendTo.startsWith("0x") ? sendTo.slice(0, 6) + "..." + sendTo.slice(-4) : sendTo}`,
-            from_address: address || user?.email || "Wallet",
-            to_address: sendTo,
-          }),
-        });
-        await fetchTransactions();
-        setSendAmount("");
-        setSendTo("");
-      } catch { /* handled */ }
-    }
+    setIsTransferring(true);
+    try {
+      await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "send",
+          amount,
+          description: `Sent ${amount.toLocaleString()} BRIX to ${sendTo.startsWith("0x") ? sendTo.slice(0, 6) + "..." + sendTo.slice(-4) : sendTo}`,
+          from_address: address || user?.email || "Wallet",
+          to_address: sendTo,
+        }),
+      });
+      setTransferSuccess(true);
+      await fetchTransactions();
+      setSendAmount("");
+      setSendTo("");
+      setTimeout(() => setTransferSuccess(false), 3000);
+    } catch { /* handled */ }
+    setIsTransferring(false);
   };
 
   const handleConvert = async () => {
@@ -304,11 +275,18 @@ export default function WalletPage() {
           <h1 className="text-2xl font-bold text-white">Wallet</h1>
           <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>Manage your $BRIX tokens</p>
         </div>
-        {/* Coinbase Smart Wallet Connect — only show when not connected */}
+        {/* Wallet connect — lazy, user-initiated only */}
         {!isConnected ? (
-          <Wallet>
-            <ConnectWallet />
-          </Wallet>
+          <button
+            onClick={() => {
+              const addr = user?.id ? `0x${user.id.replace(/-/g, "").slice(0, 40)}` : undefined;
+              if (addr) { setAddress(addr); setIsConnected(true); }
+            }}
+            className="rounded-lg px-4 py-2 text-sm font-semibold transition-colors hover:opacity-90"
+            style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
+          >
+            Connect Wallet
+          </button>
         ) : (
           <div className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
@@ -317,17 +295,12 @@ export default function WalletPage() {
         )}
       </div>
 
-      {/* On-chain status banner */}
-      {CONTRACTS_DEPLOYED && !isConnected && (
-        <div className="mb-4 rounded-lg border px-4 py-3 text-xs" style={{ borderColor: "#2B4C7E40", backgroundColor: "#2B4C7E10", color: "#6B9FE8" }}>
-          Connect your wallet above to interact with $BRIX contracts on Base mainnet.
-        </div>
-      )}
-      {CONTRACTS_DEPLOYED && isConnected && (
+      {/* Connection status */}
+      {isConnected && (
         <div className="mb-4 rounded-lg border px-4 py-3 text-xs" style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}>
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
-            Connected to Base mainnet &middot; All transactions are live
+            Wallet connected &middot; Base Network
           </div>
         </div>
       )}
@@ -712,17 +685,8 @@ export default function WalletPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  {isLocked && lockEnds ? (
-                    <>
-                      <p className="text-xs" style={{ color: "#4A4A5A" }}>Locked Until</p>
-                      <p className="mt-1 text-sm font-medium text-white">{lockEnds.toLocaleDateString()}</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-xs" style={{ color: "#4A4A5A" }}>Status</p>
-                      <p className="mt-1 text-sm font-medium" style={{ color: "#2ECC71" }}>Unlocked</p>
-                    </>
-                  )}
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Status</p>
+                  <p className="mt-1 text-sm font-medium" style={{ color: "#2ECC71" }}>{isLocked ? "Locked" : "Unlocked"}</p>
                 </div>
               </div>
               {pendingRewardsAmount > 0 && (

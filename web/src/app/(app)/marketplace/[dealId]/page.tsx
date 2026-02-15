@@ -35,10 +35,10 @@ const drawSchedule = [
 ];
 
 const documents = [
-  { name: "Inspection Report", type: "PDF", size: "2.4 MB" },
-  { name: "Title Search", type: "PDF", size: "1.1 MB" },
-  { name: "Scope of Work", type: "PDF", size: "3.8 MB" },
-  { name: "Insurance Certificate", type: "PDF", size: "890 KB" },
+  { name: "Inspection Report", type: "PDF", size: "2.4 MB", slug: "inspection-report" },
+  { name: "Title Search", type: "PDF", size: "1.1 MB", slug: "title-search" },
+  { name: "Scope of Work", type: "PDF", size: "3.8 MB", slug: "scope-of-work" },
+  { name: "Insurance Certificate", type: "PDF", size: "890 KB", slug: "insurance-certificate" },
 ];
 
 const statusColors: Record<string, { bg: string; text: string }> = {
@@ -132,7 +132,32 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
 
           <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
             <h2 className="mb-4 text-lg font-semibold text-white">Deal Documents</h2>
-            <div className="space-y-2">{documents.map((doc) => (<div key={doc.name} className="flex items-center justify-between rounded-lg border border-white/5 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer"><div className="flex items-center gap-3"><svg className="w-5 h-5" style={{ color: "#E8632B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg><div><p className="text-sm font-medium text-white">{doc.name}</p><p className="text-xs" style={{ color: "#4A4A5A" }}>{doc.type} - {doc.size}</p></div></div><svg className="w-4 h-4" style={{ color: "#4A4A5A" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg></div>))}</div>
+            <div className="space-y-2">{documents.map((doc) => (
+              <button
+                key={doc.name}
+                onClick={() => {
+                  // Generate a placeholder PDF download blob
+                  const content = `BrixUp Deal Document\n\n${doc.name}\nDeal: ${deal.address}, ${deal.city}, ${deal.state}\nType: ${doc.type}\nGenerated: ${new Date().toLocaleDateString()}\n\nThis document is a placeholder. Full documents will be available when the deal is finalized.`;
+                  const blob = new Blob([content], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `${doc.slug}-${dealId}.txt`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="flex w-full items-center justify-between rounded-lg border border-white/5 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <svg className="w-5 h-5" style={{ color: "#E8632B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                  <div><p className="text-sm font-medium text-white">{doc.name}</p><p className="text-xs" style={{ color: "#4A4A5A" }}>{doc.type} - {doc.size}</p></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium" style={{ color: "#D4A843" }}>Download</span>
+                  <svg className="w-4 h-4" style={{ color: "#D4A843" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                </div>
+              </button>
+            ))}</div>
           </section>
         </div>
 

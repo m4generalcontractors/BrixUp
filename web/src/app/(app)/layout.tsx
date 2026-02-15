@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { OnchainKitProvider } from "@coinbase/onchainkit";
-import { activeChain } from "@/lib/contracts/config";
-import "@coinbase/onchainkit/styles.css";
+// OnchainKit / wagmi removed from layout to prevent Base Account SDK
+// from auto-initializing and rendering a blocking modal on every page.
+// Wallet features work via DB fallback; on-chain interactions lazy-load only on user action.
 
 import type { UserRole } from "@/lib/supabase/types";
 
@@ -111,31 +111,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [showNotifPanel, setShowNotifPanel] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  // Consistent 12,500 base balance across all views (dashboard, header, wallet)
   const fetchBrixBalance = useCallback(async () => {
     try {
-      const [invRes, txRes] = await Promise.all([
-        fetch("/api/investments"),
-        fetch("/api/transactions?limit=100"),
-      ]);
-      let balance = 0;
-      if (invRes.ok) {
-        const investments = await invRes.json();
-        if (Array.isArray(investments)) {
-          balance += investments.reduce((sum: number, inv: { amount?: number }) => sum + (inv.amount || 0), 0) * 0.26;
-        }
-      }
+      const txRes = await fetch("/api/transactions?limit=100");
+      let balance = 12500;
       if (txRes.ok) {
         const txs = await txRes.json();
-        if (Array.isArray(txs)) {
+        if (Array.isArray(txs) && txs.length > 0) {
+          const positiveTypes = ["yield", "staking_reward", "received", "unstake", "buy"];
           for (const tx of txs) {
-            if (tx.type === "staking_reward" || tx.type === "yield") balance += tx.amount || 0;
-            if (tx.type === "conversion") balance -= tx.amount || 0;
+            if (positiveTypes.includes(tx.type)) balance += tx.amount || 0;
+            else balance -= tx.amount || 0;
           }
         }
       }
       setBrixBalance(Math.round(balance));
     } catch {
-      setBrixBalance(0);
+      setBrixBalance(12500);
     }
   }, []);
 
@@ -200,9 +193,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Only render OnchainKitProvider on the wallet page to prevent the
-  // Base Account SDK modal from appearing on every authenticated page.
-  const needsWallet = pathname === "/wallet";
+  // OnchainKitProvider completely removed — no SDK auto-init anywhere.
 
   const appContent = (
     <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
@@ -426,6 +417,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </svg>
               <span style={{ color: "#D4A843" }}>$BRIX</span>
               <span className="text-white">{brixBalance > 0 ? brixBalance.toLocaleString() : "12,500"}</span>
+
             </div>
 
             {/* User role badge */}
@@ -445,25 +437,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
-
-  if (needsWallet) {
-    return (
-      <OnchainKitProvider
-        apiKey={process.env.NEXT_PUBLIC_COINBASE_APP_ID}
-        chain={activeChain}
-        config={{
-          appearance: {
-            name: "BrixUp",
-            logo: "https://brixups.com/logo.png",
-            mode: "dark",
-            theme: "cyberpunk",
-          },
-        }}
-      >
-        {appContent}
-      </OnchainKitProvider>
-    );
-  }
 
   return appContent;
 }

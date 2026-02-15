@@ -493,10 +493,8 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const brixBalance = useMemo(() => {
-    const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
-    return totalInvested > 0 ? Math.round(totalInvested * 0.26) : 12500;
-  }, [investments]);
+  // Use consistent 12,500 base balance across all views (dashboard, header, wallet)
+  const brixBalance = 12500;
 
   if (loading) return <DashboardSkeleton />;
 
