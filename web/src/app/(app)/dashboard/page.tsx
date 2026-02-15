@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import Link from "next/link";
 import WalletWidget from "@/components/WalletWidget";
 import { useAuth } from "@/lib/auth-context";
@@ -78,26 +78,73 @@ const roleGreetings: Record<string, string> = {
   dealmaker: "Your deals and commissions",
 };
 
+const allocationColors: Record<string, string> = { Flip: "#E8632B", "New Build": "#2B4C7E", "Value-Add": "#2ECC71", Wholesale: "#D4A843", Other: "#4A4A5A" };
+
+// ── Skeleton loader ──
+
+function DashboardSkeleton() {
+  return (
+    <div className="animate-pulse space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="h-4 w-20 rounded bg-white/10 mb-2" />
+            <div className="h-8 w-28 rounded bg-white/10" />
+          </div>
+        ))}
+      </div>
+      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="h-5 w-32 rounded bg-white/10 mb-4" />
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-12 rounded bg-white/5" />
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="h-5 w-40 rounded bg-white/10 mb-4" />
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (<div key={i} className="h-10 rounded bg-white/5" />))}
+          </div>
+        </div>
+        <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+          <div className="h-5 w-32 rounded bg-white/10 mb-4" />
+          <div className="flex items-end justify-between gap-3 h-48">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="flex flex-1 flex-col items-center gap-2">
+                <div className="w-full rounded-t-md bg-white/5" style={{ height: `${30 + i * 10}%` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ════════════════════════════════════════════════════════
-//  INVESTOR DASHBOARD
+//  INVESTOR DASHBOARD — memoized
 // ════════════════════════════════════════════════════════
 
-function InvestorDashboard({ investments, transactions, brixBalance }: { investments: Investment[]; transactions: Transaction[]; brixBalance: number }) {
-  const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
-  const activeDeals = investments.filter((inv) => inv.deals?.status !== "Completed").length;
-  const avgRoi = investments.length > 0 ? (investments.reduce((sum, inv) => sum + (inv.deals?.projected_roi || 0), 0) / investments.length).toFixed(1) : "0";
+const InvestorDashboard = memo(function InvestorDashboard({ investments, transactions, brixBalance }: { investments: Investment[]; transactions: Transaction[]; brixBalance: number }) {
+  // Memoize expensive computations
+  const totalInvested = useMemo(() => investments.reduce((sum, inv) => sum + inv.amount, 0), [investments]);
+  const activeDeals = useMemo(() => investments.filter((inv) => inv.deals?.status !== "Completed").length, [investments]);
+  const avgRoi = useMemo(() => investments.length > 0 ? (investments.reduce((sum, inv) => sum + (inv.deals?.projected_roi || 0), 0) / investments.length).toFixed(1) : "0", [investments]);
 
-  const stats = [
+  const stats = useMemo(() => [
     { label: "Total Invested", value: `$${totalInvested.toLocaleString()}`, icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
     { label: "Active Deals", value: String(activeDeals), icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
     { label: "Avg ROI", value: `${avgRoi}%`, icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6", color: "#2ECC71" },
     { label: "$BRIX Balance", value: brixBalance.toLocaleString(), icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#E8632B" },
-  ];
+  ], [totalInvested, activeDeals, avgRoi, brixBalance]);
 
-  const typeMap: Record<string, number> = {};
-  investments.forEach((inv) => { const t = inv.deals?.property_type || inv.deals?.type || "Other"; typeMap[t] = (typeMap[t] || 0) + inv.amount; });
-  const allocationColors: Record<string, string> = { Flip: "#E8632B", "New Build": "#2B4C7E", "Value-Add": "#2ECC71", Wholesale: "#D4A843", Other: "#4A4A5A" };
-  const allocations = Object.entries(typeMap).map(([type, amount]) => ({ label: type, amount, pct: totalInvested > 0 ? Math.round((amount / totalInvested) * 100) : 0, color: allocationColors[type] || "#4A4A5A" }));
+  const allocations = useMemo(() => {
+    const typeMap: Record<string, number> = {};
+    investments.forEach((inv) => { const t = inv.deals?.property_type || inv.deals?.type || "Other"; typeMap[t] = (typeMap[t] || 0) + inv.amount; });
+    return Object.entries(typeMap).map(([type, amount]) => ({ label: type, amount, pct: totalInvested > 0 ? Math.round((amount / totalInvested) * 100) : 0, color: allocationColors[type] || "#4A4A5A" }));
+  }, [investments, totalInvested]);
 
   return (
     <>
@@ -229,20 +276,25 @@ function InvestorDashboard({ investments, transactions, brixBalance }: { investm
       </div>
     </>
   );
-}
+});
 
 // ════════════════════════════════════════════════════════
-//  BUILDER DASHBOARD (summary view — full page at /builder)
+//  BUILDER DASHBOARD — memoized
 // ════════════════════════════════════════════════════════
 
-function BuilderDashboard() {
-  const builderStats = [
-    { label: "Brix Score", value: "863", icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
-    { label: "Active Projects", value: "2", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
-    { label: "$BRIX Earned", value: "8,800", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
-    { label: "Sweat Equity", value: "$26,400", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
-  ];
+const builderStats = [
+  { label: "Brix Score", value: "863", icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
+  { label: "Active Projects", value: "2", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
+  { label: "$BRIX Earned", value: "8,800", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
+  { label: "Sweat Equity", value: "$26,400", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
+];
 
+const builderProjects = [
+  { address: "1847 Oakwood Dr", city: "Charlotte, NC", trade: "Electrical", milestone: "MEP Rough-In", progress: 60, nextDraw: "$3,200", due: "Mar 5, 2026" },
+  { address: "903 Pine Valley Rd", city: "Greenville, SC", trade: "Plumbing", milestone: "Finishes", progress: 35, nextDraw: "$2,100", due: "Mar 20, 2026" },
+];
+
+const BuilderDashboard = memo(function BuilderDashboard() {
   return (
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -267,10 +319,7 @@ function BuilderDashboard() {
           <Link href="/builder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
         <div className="space-y-4">
-          {[
-            { address: "1847 Oakwood Dr", city: "Charlotte, NC", trade: "Electrical", milestone: "MEP Rough-In", progress: 60, nextDraw: "$3,200", due: "Mar 5, 2026" },
-            { address: "903 Pine Valley Rd", city: "Greenville, SC", trade: "Plumbing", milestone: "Finishes", progress: 35, nextDraw: "$2,100", due: "Mar 20, 2026" },
-          ].map((p) => (
+          {builderProjects.map((p) => (
             <div key={p.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-white">{p.address}</p>
@@ -297,20 +346,26 @@ function BuilderDashboard() {
       <div className="mt-6"><WalletWidget brixBalance={8800} usdcBalance={1500} stakedAmount={0} /></div>
     </>
   );
-}
+});
 
 // ════════════════════════════════════════════════════════
-//  DEALMAKER DASHBOARD (summary view — full page at /dealfinder)
+//  DEALMAKER DASHBOARD — memoized
 // ════════════════════════════════════════════════════════
 
-function DealmakerDashboard() {
-  const dealmakerStats = [
-    { label: "Deals Listed", value: "3", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
-    { label: "Deals Funded", value: "1", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
-    { label: "Total Commission", value: "$8,550", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
-    { label: "Referrals", value: "18", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "#E8632B" },
-  ];
+const dealmakerStats = [
+  { label: "Deals Listed", value: "3", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
+  { label: "Deals Funded", value: "1", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
+  { label: "Total Commission", value: "$8,550", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
+  { label: "Referrals", value: "18", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "#E8632B" },
+];
 
+const dealmakerDeals = [
+  { address: "3421 Blanche St", city: "Charlotte, NC", status: "Funded", capital: "$285,000", commission: "$8,550" },
+  { address: "782 Eastway Dr", city: "Charlotte, NC", status: "Funding", capital: "$195,000", commission: "$5,850" },
+  { address: "1509 Parkwood Ave", city: "Raleigh, NC", status: "Under Review", capital: "$340,000", commission: "$10,200" },
+];
+
+const DealmakerDashboard = memo(function DealmakerDashboard() {
   return (
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -335,11 +390,7 @@ function DealmakerDashboard() {
           <Link href="/dealfinder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
         <div className="space-y-3">
-          {[
-            { address: "3421 Blanche St", city: "Charlotte, NC", status: "Funded", capital: "$285,000", commission: "$8,550" },
-            { address: "782 Eastway Dr", city: "Charlotte, NC", status: "Funding", capital: "$195,000", commission: "$5,850" },
-            { address: "1509 Parkwood Ave", city: "Raleigh, NC", status: "Under Review", capital: "$340,000", commission: "$10,200" },
-          ].map((d) => {
+          {dealmakerDeals.map((d) => {
             const sColor = d.status === "Funded" ? "#2ECC71" : d.status === "Funding" ? "#D4A843" : "#E8632B";
             return (
               <div key={d.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -369,7 +420,7 @@ function DealmakerDashboard() {
       <div className="mt-6"><WalletWidget brixBalance={24500} usdcBalance={8200} stakedAmount={5000} /></div>
     </>
   );
-}
+});
 
 // ════════════════════════════════════════════════════════
 //  MAIN DASHBOARD PAGE
@@ -386,10 +437,11 @@ export default function DashboardPage() {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   const fetchData = useCallback(async () => {
+    const controller = new AbortController();
     try {
       const [invRes, txRes] = await Promise.all([
-        fetch("/api/investments"),
-        fetch("/api/transactions?limit=10"),
+        fetch("/api/investments", { signal: controller.signal }),
+        fetch("/api/transactions?limit=10", { signal: controller.signal }),
       ]);
       if (invRes.ok) {
         const invData = await invRes.json();
@@ -399,16 +451,18 @@ export default function DashboardPage() {
         const txData = await txRes.json();
         if (txData.length > 0) setTransactions(txData);
       }
-    } catch { /* Use sample data */ }
+    } catch { /* Use sample data on error */ }
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
-  const brixBalance = totalInvested > 0 ? Math.round(totalInvested * 0.26) : 12500;
+  const brixBalance = useMemo(() => {
+    const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
+    return totalInvested > 0 ? Math.round(totalInvested * 0.26) : 12500;
+  }, [investments]);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" /></div>;
+  if (loading) return <DashboardSkeleton />;
 
   return (
     <div>

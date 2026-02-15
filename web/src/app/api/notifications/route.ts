@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
 
 const sampleNotifications = [
   {
@@ -36,7 +37,10 @@ const sampleNotifications = [
   },
 ];
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "notif:get"), RATE_LIMITS.standard);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   try {
     const supabase = await createServerSupabase();
     const {
@@ -65,6 +69,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "notif:patch"), RATE_LIMITS.write);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   try {
     const supabase = await createServerSupabase();
     const {
@@ -78,12 +85,19 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, read } = body;
 
+    if (!id || typeof id !== "string") {
+      return NextResponse.json({ error: "Invalid notification ID" }, { status: 400 });
+    }
+
     if (id === "all") {
       await supabase
         .from("notifications")
         .update({ read: true } as never)
         .eq("user_id", user.id);
-    } else if (id) {
+    } else {
+      if (id.length > 50) {
+        return NextResponse.json({ error: "Invalid notification ID" }, { status: 400 });
+      }
       await supabase
         .from("notifications")
         .update({ read: read ?? true } as never)

@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
+import { isValidEmail } from "@/lib/security/validate";
 
 export async function POST(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "waitlist:post"), RATE_LIMITS.public);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const body = await request.json();
   const { email } = body;
 
-  if (!email || typeof email !== "string" || !email.includes("@")) {
+  if (!email || typeof email !== "string" || !isValidEmail(email)) {
     return NextResponse.json(
       { error: "Valid email is required" },
       { status: 400 }
@@ -15,7 +20,6 @@ export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabase();
 
-    // Insert into waitlist table
     const { data, error } = await supabase
       .from("waitlist")
       .upsert(
@@ -26,7 +30,6 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      // Table might not exist yet — return success anyway
       return NextResponse.json({
         id: `wl-${Date.now()}`,
         email: email.toLowerCase().trim(),
@@ -36,7 +39,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(data, { status: 201 });
   } catch {
-    // Supabase not configured — still count as success
     return NextResponse.json({
       id: `wl-${Date.now()}`,
       email: email.toLowerCase().trim(),
@@ -45,7 +47,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "waitlist:get"), RATE_LIMITS.public);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   try {
     const supabase = await createServerSupabase();
     const { count } = await supabase

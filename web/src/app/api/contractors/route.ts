@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
+import { sanitizeString, isValidExperience, isValidLicenseNumber } from "@/lib/security/validate";
+import { auditLog } from "@/lib/security/audit";
 
 export async function POST(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "contractor:post"), RATE_LIMITS.write);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const supabase = await createServerSupabase();
   const {
     data: { user },
@@ -13,16 +19,33 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
+  const primaryTrade = sanitizeString(body.primary_trade || body.trade, 50);
+  if (!primaryTrade) {
+    return NextResponse.json({ error: "Primary trade is required" }, { status: 400 });
+  }
+
+  const yearsExperience = Number(body.years_experience) || 0;
+  if (!isValidExperience(yearsExperience)) {
+    return NextResponse.json({ error: "Years of experience must be 0-70" }, { status: 400 });
+  }
+
+  const licenseNumber = body.license_number ? sanitizeString(body.license_number, 30) : null;
+  if (licenseNumber && !isValidLicenseNumber(licenseNumber)) {
+    return NextResponse.json({ error: "Invalid license number format" }, { status: 400 });
+  }
+
   const contractor = {
     user_id: user.id,
-    primary_trade: body.primary_trade || body.trade,
-    years_experience: Number(body.years_experience) || 0,
-    license_number: body.license_number || null,
-    insurance_provider: body.insurance_provider || null,
-    brix_score: 500, // Starting score
-    location: body.location || "",
-    w9_status: body.w9_status || "pending",
+    primary_trade: primaryTrade,
+    years_experience: yearsExperience,
+    license_number: licenseNumber,
+    insurance_provider: sanitizeString(body.insurance_provider, 100) || null,
+    brix_score: 500,
+    location: sanitizeString(body.location, 100),
+    w9_status: body.w9_status === "submitted" ? "submitted" : "pending",
   };
+
+  auditLog({ action: "contractor.register", userId: user.id, metadata: { trade: primaryTrade } });
 
   try {
     const { data, error } = await supabase
@@ -39,7 +62,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Also update user role to builder
     await supabase
       .from("profiles")
       .update({ user_role: "builder" } as never)

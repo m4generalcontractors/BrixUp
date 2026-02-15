@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+// Whitelisted emails that can claim the initial admin role.
+// This prevents race conditions where any first user becomes admin.
+const ALLOWED_BOOTSTRAP_EMAILS = [
+  "mph.cordero@gmail.com",
+];
+
 /**
  * POST /api/admin/setup
  *
  * Promotes the currently authenticated user to admin role.
- * Only works if there are NO existing admin users in the database
- * (first-admin bootstrap) OR if the caller is already an admin.
+ * First-admin bootstrap: only whitelisted emails can self-promote when
+ * no admin exists yet. After that, only existing admins can promote.
  */
 export async function POST() {
   const supabase = await createServerSupabase();
@@ -15,7 +21,7 @@ export async function POST() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized — sign in first" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Check if any admin already exists
@@ -27,8 +33,8 @@ export async function POST() {
 
   const hasAdmin = existingAdmins && existingAdmins.length > 0;
 
-  // If an admin already exists, only admins can promote
   if (hasAdmin) {
+    // Only existing admins can promote new admins
     const { data: callerProfile } = await supabase
       .from("profiles")
       .select("user_role")
@@ -38,7 +44,16 @@ export async function POST() {
     const callerRole = (callerProfile as { user_role?: string } | null)?.user_role;
     if (callerRole !== "admin") {
       return NextResponse.json(
-        { error: "An admin already exists. Only admins can promote new admins." },
+        { error: "Forbidden" },
+        { status: 403 }
+      );
+    }
+  } else {
+    // First-admin bootstrap — only whitelisted emails allowed
+    const email = user.email?.toLowerCase();
+    if (!email || !ALLOWED_BOOTSTRAP_EMAILS.includes(email)) {
+      return NextResponse.json(
+        { error: "Forbidden" },
         { status: 403 }
       );
     }
@@ -52,15 +67,14 @@ export async function POST() {
 
   if (updateErr) {
     return NextResponse.json(
-      { error: `Failed to promote: ${updateErr.message}` },
+      { error: "Failed to update profile" },
       { status: 500 }
     );
   }
 
   return NextResponse.json({
     success: true,
-    message: `User ${user.email} promoted to admin`,
-    email: user.email,
+    message: "Admin role assigned",
     role: "admin",
   });
 }

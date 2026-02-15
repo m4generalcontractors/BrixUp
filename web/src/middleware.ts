@@ -6,8 +6,17 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Skip auth checks if Supabase is not configured
+  // Block access to protected routes if Supabase is not configured
   if (!supabaseUrl || !supabaseKey || supabaseUrl === "https://your-project.supabase.co") {
+    const protectedPrefixes = ["/dashboard", "/marketplace", "/builder", "/dealfinder", "/wallet", "/settings", "/verify", "/agreements", "/admin"];
+    const isProtectedRoute = protectedPrefixes.some(
+      (prefix) => request.nextUrl.pathname === prefix || request.nextUrl.pathname.startsWith(prefix + "/")
+    );
+    if (isProtectedRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
     return NextResponse.next();
   }
 

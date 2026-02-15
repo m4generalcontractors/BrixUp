@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
+import { isValidNumber } from "@/lib/security/validate";
+import { auditLog } from "@/lib/security/audit";
 
 export async function GET(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "inv:get"), RATE_LIMITS.standard);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const supabase = await createServerSupabase();
 
   const {
@@ -16,9 +22,10 @@ export async function GET(request: Request) {
   const dealId = searchParams.get("deal_id");
 
   try {
+    // Select only needed columns instead of wildcard
     let query = supabase
       .from("investments")
-      .select("*, deals(*)")
+      .select("id, amount, status, created_at, deal_id, deals(id, address, city, state, type, property_type, funded_amount, total_capital_needed, projected_roi, status)")
       .eq("investor_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -29,7 +36,6 @@ export async function GET(request: Request) {
     const { data, error } = await query;
 
     if (error) {
-      // Fall back to empty array if table doesn't exist
       return NextResponse.json([]);
     }
 
@@ -40,6 +46,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "inv:post"), RATE_LIMITS.sensitive);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const supabase = await createServerSupabase();
 
   const {
@@ -53,15 +62,20 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { deal_id, amount } = body;
 
-  if (!deal_id || !amount || amount <= 0) {
+  if (!deal_id || typeof deal_id !== "string") {
+    return NextResponse.json({ error: "Valid deal_id is required" }, { status: 400 });
+  }
+
+  if (!isValidNumber(amount, 1, 10_000_000)) {
     return NextResponse.json(
-      { error: "deal_id and positive amount are required" },
+      { error: "Amount must be between $1 and $10,000,000" },
       { status: 400 }
     );
   }
 
+  auditLog({ action: "user.invest", userId: user.id, metadata: { deal_id, amount } });
+
   try {
-    // Create investment record
     const { data: investment, error: investError } = await supabase
       .from("investments")
       .insert({
@@ -98,7 +112,6 @@ export async function POST(request: Request) {
         .eq("id", deal_id);
     }
 
-    // Record transaction
     await supabase
       .from("transactions")
       .insert({

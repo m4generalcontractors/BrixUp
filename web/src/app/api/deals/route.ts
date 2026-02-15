@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getDeals } from "@/lib/deals-data";
+import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
+import { auditLog } from "@/lib/security/audit";
 
 export async function GET(request: Request) {
+  const rl = checkRateLimit(getRateLimitKey(request, "deals:get"), RATE_LIMITS.standard);
+  if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   const { searchParams } = new URL(request.url);
   const location = searchParams.get("location") ?? undefined;
   const propertyType = searchParams.get("propertyType") ?? undefined;
@@ -32,6 +36,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const rl2 = checkRateLimit(getRateLimitKey(request, "deals:post"), RATE_LIMITS.write);
+  if (!rl2.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const supabase = await createServerSupabase();
   const {
     data: { user },
@@ -84,6 +91,24 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  // Business logic: ARV must exceed total cost for a viable deal
+  if (arv <= askingPrice + rehabBudget) {
+    return NextResponse.json(
+      { error: "After-repair value (ARV) must exceed asking price + rehab budget" },
+      { status: 400 }
+    );
+  }
+
+  // Minimum realistic property price
+  if (askingPrice < 1000) {
+    return NextResponse.json(
+      { error: "Asking price must be at least $1,000" },
+      { status: 400 }
+    );
+  }
+
+  auditLog({ action: "deal.create", userId: user.id, metadata: { address: body.address, askingPrice, arv } });
 
   const deal = {
     address: body.address.slice(0, 200),
