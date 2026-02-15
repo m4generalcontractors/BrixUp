@@ -1011,7 +1011,48 @@ details[open] summary .faq-chevron {
 }
 
 /* --------------------------------------------------------------------------
-   8. Print Styles
+   8. Clean Modern Polish
+   -------------------------------------------------------------------------- */
+
+/* Subtle card hover lift — applies to all bordered cards in the app layout */
+[style*="backgroundColor: #1A1A2E"],
+[style*="background-color: rgb(26, 26, 46)"] {
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+/* Smoother select dropdowns */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%234A4A5A' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  padding-right: 2rem;
+}
+
+/* Ensure all buttons have smooth transitions */
+button {
+  transition: all 0.15s var(--ease-out);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Reduce visual noise — subtle table borders */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Clean link underline behavior */
+a {
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   9. Print Styles
    -------------------------------------------------------------------------- */
 
 @media print {

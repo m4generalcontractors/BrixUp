@@ -5,6 +5,8 @@ import Link from "next/link";
 import WalletWidget from "@/components/WalletWidget";
 import { useAuth } from "@/lib/auth-context";
 
+// ── Shared types ──
+
 interface Investment {
   id: string;
   amount: number;
@@ -43,6 +45,8 @@ const typeColors: Record<string, string> = {
   send: "#E8632B",
 };
 
+// ── Sample data ──
+
 const sampleInvestments: Investment[] = [
   { id: "1", amount: 15000, status: "confirmed", created_at: "2026-02-10", deals: { address: "1847 Oakwood Dr", city: "Charlotte", state: "NC", property_type: "Flip", funded_amount: 190950, total_capital_needed: 285000, projected_roi: 22, status: "Active" } },
   { id: "2", amount: 20000, status: "confirmed", created_at: "2026-01-20", deals: { address: "412 Magnolia Ln", city: "Raleigh", state: "NC", property_type: "New Build", funded_amount: 223600, total_capital_needed: 520000, projected_roi: 28, status: "Funding" } },
@@ -66,39 +70,22 @@ const monthlyReturns = [
   { month: "Feb", amount: 587, max: 1400 },
 ];
 
-export default function DashboardPage() {
-  const { profile } = useAuth();
-  const [investments, setInvestments] = useState<Investment[]>(sampleInvestments);
-  const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
-  const [loading, setLoading] = useState(true);
+// ── Role-specific greeting ──
 
-  const displayName = profile?.full_name?.split(" ")[0] || "Investor";
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+const roleGreetings: Record<string, string> = {
+  investor: "Your portfolio at a glance",
+  builder: "Your projects and earnings",
+  dealmaker: "Your deals and commissions",
+};
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [invRes, txRes] = await Promise.all([
-        fetch("/api/investments"),
-        fetch("/api/transactions?limit=10"),
-      ]);
-      if (invRes.ok) {
-        const invData = await invRes.json();
-        if (invData.length > 0) setInvestments(invData);
-      }
-      if (txRes.ok) {
-        const txData = await txRes.json();
-        if (txData.length > 0) setTransactions(txData);
-      }
-    } catch { /* Use sample data */ }
-    setLoading(false);
-  }, []);
+// ════════════════════════════════════════════════════════
+//  INVESTOR DASHBOARD
+// ════════════════════════════════════════════════════════
 
-  useEffect(() => { fetchData(); }, [fetchData]);
-
+function InvestorDashboard({ investments, transactions, brixBalance }: { investments: Investment[]; transactions: Transaction[]; brixBalance: number }) {
   const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
   const activeDeals = investments.filter((inv) => inv.deals?.status !== "Completed").length;
   const avgRoi = investments.length > 0 ? (investments.reduce((sum, inv) => sum + (inv.deals?.projected_roi || 0), 0) / investments.length).toFixed(1) : "0";
-  const brixBalance = totalInvested > 0 ? Math.round(totalInvested * 0.26) : 12500;
 
   const stats = [
     { label: "Total Invested", value: `$${totalInvested.toLocaleString()}`, icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
@@ -112,15 +99,8 @@ export default function DashboardPage() {
   const allocationColors: Record<string, string> = { Flip: "#E8632B", "New Build": "#2B4C7E", "Value-Add": "#2ECC71", Wholesale: "#D4A843", Other: "#4A4A5A" };
   const allocations = Object.entries(typeMap).map(([type, amount]) => ({ label: type, amount, pct: totalInvested > 0 ? Math.round((amount / totalInvested) * 100) : 0, color: allocationColors[type] || "#4A4A5A" }));
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" /></div>;
-
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Welcome back, {displayName}</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>{today}</p>
-      </div>
-
+    <>
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
           <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
@@ -217,6 +197,201 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+//  BUILDER DASHBOARD (summary view — full page at /builder)
+// ════════════════════════════════════════════════════════
+
+function BuilderDashboard() {
+  const builderStats = [
+    { label: "Brix Score", value: "863", icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
+    { label: "Active Projects", value: "2", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
+    { label: "$BRIX Earned", value: "8,800", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
+    { label: "Sweat Equity", value: "$26,400", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
+  ];
+
+  return (
+    <>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {builderStats.map((stat) => (
+          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
+                <svg className="w-5 h-5" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Current Projects</h2>
+          <Link href="/builder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
+        </div>
+        <div className="space-y-4">
+          {[
+            { address: "1847 Oakwood Dr", city: "Charlotte, NC", trade: "Electrical", milestone: "MEP Rough-In", progress: 60, nextDraw: "$3,200", due: "Mar 5, 2026" },
+            { address: "903 Pine Valley Rd", city: "Greenville, SC", trade: "Plumbing", milestone: "Finishes", progress: 35, nextDraw: "$2,100", due: "Mar 20, 2026" },
+          ].map((p) => (
+            <div key={p.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-white">{p.address}</p>
+                <p className="text-xs" style={{ color: "#4A4A5A" }}>{p.city} &middot; {p.trade}</p>
+              </div>
+              <div className="flex items-center gap-6">
+                <div>
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{p.milestone}</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "#0D0D1A" }}><div className="h-full rounded-full" style={{ width: `${p.progress}%`, backgroundColor: "#D4A843" }} /></div>
+                    <span className="text-xs" style={{ color: "#D4A843" }}>{p.progress}%</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>Next Draw</p>
+                  <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{p.nextDraw}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6"><WalletWidget brixBalance={8800} usdcBalance={1500} stakedAmount={0} /></div>
+    </>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+//  DEALMAKER DASHBOARD (summary view — full page at /dealfinder)
+// ════════════════════════════════════════════════════════
+
+function DealmakerDashboard() {
+  const dealmakerStats = [
+    { label: "Deals Listed", value: "3", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
+    { label: "Deals Funded", value: "1", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
+    { label: "Total Commission", value: "$8,550", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
+    { label: "Referrals", value: "18", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "#E8632B" },
+  ];
+
+  return (
+    <>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {dealmakerStats.map((stat) => (
+          <div key={stat.label} className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium" style={{ color: "#4A4A5A" }}>{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: stat.color + "20" }}>
+                <svg className="w-5 h-5" style={{ color: stat.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Recent Deals</h2>
+          <Link href="/dealfinder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
+        </div>
+        <div className="space-y-3">
+          {[
+            { address: "3421 Blanche St", city: "Charlotte, NC", status: "Funded", capital: "$285,000", commission: "$8,550" },
+            { address: "782 Eastway Dr", city: "Charlotte, NC", status: "Funding", capital: "$195,000", commission: "$5,850" },
+            { address: "1509 Parkwood Ave", city: "Raleigh, NC", status: "Under Review", capital: "$340,000", commission: "$10,200" },
+          ].map((d) => {
+            const sColor = d.status === "Funded" ? "#2ECC71" : d.status === "Funding" ? "#D4A843" : "#E8632B";
+            return (
+              <div key={d.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-white">{d.address}</p>
+                    <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${sColor}20`, color: sColor }}>{d.status}</span>
+                  </div>
+                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{d.city}</p>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Capital</p>
+                    <p className="text-sm font-semibold text-white">{d.capital}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs" style={{ color: "#4A4A5A" }}>Commission</p>
+                    <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{d.commission}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mt-6"><WalletWidget brixBalance={24500} usdcBalance={8200} stakedAmount={5000} /></div>
+    </>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+//  MAIN DASHBOARD PAGE
+// ════════════════════════════════════════════════════════
+
+export default function DashboardPage() {
+  const { profile } = useAuth();
+  const [investments, setInvestments] = useState<Investment[]>(sampleInvestments);
+  const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
+  const [loading, setLoading] = useState(true);
+
+  const userRole = profile?.user_role || "investor";
+  const displayName = profile?.full_name?.split(" ")[0] || (userRole === "builder" ? "Builder" : userRole === "dealmaker" ? "Deal Finder" : "Investor");
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [invRes, txRes] = await Promise.all([
+        fetch("/api/investments"),
+        fetch("/api/transactions?limit=10"),
+      ]);
+      if (invRes.ok) {
+        const invData = await invRes.json();
+        if (invData.length > 0) setInvestments(invData);
+      }
+      if (txRes.ok) {
+        const txData = await txRes.json();
+        if (txData.length > 0) setTransactions(txData);
+      }
+    } catch { /* Use sample data */ }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
+  const brixBalance = totalInvested > 0 ? Math.round(totalInvested * 0.26) : 12500;
+
+  if (loading) return <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" /></div>;
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Welcome back, {displayName}</h1>
+        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>{roleGreetings[userRole] || today}</p>
+      </div>
+
+      {userRole === "builder" && <BuilderDashboard />}
+      {userRole === "dealmaker" && <DealmakerDashboard />}
+      {(userRole === "investor" || (userRole !== "builder" && userRole !== "dealmaker")) && (
+        <InvestorDashboard investments={investments} transactions={transactions} brixBalance={brixBalance} />
+      )}
     </div>
   );
 }

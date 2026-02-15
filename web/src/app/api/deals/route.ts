@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { getDeals, sampleDeals } from "@/lib/deals-data";
+import { getDeals } from "@/lib/deals-data";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -54,10 +54,41 @@ export async function POST(request: Request) {
     }
   }
 
+  // Validate string lengths
+  const stringLimits: Record<string, number> = { address: 200, city: 100, state: 50, property_type: 50, description: 2000 };
+  for (const [field, maxLen] of Object.entries(stringLimits)) {
+    if (typeof body[field] === "string" && body[field].length > maxLen) {
+      return NextResponse.json(
+        { error: `${field} exceeds maximum length of ${maxLen} characters` },
+        { status: 400 }
+      );
+    }
+  }
+
+  // Validate property type
+  const validTypes = ["Flip", "New Build", "Value-Add", "Wholesale", "Land"];
+  if (!validTypes.includes(body.property_type)) {
+    return NextResponse.json(
+      { error: "Invalid property type" },
+      { status: 400 }
+    );
+  }
+
+  // Validate numeric fields are reasonable
+  const askingPrice = Number(body.asking_price);
+  const rehabBudget = Number(body.rehab_budget);
+  const arv = Number(body.arv);
+  if ([askingPrice, rehabBudget, arv].some((n) => isNaN(n) || n < 0 || n > 100_000_000)) {
+    return NextResponse.json(
+      { error: "Numeric values must be between 0 and 100,000,000" },
+      { status: 400 }
+    );
+  }
+
   const deal = {
-    address: body.address,
-    city: body.city,
-    state: body.state,
+    address: body.address.slice(0, 200),
+    city: body.city.slice(0, 100),
+    state: body.state.slice(0, 50),
     zip: body.zip || "",
     property_type: body.property_type,
     status: "Open" as const,
@@ -79,7 +110,7 @@ export async function POST(request: Request) {
     sqft: Number(body.sqft) || 0,
     year_built: Number(body.year_built) || new Date().getFullYear(),
     lot_size: body.lot_size || "N/A",
-    description: body.description,
+    description: typeof body.description === "string" ? body.description.slice(0, 2000) : "",
     dealmaker_id: user.id,
     gc_id: null,
     listed_date: new Date().toISOString(),

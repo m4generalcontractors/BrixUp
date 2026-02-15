@@ -10,8 +10,6 @@ const footerLinks = {
   Company: [
     { label: "About", href: "#team" },
     { label: "Team", href: "#team" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "/login?mode=signup" },
   ],
   Legal: [
     { label: "Terms", href: "/terms" },
@@ -19,9 +17,8 @@ const footerLinks = {
     { label: "Token Disclaimer", href: "#tokenomics" },
   ],
   Connect: [
-    { label: "Twitter", href: "#" },
-    { label: "Discord", href: "#" },
-    { label: "Telegram", href: "#" },
+    { label: "Twitter", href: "#team" },
+    { label: "Discord", href: "#team" },
   ],
 };
 

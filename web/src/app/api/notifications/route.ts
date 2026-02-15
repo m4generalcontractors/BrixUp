@@ -44,7 +44,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(sampleNotifications);
+      return NextResponse.json([], { status: 401 });
     }
 
     const { data, error } = await supabase
@@ -72,7 +72,7 @@ export async function PATCH(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();

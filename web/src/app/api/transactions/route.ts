@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
-  const limit = parseInt(searchParams.get("limit") || "50");
+  const limit = Math.min(Math.max(parseInt(searchParams.get("limit") || "50") || 50, 1), 100);
 
   try {
     let query = supabase
@@ -54,12 +54,26 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { type, amount, description, to_address, from_address } = body;
 
-  if (!type || !amount) {
+  // Whitelist allowed transaction types
+  const allowedTypes = ["investment", "yield", "staking_reward", "conversion", "received", "send", "stake", "unstake", "job_application"];
+  if (!type || !allowedTypes.includes(type)) {
     return NextResponse.json(
-      { error: "type and amount are required" },
+      { error: "Invalid transaction type" },
       { status: 400 }
     );
   }
+
+  if (typeof amount !== "number" || amount < 0 || amount > 10_000_000) {
+    return NextResponse.json(
+      { error: "Amount must be a number between 0 and 10,000,000" },
+      { status: 400 }
+    );
+  }
+
+  // Sanitize string inputs
+  const safeDescription = typeof description === "string" ? description.slice(0, 500) : "";
+  const safeToAddress = typeof to_address === "string" ? to_address.slice(0, 200) : null;
+  const safeFromAddress = typeof from_address === "string" ? from_address.slice(0, 200) : null;
 
   try {
     const { data, error } = await supabase
@@ -68,9 +82,9 @@ export async function POST(request: Request) {
         user_id: user.id,
         type,
         amount,
-        description: description || "",
-        to_address: to_address || null,
-        from_address: from_address || null,
+        description: safeDescription,
+        to_address: safeToAddress,
+        from_address: safeFromAddress,
         status: "confirmed",
       } as never)
       .select()

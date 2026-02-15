@@ -61,6 +61,33 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Role-based route protection — prevent cross-role access
+  if (user && isProtected) {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("user_role")
+        .eq("id", user.id)
+        .single();
+
+      const role = (profile as { user_role?: string } | null)?.user_role || "investor";
+
+      if (request.nextUrl.pathname.startsWith("/builder") && role !== "builder") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        return NextResponse.redirect(url);
+      }
+
+      if (request.nextUrl.pathname.startsWith("/dealfinder") && role !== "dealmaker") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        return NextResponse.redirect(url);
+      }
+    } catch {
+      // Profile table may not exist — allow through
+    }
+  }
+
   // If logged in and visiting /login, redirect to dashboard
   if (user && request.nextUrl.pathname === "/login") {
     const url = request.nextUrl.clone();
