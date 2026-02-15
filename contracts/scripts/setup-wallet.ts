@@ -31,11 +31,17 @@ async function main() {
   console.log("BrixUp — CDP Wallet Setup");
   console.log("=".repeat(60));
 
+  // Convert raw base64 DER key to PEM format if needed
+  let apiKeySecret = process.env.CDP_API_KEY_SECRET || "";
+  if (apiKeySecret && !apiKeySecret.includes("-----BEGIN")) {
+    apiKeySecret = `-----BEGIN EC PRIVATE KEY-----\n${apiKeySecret}\n-----END EC PRIVATE KEY-----`;
+  }
+
   // Initialize CDP client
   const cdp = new CdpClient({
     apiKeyId: process.env.CDP_API_KEY_ID,
-    apiKeySecret: process.env.CDP_API_KEY_SECRET,
-    walletSecret: process.env.CDP_WALLET_SECRET,
+    apiKeySecret,
+    walletSecret: process.env.CDP_WALLET_SECRET || undefined,
   });
 
   // ---- Create or retrieve the platform deployer account --------------------
