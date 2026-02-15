@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import Link from "next/link";
-import WalletWidget from "@/components/WalletWidget";
 import { useAuth } from "@/lib/auth-context";
 
 // ── Shared types ──
@@ -48,9 +47,9 @@ const typeColors: Record<string, string> = {
 // ── Sample data ──
 
 const sampleInvestments: Investment[] = [
-  { id: "1", amount: 15000, status: "confirmed", created_at: "2026-02-10", deals: { address: "1847 Oakwood Dr", city: "Charlotte", state: "NC", property_type: "Flip", funded_amount: 190950, total_capital_needed: 285000, projected_roi: 22, status: "Active" } },
-  { id: "2", amount: 20000, status: "confirmed", created_at: "2026-01-20", deals: { address: "412 Magnolia Ln", city: "Raleigh", state: "NC", property_type: "New Build", funded_amount: 223600, total_capital_needed: 520000, projected_roi: 28, status: "Funding" } },
-  { id: "3", amount: 12500, status: "confirmed", created_at: "2026-01-05", deals: { address: "903 Pine Valley Rd", city: "Greenville", state: "SC", property_type: "Value-Add", funded_amount: 155750, total_capital_needed: 175000, projected_roi: 16, status: "Active" } },
+  { id: "1", amount: 15000, status: "confirmed", created_at: "2026-02-10", deal_id: "deal-001", deals: { id: "deal-001", address: "1847 Oakwood Dr", city: "Charlotte", state: "NC", property_type: "Flip", funded_amount: 190950, total_capital_needed: 285000, projected_roi: 22, status: "Active" } },
+  { id: "2", amount: 20000, status: "confirmed", created_at: "2026-01-20", deal_id: "deal-002", deals: { id: "deal-002", address: "412 Magnolia Ln", city: "Raleigh", state: "NC", property_type: "New Build", funded_amount: 223600, total_capital_needed: 520000, projected_roi: 28, status: "Funding" } },
+  { id: "3", amount: 12500, status: "confirmed", created_at: "2026-01-05", deal_id: "deal-003", deals: { id: "deal-003", address: "903 Pine Valley Rd", city: "Greenville", state: "SC", property_type: "Value-Add", funded_amount: 155750, total_capital_needed: 175000, projected_roi: 16, status: "Active" } },
 ];
 
 const sampleTransactions: Transaction[] = [
@@ -118,6 +117,43 @@ function DashboardSkeleton() {
             ))}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Simple wallet card (no wagmi/OnchainKit dependency) ──
+
+function DashboardWalletCard({ brixBalance, usdcBalance, stakedAmount = 0 }: { brixBalance: number; usdcBalance: number; stakedAmount?: number }) {
+  return (
+    <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-white/60">My Wallet</h3>
+        <Link href="/wallet" className="text-xs font-medium hover:underline" style={{ color: "#D4A843" }}>Full Wallet →</Link>
+      </div>
+      <div className="mb-4">
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-bold text-white">{brixBalance.toLocaleString()}</span>
+          <span className="text-sm font-semibold" style={{ color: "#D4A843" }}>$BRIX</span>
+        </div>
+        <p className="mt-0.5 text-xs text-white/40">≈ ${brixBalance.toLocaleString()} USD</p>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+          <span className="text-xs text-white/50">USDC Balance</span>
+          <span className="text-sm font-semibold text-white">${usdcBalance.toLocaleString()}</span>
+        </div>
+        {stakedAmount > 0 && (
+          <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ backgroundColor: "#0D0D1A" }}>
+            <span className="text-xs text-white/50">Staked $BRIX</span>
+            <span className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{stakedAmount.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
+      <div className="mt-3">
+        <Link href="/wallet" className="block w-full rounded-lg py-2.5 text-center text-xs font-semibold transition-colors hover:opacity-80" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
+          Open Wallet
+        </Link>
       </div>
     </div>
   );
@@ -224,7 +260,7 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
         </div>
       </div>
 
-      <div className="mb-6"><WalletWidget brixBalance={brixBalance} usdcBalance={3200} stakedAmount={2000} /></div>
+      <div className="mb-6"><DashboardWalletCard brixBalance={brixBalance} usdcBalance={3200} stakedAmount={2000} /></div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
@@ -343,7 +379,7 @@ const BuilderDashboard = memo(function BuilderDashboard() {
         </div>
       </div>
 
-      <div className="mt-6"><WalletWidget brixBalance={8800} usdcBalance={1500} stakedAmount={0} /></div>
+      <div className="mt-6"><DashboardWalletCard brixBalance={8800} usdcBalance={1500} stakedAmount={0} /></div>
     </>
   );
 });
@@ -417,7 +453,7 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
         </div>
       </div>
 
-      <div className="mt-6"><WalletWidget brixBalance={24500} usdcBalance={8200} stakedAmount={5000} /></div>
+      <div className="mt-6"><DashboardWalletCard brixBalance={24500} usdcBalance={8200} stakedAmount={5000} /></div>
     </>
   );
 });

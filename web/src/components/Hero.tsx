@@ -118,19 +118,19 @@ export default function Hero() {
 
         {/* Stats */}
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 sm:grid-cols-3">
-          <div className="animate-count-up">
+          <div>
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               $12M+
             </p>
             <p className="mt-1 text-sm text-offwhite/70">Deal Pipeline</p>
           </div>
-          <div className="animate-count-up delay-200">
+          <div>
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               200+
             </p>
             <p className="mt-1 text-sm text-offwhite/70">Contractors</p>
           </div>
-          <div className="animate-count-up delay-400">
+          <div>
             <p className="font-[var(--font-display)] text-3xl font-bold text-gold sm:text-4xl">
               3
             </p>

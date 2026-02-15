@@ -47,35 +47,18 @@ export default function Roadmap() {
           </p>
         </div>
 
-        {/* Timeline */}
+        {/* Single responsive timeline — renders each milestone once */}
         <div className="relative mt-16">
           {/* Vertical line */}
-          <div className="timeline-line" />
+          <div className="absolute left-[20px] top-0 bottom-0 w-px bg-offwhite/10 md:left-1/2 md:-translate-x-1/2" />
 
           <div className="space-y-12">
             {milestones.map((milestone, i) => {
               const isLeft = i % 2 === 0;
               return (
                 <div key={milestone.quarter} className="relative">
-                  {/* Desktop layout */}
-                  <div className="hidden md:grid md:grid-cols-2 md:gap-8">
-                    {/* Left side */}
-                    <div className={isLeft ? "pr-12 text-right" : ""}>
-                      {isLeft && (
-                        <TimelineCard milestone={milestone} align="right" />
-                      )}
-                    </div>
-
-                    {/* Right side */}
-                    <div className={!isLeft ? "pl-12" : ""}>
-                      {!isLeft && (
-                        <TimelineCard milestone={milestone} align="left" />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Center dot (desktop) */}
-                  <div className="absolute left-1/2 top-6 hidden -translate-x-1/2 md:block">
+                  {/* Dot */}
+                  <div className="absolute left-[20px] top-6 -translate-x-1/2 z-10 md:left-1/2">
                     <div
                       className={`h-4 w-4 rounded-full border-2 ${
                         milestone.status === "active"
@@ -85,19 +68,58 @@ export default function Roadmap() {
                     />
                   </div>
 
-                  {/* Mobile layout */}
-                  <div className="md:hidden pl-12 relative">
-                    {/* Mobile dot */}
-                    <div className="absolute left-[20px] top-6 -translate-x-1/2">
-                      <div
-                        className={`h-4 w-4 rounded-full border-2 ${
-                          milestone.status === "active"
-                            ? "border-gold bg-gold shadow-lg shadow-gold/30"
-                            : "border-offwhite/40 bg-dark"
+                  {/* Card — mobile: always left-aligned with pl-12; desktop: alternating sides */}
+                  <div className={`pl-12 md:pl-0 md:w-1/2 ${isLeft ? "md:pr-12 md:text-right" : "md:ml-auto md:pl-12"}`}>
+                    <div
+                      className={`rounded-2xl border bg-dark/50 p-6 transition-all hover:border-gold/30 ${
+                        milestone.status === "active"
+                          ? "border-gold/20 shadow-lg shadow-gold/5"
+                          : "border-offwhite/10"
+                      }`}
+                    >
+                      <div className={`flex items-center gap-3 ${isLeft ? "md:justify-end" : ""}`}>
+                        <span
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
+                            milestone.status === "active"
+                              ? "bg-gold/20 text-gold"
+                              : "bg-offwhite/10 text-offwhite/70"
+                          }`}
+                        >
+                          {milestone.quarter}
+                        </span>
+                        {milestone.status === "active" && (
+                          <span className="inline-flex items-center gap-1 text-xs text-success">
+                            <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                            In Progress
+                          </span>
+                        )}
+                      </div>
+                      <h3
+                        className={`mt-3 font-[var(--font-display)] text-xl font-semibold text-offwhite ${
+                          isLeft ? "md:text-right" : ""
                         }`}
-                      />
+                      >
+                        {milestone.title}
+                      </h3>
+                      <p
+                        className={`mt-2 text-sm text-offwhite/70 ${isLeft ? "md:text-right" : ""}`}
+                      >
+                        {milestone.description}
+                      </p>
+                      <ul className={`mt-4 space-y-1.5 ${isLeft ? "md:text-right" : ""}`}>
+                        {milestone.items.map((item) => (
+                          <li
+                            key={item}
+                            className={`flex items-center gap-2 text-sm text-offwhite/70 ${
+                              isLeft ? "md:justify-end" : ""
+                            }`}
+                          >
+                            <span className={`h-1 w-1 shrink-0 rounded-full bg-gold/50 ${isLeft ? "md:order-1" : ""}`} />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <TimelineCard milestone={milestone} align="left" />
                   </div>
                 </div>
               );
@@ -106,71 +128,5 @@ export default function Roadmap() {
         </div>
       </div>
     </section>
-  );
-}
-
-function TimelineCard({
-  milestone,
-  align,
-}: {
-  milestone: (typeof milestones)[number];
-  align: "left" | "right";
-}) {
-  return (
-    <div
-      className={`rounded-2xl border bg-dark/50 p-6 transition-all hover:border-gold/30 ${
-        milestone.status === "active"
-          ? "border-gold/20 shadow-lg shadow-gold/5"
-          : "border-offwhite/10"
-      }`}
-    >
-      <div className={`flex items-center gap-3 ${align === "right" ? "justify-end" : ""}`}>
-        <span
-          className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
-            milestone.status === "active"
-              ? "bg-gold/20 text-gold"
-              : "bg-offwhite/10 text-offwhite/70"
-          }`}
-        >
-          {milestone.quarter}
-        </span>
-        {milestone.status === "active" && (
-          <span className="inline-flex items-center gap-1 text-xs text-success">
-            <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-            In Progress
-          </span>
-        )}
-      </div>
-      <h3
-        className={`mt-3 font-[var(--font-display)] text-xl font-semibold text-offwhite ${
-          align === "right" ? "text-right" : ""
-        }`}
-      >
-        {milestone.title}
-      </h3>
-      <p
-        className={`mt-2 text-sm text-offwhite/70 ${align === "right" ? "text-right" : ""}`}
-      >
-        {milestone.description}
-      </p>
-      <ul className={`mt-4 space-y-1.5 ${align === "right" ? "text-right" : ""}`}>
-        {milestone.items.map((item) => (
-          <li
-            key={item}
-            className={`flex items-center gap-2 text-sm text-offwhite/70 ${
-              align === "right" ? "justify-end" : ""
-            }`}
-          >
-            {align === "left" && (
-              <span className="h-1 w-1 rounded-full bg-gold/50" />
-            )}
-            {item}
-            {align === "right" && (
-              <span className="h-1 w-1 rounded-full bg-gold/50" />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

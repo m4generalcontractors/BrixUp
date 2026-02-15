@@ -200,19 +200,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <OnchainKitProvider
-      apiKey={process.env.NEXT_PUBLIC_COINBASE_APP_ID}
-      chain={activeChain}
-      config={{
-        appearance: {
-          name: "BrixUp",
-          logo: "https://brixups.com/logo.png",
-          mode: "dark",
-          theme: "cyberpunk",
-        },
-      }}
-    >
+  // Only render OnchainKitProvider on the wallet page to prevent the
+  // Base Account SDK modal from appearing on every authenticated page.
+  const needsWallet = pathname === "/wallet";
+
+  const appContent = (
     <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#0D0D1A" }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -452,6 +444,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
       </div>
     </div>
-    </OnchainKitProvider>
   );
+
+  if (needsWallet) {
+    return (
+      <OnchainKitProvider
+        apiKey={process.env.NEXT_PUBLIC_COINBASE_APP_ID}
+        chain={activeChain}
+        config={{
+          appearance: {
+            name: "BrixUp",
+            logo: "https://brixups.com/logo.png",
+            mode: "dark",
+            theme: "cyberpunk",
+          },
+        }}
+      >
+        {appContent}
+      </OnchainKitProvider>
+    );
+  }
+
+  return appContent;
 }
