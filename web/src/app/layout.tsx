@@ -40,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className="bg-dark text-offwhite antialiased">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body className="bg-[var(--brix-bg)] text-[var(--brix-fg)] antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

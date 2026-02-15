@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Map as LeafletMap } from "leaflet";
+import { useTheme } from "next-themes";
+import type { Map as LeafletMap, TileLayer } from "leaflet";
 
 interface MapDeal {
   id: string;
@@ -73,13 +74,18 @@ function createClusterIcon(count: number) {
   ">${count.toLocaleString()}</div>`;
 }
 
+const TILE_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const TILE_LIGHT = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+
 export default function MapView({ deals, onDealSelect, selectedDealId }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
+  const tileLayerRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markersRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
 
   // Store callbacks in refs to avoid re-creating the map on every render
   const onDealSelectRef = useRef(onDealSelect);
@@ -127,10 +133,8 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
           attributionControl: false,
         });
 
-        L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-          { maxZoom: 19, subdomains: "abcd" }
-        ).addTo(map);
+        const tileUrl = document.documentElement.getAttribute("data-theme") === "light" ? TILE_LIGHT : TILE_DARK;
+        tileLayerRef.current = L.tileLayer(tileUrl, { maxZoom: 19, subdomains: "abcd" }).addTo(map);
 
         L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -152,6 +156,19 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
       }
     };
   }, []);
+
+  // Swap tile layer when theme changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !ready) return;
+    import("leaflet").then(({ default: L }) => {
+      if (tileLayerRef.current) {
+        map.removeLayer(tileLayerRef.current);
+      }
+      const tileUrl = resolvedTheme === "light" ? TILE_LIGHT : TILE_DARK;
+      tileLayerRef.current = L.tileLayer(tileUrl, { maxZoom: 19, subdomains: "abcd" }).addTo(map);
+    });
+  }, [resolvedTheme, ready]);
 
   // Update markers when deals or selectedDealId change
   useEffect(() => {
@@ -233,34 +250,34 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
     <div className="relative h-full w-full">
       <div ref={mapRef} className="h-full w-full" />
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
           <div className="flex flex-col items-center gap-3 text-center px-6">
-            <svg className="h-10 w-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-10 w-10" style={{ color: "var(--brix-fg-muted)", opacity: 0.4 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
-            <span className="text-sm text-white/50">{error}</span>
+            <span className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>{error}</span>
           </div>
         </div>
       )}
       {!ready && !error && (
-        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#0D0D1A" }}>
+        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
           <div className="flex flex-col items-center gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
-            <span className="text-sm" style={{ color: "#4A4A5A" }}>Loading map...</span>
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-t-[#D4A843]" style={{ borderColor: "var(--brix-border)" }} />
+            <span className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>Loading map...</span>
           </div>
         </div>
       )}
       {/* Map legend */}
       <div
-        className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-white/10 p-3"
-        style={{ backgroundColor: "#1A1A2Eee" }}
+        className="absolute bottom-4 left-4 z-[1000] rounded-lg p-3"
+        style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)", opacity: 0.95 }}
       >
-        <div className="text-xs font-semibold text-white mb-2">Deal Types</div>
+        <div className="text-xs font-semibold mb-2" style={{ color: "var(--brix-fg)" }}>Deal Types</div>
         <div className="space-y-1.5">
           {Object.entries(TYPE_COLORS).slice(0, 3).map(([type, color]) => (
             <div key={type} className="flex items-center gap-2">
               <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-              <span className="text-xs" style={{ color: "#F8F6F0" }}>{type}</span>
+              <span className="text-xs" style={{ color: "var(--brix-fg)" }}>{type}</span>
             </div>
           ))}
         </div>

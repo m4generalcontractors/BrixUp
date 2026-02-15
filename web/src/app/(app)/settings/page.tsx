@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
+import { useLanguage } from "@/lib/language-context";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAccount, useConnect } from "wagmi";
@@ -9,6 +11,8 @@ import { coinbaseWallet } from "wagmi/connectors";
 
 export default function SettingsPage() {
   const { user, profile, updateProfile, signOut } = useAuth();
+  const { t, lang, setLang } = useLanguage();
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { address: wagmiAddress, isConnected: walletConnected } = useAccount();
   const { connect, isPending: isWalletConnecting } = useConnect();
@@ -18,7 +22,6 @@ export default function SettingsPage() {
   const [emailNotif, setEmailNotif] = useState(true);
   const [smsNotif, setSmsNotif] = useState(true);
   const [pushNotif, setPushNotif] = useState(false);
-  const [language, setLanguage] = useState<"en" | "es">("en");
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -39,12 +42,10 @@ export default function SettingsPage() {
       alert("File too large. Max 2MB.");
       return;
     }
-    // Show local preview immediately
     const reader = new FileReader();
     reader.onload = (ev) => setAvatarPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
 
-    // Upload to Supabase Storage
     setUploading(true);
     try {
       const supabase = createClient();
@@ -56,14 +57,12 @@ export default function SettingsPage() {
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) {
-        // Storage bucket may not exist — save a short placeholder URL instead
         await updateProfile({ avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2B4C7E&color=F8F6F0&size=128` });
       } else {
         const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
         await updateProfile({ avatar_url: urlData.publicUrl });
       }
     } catch {
-      // Fallback to generated avatar URL
       await updateProfile({ avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2B4C7E&color=F8F6F0&size=128` });
     }
     setUploading(false);
@@ -77,9 +76,13 @@ export default function SettingsPage() {
       setEmailNotif(profile.email_notifications ?? true);
       setSmsNotif(profile.sms_notifications ?? true);
       setPushNotif(profile.push_notifications ?? false);
-      setLanguage(profile.language || "en");
+      // Sync language context from profile on load
+      if (profile.language && profile.language !== lang) {
+        setLang(profile.language);
+      }
       setKycStatus(profile.kyc_status || "pending");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   const handleSave = async () => {
@@ -91,7 +94,7 @@ export default function SettingsPage() {
       email_notifications: emailNotif,
       sms_notifications: smsNotif,
       push_notifications: pushNotif,
-      language,
+      language: lang,
     });
     setSaving(false);
     if (!result.error) {
@@ -105,6 +108,14 @@ export default function SettingsPage() {
     if (type === "sms") setSmsNotif(value);
     if (type === "push") setPushNotif(value);
     await updateProfile({ [`${type}_notifications`]: value });
+  };
+
+  const handleLangChange = (newLang: "en" | "es") => {
+    setLang(newLang);
+    updateProfile({ language: newLang }).then(() => {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    });
   };
 
   const handleCopy = () => {
@@ -135,9 +146,9 @@ export default function SettingsPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="mt-1 text-sm" style={{ color: "#4A4A5A" }}>
-          Manage your account and preferences
+        <h1 className="text-2xl font-bold" style={{ color: "var(--brix-fg)" }}>{t("settings.title")}</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
+          {t("settings.subtitle")}
         </p>
       </div>
 
@@ -146,14 +157,14 @@ export default function SettingsPage() {
           className="mb-4 rounded-lg border px-4 py-3 text-sm"
           style={{ borderColor: "#2ECC7130", backgroundColor: "#2ECC7110", color: "#2ECC71" }}
         >
-          Changes saved successfully!
+          {t("settings.saved")}
         </div>
       )}
 
       <div className="space-y-6">
         {/* Profile Section */}
-        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Profile</h2>
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.profile")}</h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               {avatarPreview || profile?.avatar_url ? (
@@ -172,10 +183,10 @@ export default function SettingsPage() {
               )}
               <div>
                 <label
-                  className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium border transition-colors hover:bg-white/5 inline-block"
+                  className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium border transition-colors hover:opacity-80 inline-block"
                   style={{ borderColor: "#D4A843", color: "#D4A843" }}
                 >
-                  {uploading ? "Uploading..." : "Upload Photo"}
+                  {uploading ? t("settings.uploading") : t("settings.uploadPhoto")}
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/gif"
@@ -183,41 +194,41 @@ export default function SettingsPage() {
                     className="hidden"
                   />
                 </label>
-                <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>JPG, PNG or GIF. Max 2MB.</p>
+                <p className="mt-1 text-xs" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.photoHint")}</p>
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Full Name</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.fullName")}</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="mt-1 w-full rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+                style={{ backgroundColor: "var(--brix-bg)", color: "var(--brix-fg)", border: "1px solid var(--brix-border)" }}
               />
             </div>
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Email Address</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.email")}</label>
               <input
                 type="email"
                 value={email}
                 disabled
-                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white/50 cursor-not-allowed"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="mt-1 w-full rounded-lg py-2.5 px-4 text-sm cursor-not-allowed opacity-50"
+                style={{ backgroundColor: "var(--brix-bg)", color: "var(--brix-fg)", border: "1px solid var(--brix-border)" }}
               />
-              <p className="mt-1 text-xs" style={{ color: "#4A4A5A" }}>Email cannot be changed</p>
+              <p className="mt-1 text-xs" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.emailCantChange")}</p>
             </div>
 
             <div>
-              <label className="text-xs font-medium" style={{ color: "#4A4A5A" }}>Phone Number</label>
+              <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.phone")}</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-white/10 py-2.5 px-4 text-sm text-white focus:outline-none focus:ring-1"
-                style={{ backgroundColor: "#0D0D1A" }}
+                className="mt-1 w-full rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
+                style={{ backgroundColor: "var(--brix-bg)", color: "var(--brix-fg)", border: "1px solid var(--brix-border)" }}
               />
             </div>
 
@@ -227,14 +238,50 @@ export default function SettingsPage() {
               className="rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
             >
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? t("settings.saving") : t("settings.saveChanges")}
             </button>
           </div>
         </section>
 
+        {/* Theme Section */}
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.theme")}</h2>
+          <div className="flex gap-3">
+            {(["dark", "light", "system"] as const).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setTheme(mode)}
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border py-3 text-sm font-medium transition-colors hover:opacity-80"
+                style={{
+                  borderColor: theme === mode ? "#D4A843" : "var(--brix-border)",
+                  backgroundColor: theme === mode ? "#D4A84320" : "transparent",
+                  color: theme === mode ? "#D4A843" : "var(--brix-fg)",
+                }}
+              >
+                {mode === "light" && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+                {mode === "dark" && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+                {mode === "system" && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                )}
+                {mode === "dark" ? t("settings.themeDark") : mode === "light" ? t("settings.themeLight") : t("settings.themeAuto")}
+              </button>
+            ))}
+          </div>
+        </section>
+
         {/* KYC Status */}
-        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">KYC Verification</h2>
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.kyc")}</h2>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
@@ -250,15 +297,15 @@ export default function SettingsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Identity Verification</p>
-                <p className="text-xs" style={{ color: "#4A4A5A" }}>
-                  {kycStatus === "verified" ? "Your identity has been verified" : "Verification pending"}
+                <p className="text-sm font-medium" style={{ color: "var(--brix-fg)" }}>{t("settings.kycIdentity")}</p>
+                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>
+                  {kycStatus === "verified" ? t("settings.kycVerified") : t("settings.kycPending")}
                 </p>
               </div>
             </div>
             {kycStatus === "verified" ? (
               <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#2ECC7130", color: "#2ECC71" }}>
-                Verified
+                {t("settings.verified")}
               </span>
             ) : (
               <a
@@ -266,25 +313,25 @@ export default function SettingsPage() {
                 className="rounded-lg px-4 py-2 text-xs font-semibold hover:opacity-90 inline-block"
                 style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
               >
-                Start Verification
+                {t("settings.startVerification")}
               </a>
             )}
           </div>
         </section>
 
         {/* Notification Preferences */}
-        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Notification Preferences</h2>
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.notifications")}</h2>
           <div className="space-y-4">
             {[
-              { key: "email" as const, label: "Email Notifications", desc: "Deal updates, yield payouts, and account alerts", value: emailNotif },
-              { key: "sms" as const, label: "SMS Notifications", desc: "Security alerts and important transaction confirmations", value: smsNotif },
-              { key: "push" as const, label: "Push Notifications", desc: "Real-time updates on milestones and draw schedules", value: pushNotif },
+              { key: "email" as const, label: t("settings.emailNotif"), desc: t("settings.emailNotifDesc"), value: emailNotif },
+              { key: "sms" as const, label: t("settings.smsNotif"), desc: t("settings.smsNotifDesc"), value: smsNotif },
+              { key: "push" as const, label: t("settings.pushNotif"), desc: t("settings.pushNotifDesc"), value: pushNotif },
             ].map((notif, i) => (
-              <div key={notif.key} className={`flex items-center justify-between ${i > 0 ? "border-t border-white/10 pt-4" : ""}`}>
+              <div key={notif.key} className={`flex items-center justify-between ${i > 0 ? "pt-4" : ""}`} style={i > 0 ? { borderTop: "1px solid var(--brix-border)" } : undefined}>
                 <div>
-                  <p className="text-sm font-medium text-white">{notif.label}</p>
-                  <p className="text-xs" style={{ color: "#4A4A5A" }}>{notif.desc}</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--brix-fg)" }}>{notif.label}</p>
+                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{notif.desc}</p>
                 </div>
                 <button
                   onClick={() => handleNotifToggle(notif.key, !notif.value)}
@@ -302,41 +349,41 @@ export default function SettingsPage() {
         </section>
 
         {/* Connected Wallet */}
-        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Connected Wallet</h2>
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.connectedWallet")}</h2>
           {walletAddress ? (
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 flex-1 rounded-lg px-4 py-3 font-mono text-sm text-white/80 overflow-hidden text-ellipsis whitespace-nowrap" style={{ backgroundColor: "#0D0D1A" }}>
+            <div className="flex items-center gap-2 flex-1 rounded-lg px-4 py-3 font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap" style={{ backgroundColor: "var(--brix-bg)", color: "var(--brix-fg)" }}>
               <div className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
               {walletAddress}
             </div>
             <button
               onClick={handleCopy}
-              className="shrink-0 rounded-lg border px-4 py-3 text-sm font-medium transition-colors hover:bg-white/5"
-              style={{ borderColor: "#4A4A5A", color: "#F8F6F0" }}
+              className="shrink-0 rounded-lg border px-4 py-3 text-sm font-medium transition-colors hover:opacity-80"
+              style={{ borderColor: "var(--brix-border-strong)", color: "var(--brix-fg)" }}
             >
               {copied ? (
                 <span className="flex items-center gap-1.5" style={{ color: "#2ECC71" }}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Copied
+                  {t("settings.copied")}
                 </span>
               ) : (
                 <span className="flex items-center gap-1.5">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  Copy
+                  {t("settings.copy")}
                 </span>
               )}
             </button>
           </div>
           ) : (
-          <div className="flex items-center justify-between rounded-lg px-4 py-4" style={{ backgroundColor: "#0D0D1A" }}>
+          <div className="flex items-center justify-between rounded-lg px-4 py-4" style={{ backgroundColor: "var(--brix-bg)" }}>
             <div>
-              <p className="text-sm text-white/60">No wallet connected</p>
-              <p className="mt-0.5 text-xs" style={{ color: "#4A4A5A" }}>Connect your wallet to see your on-chain address</p>
+              <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.noWallet")}</p>
+              <p className="mt-0.5 text-xs" style={{ color: "var(--brix-fg-muted)", opacity: 0.7 }}>{t("settings.noWalletDesc")}</p>
             </div>
             <button
               onClick={() => connect({ connector: coinbaseWallet({ appName: "BrixUp" }) })}
@@ -344,45 +391,45 @@ export default function SettingsPage() {
               className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
             >
-              {isWalletConnecting ? "Connecting..." : "Connect Wallet"}
+              {isWalletConnecting ? t("settings.connecting") : t("settings.connectWallet")}
             </button>
           </div>
           )}
         </section>
 
         {/* Language */}
-        <section className="rounded-xl border border-white/10 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-4 text-lg font-semibold text-white">Language</h2>
+        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.language")}</h2>
           <div className="flex gap-3">
-            {(["en", "es"] as const).map((lang) => (
+            {(["en", "es"] as const).map((l) => (
               <button
-                key={lang}
-                onClick={() => { setLanguage(lang); updateProfile({ language: lang }).then(() => { setSaved(true); setTimeout(() => setSaved(false), 2000); }); }}
-                className="flex-1 rounded-lg border py-3 text-sm font-medium transition-colors hover:bg-white/5"
+                key={l}
+                onClick={() => handleLangChange(l)}
+                className="flex-1 rounded-lg border py-3 text-sm font-medium transition-colors hover:opacity-80"
                 style={{
-                  borderColor: language === lang ? "#D4A843" : "rgba(255,255,255,0.1)",
-                  backgroundColor: language === lang ? "#D4A84320" : "transparent",
-                  color: language === lang ? "#D4A843" : "#F8F6F0",
+                  borderColor: lang === l ? "#D4A843" : "var(--brix-border)",
+                  backgroundColor: lang === l ? "#D4A84320" : "transparent",
+                  color: lang === l ? "#D4A843" : "var(--brix-fg)",
                 }}
               >
-                {lang === "en" ? "English" : "Español"}
+                {l === "en" ? "English" : "Español"}
               </button>
             ))}
           </div>
         </section>
 
         {/* Danger Zone */}
-        <section className="rounded-xl border border-red-500/30 p-5" style={{ backgroundColor: "#1A1A2E" }}>
-          <h2 className="mb-2 text-lg font-semibold text-red-400">Danger Zone</h2>
-          <p className="mb-4 text-xs" style={{ color: "#4A4A5A" }}>
-            These actions are irreversible. Please proceed with caution.
+        <section className="rounded-xl border border-red-500/30 p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
+          <h2 className="mb-2 text-lg font-semibold text-red-400">{t("settings.dangerZone")}</h2>
+          <p className="mb-4 text-xs" style={{ color: "var(--brix-fg-muted)" }}>
+            {t("settings.dangerDesc")}
           </p>
           <div className="flex flex-wrap gap-3">
             <button onClick={handleDisconnect} className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10">
-              Disconnect Wallet
+              {t("settings.disconnectWallet")}
             </button>
             <button onClick={handleDeleteAccount} className="rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10">
-              Delete Account
+              {t("settings.deleteAccount")}
             </button>
           </div>
         </section>
