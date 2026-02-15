@@ -43,7 +43,7 @@ function AdminLoginForm() {
         const profile = await res.json();
         const role = profile?.user_role;
         if (role === "admin" || role === "manager") {
-          router.push("/admin");
+          router.push("/admin/tokens");
           return;
         }
       }

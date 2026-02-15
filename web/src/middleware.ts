@@ -83,7 +83,7 @@ export async function middleware(request: NextRequest) {
         const role = (profile as { user_role?: string } | null)?.user_role || "investor";
         if (role === "admin" || role === "manager") {
           const url = request.nextUrl.clone();
-          url.pathname = "/admin";
+          url.pathname = "/admin/tokens";
           return NextResponse.redirect(url);
         }
       } catch {
