@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
               <li><strong className="text-white">Legal and Regulatory:</strong> When required by law, court order, or governmental authority, or to protect our rights and safety</li>
               <li><strong className="text-white">Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
             </ul>
-            <p className="mt-3">
+            <p className="mt-3" aria-label="We do NOT sell your personal information to third parties for marketing purposes.">
               We <strong className="text-white">do NOT sell</strong> your personal information to third parties for marketing purposes.
             </p>
           </section>

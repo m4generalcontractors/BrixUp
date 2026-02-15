@@ -53,9 +53,9 @@ const sampleInvestments: Investment[] = [
 ];
 
 const sampleTransactions: Transaction[] = [
-  { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-10" },
-  { id: "2", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05" },
-  { id: "3", type: "staking_reward", amount: 125, description: "Staking reward", status: "confirmed", created_at: "2026-01-28" },
+  { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-12" },
+  { id: "2", type: "staking_reward", amount: 42, description: "Staking reward", status: "confirmed", created_at: "2026-02-10" },
+  { id: "3", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05" },
   { id: "4", type: "investment", amount: 10000, description: "Investment in 412 Magnolia Ln", status: "confirmed", created_at: "2026-01-20" },
   { id: "5", type: "yield", amount: 275, description: "Yield payout - Oakwood Dr", status: "confirmed", created_at: "2026-01-15" },
 ];
@@ -481,11 +481,17 @@ export default function DashboardPage() {
       ]);
       if (invRes.ok) {
         const invData = await invRes.json();
-        if (invData.length > 0) setInvestments(invData);
+        // Only replace sample data when API returns complete data with deals info
+        if (Array.isArray(invData) && invData.length >= sampleInvestments.length && invData[0]?.deals) {
+          setInvestments(invData);
+        }
       }
       if (txRes.ok) {
         const txData = await txRes.json();
-        if (txData.length > 0) setTransactions(txData);
+        // Only replace sample transactions when API returns at least as many
+        if (Array.isArray(txData) && txData.length >= sampleTransactions.length) {
+          setTransactions(txData);
+        }
       }
     } catch { /* Use sample data on error */ }
     setLoading(false);

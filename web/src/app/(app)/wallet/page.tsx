@@ -25,7 +25,7 @@ const sampleTransactions: Transaction[] = [
   { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-12", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #001" },
   { id: "2", type: "staking_reward", amount: 42, description: "Staking reward", status: "confirmed", created_at: "2026-02-10", from_address: "Staking Pool", to_address: "0x7a3B...9f2E" },
   { id: "3", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05", from_address: "Deal Pool #003", to_address: "0x7a3B...9f2E" },
-  { id: "4", type: "conversion", amount: 2000, description: "Convert BRIX to USDC", status: "confirmed", created_at: "2026-02-01", from_address: "0x7a3B...9f2E", to_address: "USDC Wallet" },
+  { id: "4", type: "conversion", amount: 1667, description: "Convert 1,667 BRIX to USDC", status: "confirmed", created_at: "2026-02-01", from_address: "0x7a3B...9f2E", to_address: "USDC Wallet" },
   { id: "5", type: "received", amount: 1000, description: "Received from 0x4e2C...1a8D", status: "confirmed", created_at: "2026-01-28", from_address: "0x4e2C...1a8D", to_address: "0x7a3B...9f2E" },
   { id: "6", type: "investment", amount: 10000, description: "Investment in 412 Magnolia Ln", status: "confirmed", created_at: "2026-01-20", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #002" },
   { id: "7", type: "yield", amount: 275, description: "Yield payout - Oakwood Dr", status: "confirmed", created_at: "2026-01-15", from_address: "Deal Pool #001", to_address: "0x7a3B...9f2E" },
@@ -112,14 +112,17 @@ export default function WalletPage() {
 
   useEffect(() => { fetchTransactions(); }, [fetchTransactions]);
 
-  // Compute balances from transaction history (consistent 12,500 base)
+  // Compute balances from BRIX-specific transactions (skip "investment" — those
+  // are dollar-denominated real estate allocations, NOT token movements).
+  const brixOnlyTypes = new Set(["yield", "staking_reward", "received", "unstake", "buy", "conversion", "send", "stake"]);
   const brixBalance = transactions.reduce((sum, tx) => {
+    if (!brixOnlyTypes.has(tx.type)) return sum; // skip investment, etc.
     const isPositive = positiveTypes.includes(tx.type);
     return sum + (isPositive ? tx.amount : -tx.amount);
   }, 12500);
 
   const stakedAmount = transactions.filter((tx) => tx.type === "stake").reduce((sum, tx) => sum + tx.amount, 0) -
-    transactions.filter((tx) => tx.type === "unstake").reduce((sum, tx) => sum + tx.amount, 0) + 3500;
+    transactions.filter((tx) => tx.type === "unstake").reduce((sum, tx) => sum + tx.amount, 0) + 2000;
 
   const pendingRewardsAmount = transactions.filter((t) => t.type === "staking_reward").reduce((s, t) => s + t.amount, 0);
 

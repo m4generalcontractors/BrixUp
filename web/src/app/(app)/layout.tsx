@@ -111,7 +111,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [showNotifPanel, setShowNotifPanel] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // Consistent 12,500 base balance across all views (dashboard, header, wallet)
+  // Consistent 12,500 base balance across all views (dashboard, header, wallet).
+  // Only BRIX-specific transaction types affect token balance — "investment" is
+  // dollar-denominated real estate allocation and does NOT reduce BRIX balance.
   const fetchBrixBalance = useCallback(async () => {
     try {
       const txRes = await fetch("/api/transactions?limit=100");
@@ -119,9 +121,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       if (txRes.ok) {
         const txs = await txRes.json();
         if (Array.isArray(txs) && txs.length > 0) {
-          const positiveTypes = ["yield", "staking_reward", "received", "unstake", "buy"];
+          const positiveTypes = new Set(["yield", "staking_reward", "received", "unstake", "buy"]);
+          const brixTypes = new Set(["yield", "staking_reward", "received", "unstake", "buy", "conversion", "send", "stake"]);
           for (const tx of txs) {
-            if (positiveTypes.includes(tx.type)) balance += tx.amount || 0;
+            if (!brixTypes.has(tx.type)) continue; // skip investment, etc.
+            if (positiveTypes.has(tx.type)) balance += tx.amount || 0;
             else balance -= tx.amount || 0;
           }
         }
