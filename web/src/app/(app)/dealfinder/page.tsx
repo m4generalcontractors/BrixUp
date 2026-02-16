@@ -23,20 +23,8 @@ interface ActivityItem {
   type: string;
 }
 
-const sampleListings: ListedDeal[] = [
-  { id: "listing-001", address: "3421 Blanche St", city: "Charlotte", state: "NC", status: "Funded", total_capital_needed: 285000, funded_amount: 285000, listed_date: "2026-01-12" },
-  { id: "listing-002", address: "782 Eastway Dr", city: "Charlotte", state: "NC", status: "Funding", total_capital_needed: 195000, funded_amount: 124800, listed_date: "2026-02-01" },
-  { id: "listing-003", address: "1509 Parkwood Ave", city: "Raleigh", state: "NC", status: "Under Review", total_capital_needed: 340000, funded_amount: 0, listed_date: "2026-02-10" },
-];
 
-const sampleActivity: ActivityItem[] = [
-  { date: "Feb 13", event: "Deal #001 fully funded — commission pending", amount: "+8,550 $BRXU", type: "earning" },
-  { date: "Feb 10", event: "New deal submitted: 1509 Parkwood Ave", amount: "-", type: "action" },
-  { date: "Feb 5", event: "Investor inquiry on 782 Eastway Dr", amount: "-", type: "info" },
-  { date: "Feb 1", event: "Deal #002 listed on marketplace", amount: "-", type: "action" },
-  { date: "Jan 28", event: "Referral bonus: Sarah M. signed up", amount: "+500 $BRXU", type: "earning" },
-  { date: "Jan 15", event: "Deal #001 funding milestone 50%", amount: "-", type: "info" },
-];
+
 
 const statusColors: Record<string, string> = {
   Funded: "#2ECC71",
@@ -49,8 +37,8 @@ const statusColors: Record<string, string> = {
 
 export default function DealFinderDashboard() {
   const { profile } = useAuth();
-  const [listings, setListings] = useState<ListedDeal[]>(sampleListings);
-  const [activity] = useState<ActivityItem[]>(sampleActivity);
+  const [listings, setListings] = useState<ListedDeal[]>([]);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
@@ -72,7 +60,7 @@ export default function DealFinderDashboard() {
       const res = await fetch("/api/deals?source=user");
       if (res.ok) {
         const data = await res.json();
-        if (data.length > 0) {
+        if (Array.isArray(data)) {
           setListings(data.map((d: Record<string, unknown>) => ({
             id: d.id as string,
             address: d.address as string,
@@ -85,7 +73,7 @@ export default function DealFinderDashboard() {
           })));
         }
       }
-    } catch { /* Use sample data */ }
+    } catch { /* API unavailable */ }
     setLoading(false);
   }, []);
 

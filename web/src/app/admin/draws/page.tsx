@@ -14,12 +14,8 @@ interface DrawRequest {
   proof_url?: string;
 }
 
-const sampleDraws: DrawRequest[] = [
-  { id: "dr-1", contractor_name: "J&R Electric", deal_address: "1847 Oakwood Dr, Charlotte", milestone: "MEP Rough-In", amount: 3200, status: "pending", submitted_at: "2026-02-14T10:30:00Z", notes: "All rough-in electrical and plumbing completed per spec. Inspection passed 2/13." },
-  { id: "dr-2", contractor_name: "Summit Plumbing", deal_address: "903 Pine Valley Rd, Greenville", milestone: "Finishes - Bathroom", amount: 2100, status: "pending", submitted_at: "2026-02-13T14:00:00Z", notes: "Bathroom tile, fixtures, and vanity installed. Ready for final walkthrough." },
-  { id: "dr-3", contractor_name: "BrickHouse Framing", deal_address: "412 Magnolia Ln, Raleigh", milestone: "Framing Complete", amount: 8500, status: "approved", submitted_at: "2026-02-10T09:00:00Z", notes: "Full frame complete. Passed structural inspection." },
-  { id: "dr-4", contractor_name: "ProCoat Painting", deal_address: "1847 Oakwood Dr, Charlotte", milestone: "Interior Paint", amount: 1800, status: "paid", submitted_at: "2026-02-05T11:00:00Z", notes: "Interior painting complete — 2 coats throughout." },
-];
+
+
 
 const STATUS_COLORS: Record<string, string> = { pending: "#D4A843", approved: "#2ECC71", rejected: "#E8632B", paid: "#2B4C7E" };
 
@@ -41,7 +37,7 @@ export default function DrawRequestsPage() {
         }
       }
     } catch { /* silent */ }
-    setDraws(sampleDraws);
+    setDraws([]);
     setLoading(false);
   }, []);
 

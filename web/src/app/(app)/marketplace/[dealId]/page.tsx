@@ -80,7 +80,7 @@ interface DealData {
   }[];
 }
 
-// Normalize deal fields (handles both camelCase from deals-data.ts and snake_case from Supabase)
+// Normalize deal fields (handles both camelCase and snake_case from Supabase)
 function normalizeDeal(raw: DealData) {
   const askingPrice = raw.askingPrice ?? raw.asking_price ?? 0;
   const rehabBudget = raw.rehabBudget ?? raw.rehab_budget ?? 0;

@@ -310,15 +310,10 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
 // ════════════════════════════════════════════════════════
 
 const builderStats = [
-  { label: "Brix Score", value: "863", icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
-  { label: "Active Projects", value: "2", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
-  { label: "$BRXU Earned", value: "8,800", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
-  { label: "Sweat Equity", value: "$26,400", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
-];
-
-const builderProjects = [
-  { address: "1847 Oakwood Dr", city: "Charlotte, NC", trade: "Electrical", milestone: "MEP Rough-In", progress: 60, nextDraw: "$3,200", due: "Mar 5, 2026" },
-  { address: "903 Pine Valley Rd", city: "Greenville, SC", trade: "Plumbing", milestone: "Finishes", progress: 35, nextDraw: "$2,100", due: "Mar 20, 2026" },
+  { label: "Brix Score", value: "—", icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
+  { label: "Active Projects", value: "0", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#2B4C7E" },
+  { label: "$BRXU Earned", value: "0", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#2ECC71" },
+  { label: "Sweat Equity", value: "$0", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#E8632B" },
 ];
 
 const BuilderDashboard = memo(function BuilderDashboard() {
@@ -345,28 +340,9 @@ const BuilderDashboard = memo(function BuilderDashboard() {
           <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Current Projects</h2>
           <Link href="/builder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
-        <div className="space-y-4">
-          {builderProjects.map((p) => (
-            <div key={p.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-[var(--brix-fg)]">{p.address}</p>
-                <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{p.city} &middot; {p.trade}</p>
-              </div>
-              <div className="flex items-center gap-6">
-                <div>
-                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{p.milestone}</p>
-                  <div className="mt-1 flex items-center gap-2">
-                    <div className="h-1.5 w-20 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}><div className="h-full rounded-full" style={{ width: `${p.progress}%`, backgroundColor: "#D4A843" }} /></div>
-                    <span className="text-xs" style={{ color: "#D4A843" }}>{p.progress}%</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Next Draw</p>
-                  <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{p.nextDraw}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="rounded-lg border border-dashed border-[var(--brix-border)] p-8 text-center">
+          <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No active projects yet. Visit the Builder page to find and apply for jobs.</p>
+          <Link href="/builder" className="mt-3 inline-block rounded-lg px-5 py-2 text-sm font-semibold hover:opacity-90" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>Find Jobs</Link>
         </div>
       </div>
 
@@ -380,16 +356,10 @@ const BuilderDashboard = memo(function BuilderDashboard() {
 // ════════════════════════════════════════════════════════
 
 const dealmakerStats = [
-  { label: "Deals Listed", value: "3", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
-  { label: "Deals Funded", value: "1", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
-  { label: "Total Commission", value: "$8,550", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
-  { label: "Referrals", value: "18", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "#E8632B" },
-];
-
-const dealmakerDeals = [
-  { address: "3421 Blanche St", city: "Charlotte, NC", status: "Funded", capital: "$285,000", commission: "$8,550" },
-  { address: "782 Eastway Dr", city: "Charlotte, NC", status: "Funding", capital: "$195,000", commission: "$5,850" },
-  { address: "1509 Parkwood Ave", city: "Raleigh, NC", status: "Under Review", capital: "$340,000", commission: "$10,200" },
+  { label: "Deals Listed", value: "0", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#2B4C7E" },
+  { label: "Deals Funded", value: "0", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#2ECC71" },
+  { label: "Total Commission", value: "$0", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#D4A843" },
+  { label: "Referrals", value: "0", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "#E8632B" },
 ];
 
 const DealmakerDashboard = memo(function DealmakerDashboard() {
@@ -416,31 +386,9 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
           <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Recent Deals</h2>
           <Link href="/dealfinder" className="text-sm font-medium hover:opacity-80" style={{ color: "#D4A843" }}>View All</Link>
         </div>
-        <div className="space-y-3">
-          {dealmakerDeals.map((d) => {
-            const sColor = d.status === "Funded" ? "#2ECC71" : d.status === "Funding" ? "#D4A843" : "#E8632B";
-            return (
-              <div key={d.address} className="flex flex-col gap-3 rounded-lg border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-[var(--brix-fg)]">{d.address}</p>
-                    <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${sColor}20`, color: sColor }}>{d.status}</span>
-                  </div>
-                  <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{d.city}</p>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Capital</p>
-                    <p className="text-sm font-semibold text-[var(--brix-fg)]">{d.capital}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Commission</p>
-                    <p className="text-sm font-semibold" style={{ color: "#2ECC71" }}>{d.commission}</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="rounded-lg border border-dashed border-[var(--brix-border)] p-8 text-center">
+          <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No deals listed yet. Start sourcing deals to earn commissions.</p>
+          <Link href="/dealfinder" className="mt-3 inline-block rounded-lg px-5 py-2 text-sm font-semibold hover:opacity-90" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>List a Deal</Link>
         </div>
       </div>
 

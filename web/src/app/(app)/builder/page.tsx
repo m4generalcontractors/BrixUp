@@ -45,31 +45,12 @@ const tradeColors: Record<string, string> = {
   "General Labor": "#2B4C7E",
 };
 
-const sampleActiveProjects: ActiveProject[] = [
-  { address: "1847 Oakwood Dr", city: "Charlotte, NC", trade: "Electrical", milestone: "MEP Rough-In", milestoneProgress: 60, nextDraw: "$3,200", totalEarned: "$4,800", dueDate: "Mar 5, 2026" },
-  { address: "903 Pine Valley Rd", city: "Greenville, SC", trade: "Plumbing", milestone: "Finishes", milestoneProgress: 35, nextDraw: "$2,100", totalEarned: "$5,600", dueDate: "Mar 20, 2026" },
-];
-
-const samplePayments: Payment[] = [
-  { date: "Feb 8, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRXU", status: "Paid" },
-  { date: "Jan 25, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRXU", status: "Paid" },
-  { date: "Jan 15, 2026", project: "1847 Oakwood Dr", amount: "1,600 $BRXU", status: "Paid" },
-  { date: "Jan 5, 2026", project: "903 Pine Valley Rd", amount: "2,800 $BRXU", status: "Paid" },
-  { date: "Mar 5, 2026", project: "1847 Oakwood Dr", amount: "3,200 $BRXU", status: "Pending" },
-];
-
-const brixScoreBreakdown = [
-  { label: "Quality", score: 92, color: "#2ECC71" },
-  { label: "Timeliness", score: 85, color: "#D4A843" },
-  { label: "Communication", score: 78, color: "#2B4C7E" },
-  { label: "Reliability", score: 90, color: "#E8632B" },
-];
 
 export default function BuilderPage() {
   const { profile } = useAuth();
   const [availableDeals, setAvailableDeals] = useState<Deal[]>([]);
-  const [activeProjects] = useState<ActiveProject[]>(sampleActiveProjects);
-  const [payments] = useState<Payment[]>(samplePayments);
+  const [activeProjects, setActiveProjects] = useState<ActiveProject[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState<string | null>(null);
   const [applied, setApplied] = useState<Set<string>>(new Set());
@@ -82,11 +63,36 @@ export default function BuilderPage() {
       const res = await fetch("/api/deals?status=Active");
       if (res.ok) {
         const data = await res.json();
-        if (data.length > 0) setAvailableDeals(data.slice(0, 6));
+        if (Array.isArray(data) && data.length > 0) setAvailableDeals(data.slice(0, 6));
       }
-    } catch { /* fallback */ }
+    } catch { /* API unavailable */ }
+
+    // Fetch builder's active projects from transactions
+    try {
+      const res = await fetch("/api/transactions?type=job_application&limit=20");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const projects: ActiveProject[] = data
+            .filter((tx: Record<string, unknown>) => tx.type === "job_application" || tx.type === "draw_payment")
+            .slice(0, 5)
+            .map((tx: Record<string, unknown>) => ({
+              address: String(tx.description || "").replace(/^Applied for .* at /, ""),
+              city: "",
+              trade: selectedTrade,
+              milestone: "In Progress",
+              milestoneProgress: 0,
+              nextDraw: "$0",
+              totalEarned: `${tx.amount || 0}`,
+              dueDate: tx.created_at ? new Date(String(tx.created_at)).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "",
+            }));
+          setActiveProjects(projects);
+        }
+      }
+    } catch { /* API unavailable */ }
+
     setLoading(false);
-  }, []);
+  }, [selectedTrade]);
 
   useEffect(() => { fetchDeals(); }, [fetchDeals]);
 
@@ -112,8 +118,14 @@ export default function BuilderPage() {
     return sum + (isNaN(num) ? 0 : num);
   }, 0);
 
+  const brixScoreBreakdown = [
+    { label: "Quality", score: 0, color: "#2ECC71" },
+    { label: "Timeliness", score: 0, color: "#D4A843" },
+    { label: "Communication", score: 0, color: "#2B4C7E" },
+    { label: "Reliability", score: 0, color: "#E8632B" },
+  ];
   const brixScore = brixScoreBreakdown.reduce((s, c) => s + c.score, 0);
-  const brixScoreAvg = Math.round(brixScore / brixScoreBreakdown.length);
+  const brixScoreAvg = brixScoreBreakdown.length > 0 ? Math.round(brixScore / brixScoreBreakdown.length) : 0;
 
   const builderStats = [
     { label: "Brix Score", value: String(Math.round(brixScoreAvg * 10)), icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z", color: "#D4A843" },
@@ -210,6 +222,11 @@ export default function BuilderPage() {
       {/* My Active Projects */}
       <div className="mb-6">
         <h2 className="mb-4 text-lg font-semibold text-white">My Active Projects</h2>
+        {activeProjects.length === 0 && (
+          <div className="rounded-xl border border-dashed border-[var(--brix-border)] p-8 text-center" style={{ backgroundColor: "var(--brix-surface)" }}>
+            <p className="text-sm text-white/60">No active projects yet. Apply for jobs above to get started!</p>
+          </div>
+        )}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {activeProjects.map((project) => (
             <div key={project.address} className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>

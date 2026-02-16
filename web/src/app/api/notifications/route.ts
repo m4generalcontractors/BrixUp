@@ -2,40 +2,8 @@ import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
 
-const sampleNotifications = [
-  {
-    id: "n1",
-    type: "yield",
-    title: "Yield Payout Received",
-    message: "You received $312 yield from Pine Valley Rd",
-    read: false,
-    created_at: "2026-02-13T14:30:00Z",
-  },
-  {
-    id: "n2",
-    type: "deal",
-    title: "New Deal Available",
-    message: "567 Elm Creek Way in Charlotte is now open for investment",
-    read: false,
-    created_at: "2026-02-14T09:00:00Z",
-  },
-  {
-    id: "n3",
-    type: "milestone",
-    title: "Construction Milestone",
-    message: "1847 Oakwood Dr has reached 65% completion",
-    read: true,
-    created_at: "2026-02-12T16:45:00Z",
-  },
-  {
-    id: "n4",
-    type: "system",
-    title: "Welcome to BrixUp",
-    message: "Your account is set up. Start exploring deals!",
-    read: true,
-    created_at: "2026-02-10T08:00:00Z",
-  },
-];
+
+
 
 export async function GET(request: Request) {
   const rl = checkRateLimit(getRateLimitKey(request, "notif:get"), RATE_LIMITS.standard);
@@ -59,12 +27,12 @@ export async function GET(request: Request) {
       .limit(20);
 
     if (error || !data || data.length === 0) {
-      return NextResponse.json(sampleNotifications);
+      return NextResponse.json([]);
     }
 
     return NextResponse.json(data);
   } catch {
-    return NextResponse.json(sampleNotifications);
+    return NextResponse.json([]);
   }
 }
 
