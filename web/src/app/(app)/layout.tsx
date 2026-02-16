@@ -115,7 +115,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile, signOut, loading } = useAuth();
-  const { t, lang, setLang } = useLanguage();
+  const { t, lang } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState<{ id: string; type: string; title: string; message: string; read: boolean; created_at: string }[]>([]);
@@ -211,11 +211,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     } catch { /* silent */ }
   };
 
-  const displayName = profile?.full_name || user?.email?.split("@")[0] || "User";
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
   const displayEmail = profile?.email || user?.email || "";
   const initials = displayName
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
@@ -467,16 +467,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </button>
               ))}
             </div>
-
-            {/* Language toggle — i18n not yet implemented, disabled */}
-            <button
-              aria-disabled="true"
-              className="hidden sm:flex h-8 items-center gap-1 rounded-lg px-2.5 text-xs font-semibold transition-colors opacity-50 cursor-not-allowed"
-              style={{ border: "1px solid var(--brix-border)", color: "var(--brix-fg-muted)" }}
-              title="Coming soon"
-            >
-              EN
-            </button>
 
             {/* Notification bell */}
             <div className="relative">

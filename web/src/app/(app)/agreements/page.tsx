@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth-context";
+
 
 interface Agreement {
   id: string;
@@ -31,7 +31,6 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function AgreementsPage() {
-  const { profile } = useAuth();
   const [agreements, setAgreements] = useState<Agreement[]>([]);
   const [loading, setLoading] = useState(true);
   const [signing, setSigning] = useState<string | null>(null);
@@ -49,35 +48,12 @@ export default function AgreementsPage() {
             return;
           }
         }
-      } catch { /* use fallback */ }
-
-      // Fallback sample agreements based on user role
-      const role = profile?.user_role || "investor";
-      const sampleAgreements: Agreement[] = [
-        { id: "a1", title: "BrixUp Terms of Service", type: "tos", status: "signed", createdAt: "2026-01-01T00:00:00Z", signedAt: "2026-01-01T12:00:00Z" },
-      ];
-
-      if (role === "investor" || role === "dealmaker") {
-        sampleAgreements.push(
-          { id: "a2", title: "Private Placement Memorandum - 1847 Oakwood Dr", type: "ppm", dealId: "d1", dealAddress: "1847 Oakwood Dr", status: "signed", createdAt: "2026-01-15T00:00:00Z", signedAt: "2026-01-15T14:00:00Z" },
-          { id: "a3", title: "Token Purchase Agreement (SAFT)", type: "saft", status: "signed", createdAt: "2026-01-15T00:00:00Z", signedAt: "2026-01-15T14:30:00Z" },
-          { id: "a4", title: "SPV Operating Agreement - 412 Magnolia Ln", type: "spv", dealId: "d2", dealAddress: "412 Magnolia Ln", status: "pending", createdAt: "2026-02-10T00:00:00Z" },
-        );
-      }
-
-      if (role === "builder") {
-        sampleAgreements.push(
-          { id: "a5", title: "Contractor Participation Agreement - Pine Valley", type: "contractor", dealId: "d3", dealAddress: "Pine Valley Estates", status: "signed", createdAt: "2026-01-20T00:00:00Z", signedAt: "2026-01-20T10:00:00Z" },
-          { id: "a6", title: "Contractor Participation Agreement - 1847 Oakwood Dr", type: "contractor", dealId: "d1", dealAddress: "1847 Oakwood Dr", status: "pending", createdAt: "2026-02-12T00:00:00Z" },
-        );
-      }
-
-      setAgreements(sampleAgreements);
+      } catch { /* API unavailable */ }
       setLoading(false);
     };
 
     fetchAgreements();
-  }, [profile?.user_role]);
+  }, []);
 
   const handleSign = async (agreementId: string) => {
     setSigning(agreementId);

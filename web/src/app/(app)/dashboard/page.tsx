@@ -45,30 +45,7 @@ const typeColors: Record<string, string> = {
   send: "#E8632B",
 };
 
-// ── Sample data ──
 
-const sampleInvestments: Investment[] = [
-  { id: "1", amount: 15000, status: "confirmed", created_at: "2026-02-10", deal_id: "deal-001", deals: { id: "deal-001", address: "1847 Oakwood Dr", city: "Charlotte", state: "NC", property_type: "Flip", funded_amount: 190950, total_capital_needed: 285000, projected_roi: 22, status: "Active" } },
-  { id: "2", amount: 20000, status: "confirmed", created_at: "2026-01-20", deal_id: "deal-002", deals: { id: "deal-002", address: "412 Magnolia Ln", city: "Raleigh", state: "NC", property_type: "New Build", funded_amount: 223600, total_capital_needed: 520000, projected_roi: 28, status: "Funding" } },
-  { id: "3", amount: 12500, status: "confirmed", created_at: "2026-01-05", deal_id: "deal-003", deals: { id: "deal-003", address: "903 Pine Valley Rd", city: "Greenville", state: "SC", property_type: "Value-Add", funded_amount: 155750, total_capital_needed: 175000, projected_roi: 16, status: "Active" } },
-];
-
-const sampleTransactions: Transaction[] = [
-  { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-12" },
-  { id: "2", type: "staking_reward", amount: 42, description: "Staking reward", status: "confirmed", created_at: "2026-02-10" },
-  { id: "3", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05" },
-  { id: "4", type: "investment", amount: 10000, description: "Investment in 412 Magnolia Ln", status: "confirmed", created_at: "2026-01-20" },
-  { id: "5", type: "yield", amount: 275, description: "Yield payout - Oakwood Dr", status: "confirmed", created_at: "2026-01-15" },
-];
-
-const monthlyReturns = [
-  { month: "Sep", amount: 820, max: 1400 },
-  { month: "Oct", amount: 1050, max: 1400 },
-  { month: "Nov", amount: 960, max: 1400 },
-  { month: "Dec", amount: 1180, max: 1400 },
-  { month: "Jan", amount: 1340, max: 1400 },
-  { month: "Feb", amount: 587, max: 1400 },
-];
 
 // ── Role-specific greeting ──
 
@@ -206,6 +183,19 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
           <h2 className="text-lg font-semibold text-[var(--brix-fg)]">Active Deals</h2>
           <Link href="/marketplace" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: "#D4A843" }}>View Marketplace</Link>
         </div>
+        {investments.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-[var(--brix-border)] p-10 text-center">
+            <svg className="mx-auto w-12 h-12 mb-3" style={{ color: "var(--brix-fg-muted)", opacity: 0.3 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <p className="text-sm font-medium text-[var(--brix-fg)]">No investments yet</p>
+            <p className="mt-1 text-xs" style={{ color: "var(--brix-fg-muted)" }}>Browse the marketplace to find your first deal.</p>
+            <Link href="/marketplace" className="mt-4 inline-block rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors hover:opacity-90" style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}>
+              Browse Marketplace
+            </Link>
+          </div>
+        ) : (
+        <>
         {/* Desktop table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
@@ -260,6 +250,8 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
             );
           })}
         </div>
+        </>
+        )}
       </div>
 
       <div className="mb-6"><DashboardWalletCard brixBalance={brixBalance} usdcBalance={3200} stakedAmount={stakedBalance} /></div>
@@ -268,6 +260,9 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
         <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-[var(--brix-fg)]">Recent Transactions</h2>
           <div className="space-y-3">
+            {transactions.length === 0 && (
+              <p className="py-6 text-center text-sm" style={{ color: "var(--brix-fg-muted)" }}>No transactions yet.</p>
+            )}
             {transactions.map((tx) => {
               const isPositive = ["yield", "staking_reward", "received"].includes(tx.type);
               const color = typeColors[tx.type] || "#4A4A5A";
@@ -288,15 +283,9 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
 
         <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
           <h2 className="mb-4 text-lg font-semibold text-[var(--brix-fg)]">Yield Tracker</h2>
-          <p className="mb-4 text-xs" style={{ color: "var(--brix-fg-muted)" }}>Monthly returns over the last 6 months</p>
-          <div className="flex items-end justify-between gap-3 h-48">
-            {monthlyReturns.map((m) => (
-              <div key={m.month} className="flex flex-1 flex-col items-center gap-2">
-                <span className="text-xs font-medium text-[var(--brix-fg)]">${m.amount}</span>
-                <div className="w-full flex-1 flex items-end"><div className="w-full rounded-t-md" style={{ height: `${(m.amount / m.max) * 100}%`, backgroundColor: "#D4A843", minHeight: "8px" }} /></div>
-                <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{m.month}</span>
-              </div>
-            ))}
+          <p className="mb-4 text-xs" style={{ color: "var(--brix-fg-muted)" }}>Monthly returns will appear here as you earn yield from investments.</p>
+          <div className="flex items-center justify-center h-48">
+            <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>No yield data yet</p>
           </div>
         </div>
       </div>
@@ -476,7 +465,6 @@ export default function DashboardPage() {
 
   const fetchData = useCallback(async () => {
     const controller = new AbortController();
-    let apiFailed = true;
     try {
       const [invRes, txRes] = await Promise.all([
         fetch("/api/investments", { signal: controller.signal }),
@@ -486,7 +474,6 @@ export default function DashboardPage() {
         const invData = await invRes.json();
         if (Array.isArray(invData)) {
           setInvestments(invData);
-          apiFailed = false;
         }
       }
       if (txRes.ok) {
@@ -502,15 +489,9 @@ export default function DashboardPage() {
             return true;
           });
           setTransactions(deduped.slice(0, 10));
-          apiFailed = false;
         }
       }
-    } catch { /* fall through to fallback */ }
-    // Fallback to sample data only when APIs are completely unavailable
-    if (apiFailed) {
-      setInvestments(sampleInvestments);
-      setTransactions(sampleTransactions);
-    }
+    } catch { /* APIs unavailable — show empty state */ }
     setLoading(false);
   }, []);
 

@@ -41,27 +41,6 @@ interface Document {
   size: string;
 }
 
-// ---------------------------------------------------------------------------
-//  Sample data (until Supabase tables are populated)
-// ---------------------------------------------------------------------------
-
-const sampleDeals: Deal[] = [
-  { id: "deal-001", address: "1847 Oakwood Dr", city: "Charlotte", state: "NC", status: "Active", funded_amount: 190950, total_capital_needed: 285000, created_at: "2026-01-05" },
-  { id: "deal-002", address: "412 Magnolia Ln", city: "Raleigh", state: "NC", status: "Funding", funded_amount: 223600, total_capital_needed: 520000, created_at: "2026-01-15" },
-  { id: "deal-003", address: "903 Pine Valley Rd", city: "Greenville", state: "SC", status: "Active", funded_amount: 155750, total_capital_needed: 175000, created_at: "2026-01-20" },
-];
-
-const sampleUsers: UserRow[] = [
-  { id: "u1", email: "admin@brixup.io", full_name: "Platform Admin", user_role: "admin", wallet_address: "0x7a3B...9f2E", kyc_status: "verified", created_at: "2025-12-01" },
-  { id: "u2", email: "john@example.com", full_name: "John Builder", user_role: "builder", wallet_address: "0x4e2C...1a8D", kyc_status: "verified", created_at: "2025-12-15" },
-  { id: "u3", email: "sarah@investor.co", full_name: "Sarah Investor", user_role: "investor", wallet_address: null, kyc_status: "pending", created_at: "2026-01-10" },
-];
-
-const sampleDocuments: Document[] = [
-  { id: "d1", name: "SPV Operating Agreement", type: "PDF", deal_id: "deal-001", uploaded_at: "2026-01-06", uploaded_by: "admin@brixup.io", size: "2.4 MB" },
-  { id: "d2", name: "Title Insurance Certificate", type: "PDF", deal_id: "deal-001", uploaded_at: "2026-01-08", uploaded_by: "admin@brixup.io", size: "1.1 MB" },
-  { id: "d3", name: "Construction Permit", type: "PDF", deal_id: "deal-002", uploaded_at: "2026-01-20", uploaded_by: "john@example.com", size: "890 KB" },
-];
 
 // ---------------------------------------------------------------------------
 //  Component
@@ -71,9 +50,9 @@ export default function AdminPortal() {
   const { profile } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"overview" | "deals" | "users" | "contracts" | "documents" | "settings">("overview");
-  const [deals, setDeals] = useState<Deal[]>(sampleDeals);
-  const [users, setUsers] = useState<UserRow[]>(sampleUsers);
-  const [documents, setDocuments] = useState<Document[]>(sampleDocuments);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Admin-only actions
@@ -106,8 +85,8 @@ export default function AdminPortal() {
         supabase.from("deals").select("*").order("created_at", { ascending: false }),
         supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(50),
       ]);
-      if (dealsRes.data && dealsRes.data.length > 0) setDeals(dealsRes.data as unknown as Deal[]);
-      if (profilesRes.data && profilesRes.data.length > 0) setUsers(profilesRes.data as unknown as UserRow[]);
+      if (dealsRes.data) setDeals(dealsRes.data as unknown as Deal[]);
+      if (profilesRes.data) setUsers(profilesRes.data as unknown as UserRow[]);
     } catch { /* Use sample data */ }
     setLoading(false);
   }, []);

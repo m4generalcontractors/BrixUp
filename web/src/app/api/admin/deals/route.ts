@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { getDeals } from "@/lib/deals-data";
 
 async function requireAdmin() {
   const supabase = await createServerSupabase();
@@ -25,22 +24,13 @@ export async function GET() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (dbErr || !data || data.length === 0) {
-      // Fallback to sample deals with some pending
-      const samples = getDeals({}).map((d, i) => ({
-        ...d,
-        status: i < 2 ? "Pending Review" : d.status,
-      }));
-      return NextResponse.json(samples);
+    if (dbErr) {
+      return NextResponse.json([]);
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data || []);
   } catch {
-    const samples = getDeals({}).map((d, i) => ({
-      ...d,
-      status: i < 2 ? "Pending Review" : d.status,
-    }));
-    return NextResponse.json(samples);
+    return NextResponse.json([]);
   }
 }
 

@@ -1,38 +1,24 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { getDeals } from "@/lib/deals-data";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "@/lib/security/rate-limit";
 import { auditLog } from "@/lib/security/audit";
 
 export async function GET(request: Request) {
   const rl = checkRateLimit(getRateLimitKey(request, "deals:get"), RATE_LIMITS.standard);
   if (!rl.allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-  const { searchParams } = new URL(request.url);
-  const location = searchParams.get("location") ?? undefined;
-  const propertyType = searchParams.get("propertyType") ?? undefined;
-  const status = searchParams.get("status") ?? undefined;
-  const source = searchParams.get("source") ?? undefined;
-  const minROI = searchParams.get("minROI")
-    ? Number(searchParams.get("minROI"))
-    : undefined;
-  const maxCapital = searchParams.get("maxCapital")
-    ? Number(searchParams.get("maxCapital"))
-    : undefined;
 
-  // Try Supabase first, fall back to sample data
   try {
     const supabase = await createServerSupabase();
-    const { data: dbDeals } = await supabase.from("deals").select("*");
+    const { data: dbDeals, error } = await supabase.from("deals").select("*");
 
-    if (dbDeals && dbDeals.length > 0) {
-      return NextResponse.json(dbDeals);
+    if (error) {
+      return NextResponse.json([]);
     }
-  } catch {
-    // Supabase not configured, use sample data
-  }
 
-  const deals = getDeals({ location, propertyType, status, source, minROI, maxCapital });
-  return NextResponse.json(deals);
+    return NextResponse.json(dbDeals || []);
+  } catch {
+    return NextResponse.json([]);
+  }
 }
 
 export async function POST(request: Request) {

@@ -32,16 +32,6 @@ interface Transaction {
   to_address?: string;
 }
 
-const sampleTransactions: Transaction[] = [
-  { id: "1", type: "investment", amount: 5000, description: "Investment in 1847 Oakwood Dr", status: "confirmed", created_at: "2026-02-12", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #001" },
-  { id: "2", type: "staking_reward", amount: 42, description: "Staking reward", status: "confirmed", created_at: "2026-02-10", from_address: "Staking Pool", to_address: "0x7a3B...9f2E" },
-  { id: "3", type: "yield", amount: 312, description: "Yield payout - Pine Valley", status: "confirmed", created_at: "2026-02-05", from_address: "Deal Pool #003", to_address: "0x7a3B...9f2E" },
-  { id: "4", type: "conversion", amount: 1667, description: "Convert 1,667 BRXU to USDC", status: "confirmed", created_at: "2026-02-01", from_address: "0x7a3B...9f2E", to_address: "USDC Wallet" },
-  { id: "5", type: "received", amount: 1000, description: "Received from 0x4e2C...1a8D", status: "confirmed", created_at: "2026-01-28", from_address: "0x4e2C...1a8D", to_address: "0x7a3B...9f2E" },
-  { id: "6", type: "investment", amount: 10000, description: "Investment in 412 Magnolia Ln", status: "confirmed", created_at: "2026-01-20", from_address: "0x7a3B...9f2E", to_address: "Deal Pool #002" },
-  { id: "7", type: "yield", amount: 275, description: "Yield payout - Oakwood Dr", status: "confirmed", created_at: "2026-01-15", from_address: "Deal Pool #001", to_address: "0x7a3B...9f2E" },
-  { id: "8", type: "staking_reward", amount: 38, description: "Staking reward", status: "confirmed", created_at: "2026-01-10", from_address: "Staking Pool", to_address: "0x7a3B...9f2E" },
-];
 
 const typeLabels: Record<string, string> = {
   investment: "Investment",
@@ -137,7 +127,7 @@ export default function WalletPage() {
   }, [onChainStakeSuccess, onChainUnstakeSuccess, onChainClaimSuccess, onChainTransferSuccess, balance]);
 
   // State for wallet features
-  const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [convertAmount, setConvertAmount] = useState("1000");
   const [stakeAmount, setStakeAmount] = useState("500");
   const [sendTo, setSendTo] = useState("");
@@ -176,14 +166,12 @@ export default function WalletPage() {
   }, [lastClaimTime]);
 
   const fetchTransactions = useCallback(async () => {
-    let apiFailed = true;
     try {
       const res = await fetch("/api/transactions?limit=50");
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) {
           setTransactions(data);
-          apiFailed = false;
           // Find last staking_reward claim for cooldown
           const lastClaim = data.find((tx: Transaction) => tx.type === "staking_reward");
           if (lastClaim?.created_at) {
@@ -195,7 +183,7 @@ export default function WalletPage() {
         }
       }
     } catch { /* fall through */ }
-    if (apiFailed) setTransactions(sampleTransactions);
+    // No fallback — show empty state when API is unavailable
     setLoading(false);
   }, []);
 
