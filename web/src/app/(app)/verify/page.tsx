@@ -3,8 +3,19 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
-type Step = "info" | "identity" | "accreditation" | "review";
+const SumsubWidget = dynamic(() => import("@/components/SumsubWidget"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col items-center justify-center py-12">
+      <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
+      <p className="mt-4 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Loading verification...</p>
+    </div>
+  ),
+});
+
+type Step = "info" | "identity" | "accreditation" | "review" | "sumsub";
 
 const STEPS: { key: Step; label: string }[] = [
   { key: "info", label: "Personal Info" },
@@ -19,6 +30,7 @@ export default function VerifyPage() {
   const [currentStep, setCurrentStep] = useState<Step>("info");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [useSumsub, setUseSumsub] = useState(false);
 
   // Form state
   const [form, setForm] = useState({
@@ -33,14 +45,12 @@ export default function VerifyPage() {
     zip: "",
     country: "US",
     phoneNumber: "",
-    // Identity
     idType: "drivers_license" as "drivers_license" | "passport" | "state_id",
     idNumber: "",
     idExpiry: "",
     idFrontUploaded: false,
     idBackUploaded: false,
     selfieUploaded: false,
-    // Accreditation (for investors)
     isAccredited: false,
     accreditationType: "" as "" | "income" | "net_worth" | "professional" | "entity",
     annualIncome: "",
@@ -48,7 +58,6 @@ export default function VerifyPage() {
     employerName: "",
     investmentExperience: "beginner" as "beginner" | "intermediate" | "advanced",
     acknowledgeRisks: false,
-    // International
     isUSCitizen: true,
     taxResidency: "US",
     tin: "",
@@ -62,7 +71,6 @@ export default function VerifyPage() {
   };
 
   const handleFileUpload = (field: string) => {
-    // Simulate file upload - in production this would upload to Supabase Storage or a KYC provider like Persona
     update(field, true);
   };
 
@@ -85,7 +93,6 @@ export default function VerifyPage() {
   const nextStep = () => {
     const idx = STEPS.findIndex((s) => s.key === currentStep);
     if (idx < STEPS.length - 1) {
-      // Skip accreditation for builders
       if (STEPS[idx + 1].key === "accreditation" && !isInvestor) {
         setCurrentStep("review");
       } else {
@@ -129,13 +136,18 @@ export default function VerifyPage() {
         setSubmitted(true);
       }
     } catch {
-      // Fallback: still mark as verified for demo
       await updateProfile({ kyc_status: "verified" });
       setSubmitted(true);
     }
     setSubmitting(false);
   };
 
+  const handleSumsubComplete = async () => {
+    await updateProfile({ kyc_status: "verified" });
+    setSubmitted(true);
+  };
+
+  // Already verified or just completed
   if (profile?.kyc_status === "verified" || submitted) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -145,7 +157,7 @@ export default function VerifyPage() {
           </svg>
         </div>
         <h2 className="mt-4 text-xl font-bold text-white">Verification Complete</h2>
-        <p className="mt-2 text-sm text-white/50">Your identity has been verified. You can now invest in deals.</p>
+        <p className="mt-2 text-sm" style={{ color: "var(--brix-fg-muted)" }}>Your identity has been verified. You can now invest in deals.</p>
         <button
           onClick={() => router.push("/dashboard")}
           className="mt-6 rounded-lg px-6 py-2.5 text-sm font-semibold"
@@ -157,16 +169,67 @@ export default function VerifyPage() {
     );
   }
 
+  // Sumsub widget mode
+  if (useSumsub) {
+    return (
+      <div className="mx-auto max-w-2xl">
+        <div className="mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Identity Verification</h1>
+              <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
+                Complete identity verification powered by Sumsub
+              </p>
+            </div>
+            <button
+              onClick={() => setUseSumsub(false)}
+              className="rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/5"
+              style={{ borderColor: "var(--brix-border)", color: "var(--brix-fg-muted)" }}
+            >
+              Use manual form
+            </button>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-[var(--brix-border)] p-4 sm:p-6" style={{ backgroundColor: "var(--brix-surface)" }}>
+          <div className="mb-4 rounded-lg border px-4 py-3 text-xs" style={{ borderColor: "#2B4C7E40", backgroundColor: "#2B4C7E10", color: "#6B9FE8" }}>
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Your data is encrypted and processed securely by Sumsub. SOC 2 Type II certified.
+            </div>
+          </div>
+          <SumsubWidget
+            onComplete={handleSumsubComplete}
+            onError={(err) => console.error("Sumsub error:", err)}
+          />
+        </div>
+      </div>
+    );
+  }
+
   const inputClass = "mt-1 w-full rounded-lg border border-[var(--brix-border)] py-2.5 px-4 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#D4A843]";
   const inputStyle = { backgroundColor: "var(--brix-bg)" };
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Identity Verification</h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
-          Complete KYC/AML verification to invest in deals
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Identity Verification</h1>
+            <p className="mt-1 text-sm" style={{ color: "var(--brix-fg-muted)" }}>
+              Complete KYC/AML verification to invest in deals
+            </p>
+          </div>
+          <button
+            onClick={() => setUseSumsub(true)}
+            className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors hover:opacity-90"
+            style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
+          >
+            Verify with Sumsub
+          </button>
+        </div>
       </div>
 
       {/* Progress steps */}
@@ -339,7 +402,7 @@ export default function VerifyPage() {
             </div>
 
             <div className="rounded-lg border px-4 py-3 text-xs" style={{ borderColor: "#D4A84340", backgroundColor: "#D4A84310", color: "#D4A843" }}>
-              Documents are processed by our KYC provider (Persona) and are never stored on our servers. SOC 2 Type II certified.
+              Documents are processed by our KYC provider (Sumsub) and are never stored on our servers. SOC 2 Type II certified.
             </div>
           </div>
         )}

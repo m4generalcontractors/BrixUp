@@ -53,18 +53,18 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value:
-              "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+              "camera=(self), microphone=(), geolocation=(), browsing-topics=()",
           },
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+              "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://js.stripe.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
               "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.basemaps.cartocdn.com",
-              "connect-src 'self' https://*.supabase.co https://sepolia.base.org https://mainnet.base.org wss://*.supabase.co https://api.circle.com https://withpersona.com",
-              "frame-src 'self' https://withpersona.com https://challenges.cloudflare.com https://keys.coinbase.com",
+              "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.basemaps.cartocdn.com https://*.stripe.com",
+              "connect-src 'self' https://*.supabase.co https://sepolia.base.org https://mainnet.base.org wss://*.supabase.co https://api.circle.com https://withpersona.com https://api.sumsub.com https://api.stripe.com https://api.boldsign.com",
+              "frame-src 'self' https://withpersona.com https://challenges.cloudflare.com https://keys.coinbase.com https://js.stripe.com https://*.sumsub.com",
               "worker-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",

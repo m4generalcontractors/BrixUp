@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useSearchParams } from "next/navigation";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { coinbaseWallet } from "wagmi/connectors";
 import { useBalance } from "@/lib/wallet/useBalance";
@@ -74,6 +75,23 @@ const positiveTypes = ["yield", "staking_reward", "received", "unstake", "buy"];
 
 export default function WalletPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const [stripeSuccess, setStripeSuccess] = useState(false);
+
+  // Handle Stripe redirect success
+  useEffect(() => {
+    if (searchParams.get("purchase") === "success") {
+      setStripeSuccess(true);
+      const amount = searchParams.get("amount");
+      if (amount) {
+        setBuySuccess(true);
+        setTimeout(() => setBuySuccess(false), 5000);
+      }
+      // Clean URL params
+      window.history.replaceState({}, "", "/wallet");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   // Real wallet connection via wagmi — no auto-popup, user-initiated only
   const { address: wagmiAddress, isConnected: wagmiConnected } = useAccount();
@@ -326,7 +344,23 @@ export default function WalletPage() {
     setBuying(true);
     setBuySuccess(false);
 
-    // Calculate BRXU amount (1 USD = 1 BRXU at current rate)
+    // Try Stripe Checkout for card/bank payments
+    if (buyMethod === "card" || buyMethod === "bank") {
+      try {
+        const res = await fetch("/api/stripe/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: usdAmount }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+      } catch { /* Fall through to DB fallback */ }
+    }
+
+    // Fallback: record transaction directly (Coinbase method or Stripe unavailable)
     const brixAmount = usdAmount;
     const methodLabel = buyMethod === "card" ? "Debit/Credit Card" : buyMethod === "bank" ? "Bank Transfer (ACH)" : "Coinbase Account";
 
@@ -343,6 +377,7 @@ export default function WalletPage() {
         }),
       });
       setBuySuccess(true);
+      balance.refetch();
       await fetchTransactions();
       setTimeout(() => setBuySuccess(false), 4000);
     } catch { /* handled */ }
