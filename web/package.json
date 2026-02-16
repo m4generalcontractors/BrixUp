@@ -17,6 +17,8 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "@tanstack/react-query": "^5.90.21",
+    "jazz-react": "^0.14.28",
+    "jazz-tools": "^0.20.9",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
     "next": "16.1.6",
