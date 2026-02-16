@@ -373,7 +373,9 @@ export default function MarketplacePage() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
+            <label htmlFor="marketplace-search" className="sr-only">Search deals by location</label>
             <input
+              id="marketplace-search"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -385,9 +387,9 @@ export default function MarketplacePage() {
 
           {/* Deal count */}
           <div className="hidden sm:flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">{filteredDeals.length}</span>
-            <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>
-              deals found
+            <span className="text-sm text-white">
+              <span className="font-semibold">{filteredDeals.length}</span>{" "}
+              <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>deals found</span>
             </span>
           </div>
 
@@ -422,7 +424,7 @@ export default function MarketplacePage() {
                   backgroundColor: viewMode === mode ? "#D4A843" : "#0D0D1A",
                   color: viewMode === mode ? "#0D0D1A" : "#4A4A5A",
                 }}
-                title={mode.charAt(0).toUpperCase() + mode.slice(1) + " view"}
+                aria-label={mode.charAt(0).toUpperCase() + mode.slice(1) + " view"}
               >
                 {icon === "columns" && (
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -594,9 +596,22 @@ export default function MarketplacePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <p className="text-lg font-semibold text-white mb-1">No deals found</p>
-                <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>
+                <p className="text-sm mb-4" style={{ color: "var(--brix-fg-muted)" }}>
                   Try adjusting your filters or search query
                 </p>
+                <button
+                  onClick={() => {
+                    setPropertyType("All");
+                    setPriceRange("All");
+                    setBedsFilter("All");
+                    setStatusFilter("All");
+                    setSearchQuery("");
+                  }}
+                  className="rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors hover:opacity-90"
+                  style={{ backgroundColor: "#D4A843", color: "#0D0D1A" }}
+                >
+                  Clear all filters
+                </button>
               </div>
             )}
           </div>

@@ -35,11 +35,11 @@ const milestones = [
 
 export default function Roadmap() {
   return (
-    <section id="roadmap" className="bg-charcoal py-20 sm:py-28">
+    <section id="roadmap" aria-labelledby="roadmap-heading" className="bg-charcoal py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
+          <h2 id="roadmap-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             <span className="text-gradient-gold">Roadmap</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">

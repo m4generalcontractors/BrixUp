@@ -33,7 +33,7 @@ export default function CTA() {
   };
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28">
+    <section aria-labelledby="waitlist-heading" className="relative overflow-hidden py-20 sm:py-28">
       {/* Gold gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-gold via-gold-dark to-gold" />
 
@@ -43,7 +43,7 @@ export default function CTA() {
       </div>
 
       <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="font-[var(--font-display)] text-3xl font-bold text-dark sm:text-4xl lg:text-5xl">
+        <h2 id="waitlist-heading" className="font-[var(--font-display)] text-3xl font-bold text-dark sm:text-4xl lg:text-5xl">
           Ready to Build Wealth Together?
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-lg text-dark/70">
@@ -68,7 +68,9 @@ export default function CTA() {
         ) : (
           <form onSubmit={handleSubmit} className="mx-auto mt-8 max-w-md">
             <div className="flex flex-col gap-3 sm:flex-row">
+              <label htmlFor="waitlist-email" className="sr-only">Email address</label>
               <input
+                id="waitlist-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

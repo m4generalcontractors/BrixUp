@@ -69,6 +69,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
           <img
             src={deal.imageUrl}
             alt={deal.address}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
@@ -113,6 +114,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
             }}
             className="flex h-8 w-8 items-center justify-center rounded-full transition-colors"
             style={{ backgroundColor: "#0D0D1Acc", backdropFilter: "blur(4px)" }}
+            aria-label={`Save ${deal.address} to favorites`}
           >
             <svg
               className="h-4 w-4"

@@ -838,10 +838,11 @@ export default function WalletPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Stake Amount</label>
+                  <label htmlFor="stake-amount" className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Stake Amount</label>
                   <button onClick={() => setStakeAmount(String(Math.floor(brixBalance)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
                 </div>
                 <input
+                  id="stake-amount"
                   type="text"
                   inputMode="decimal"
                   value={stakeAmount}
@@ -857,10 +858,11 @@ export default function WalletPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Unstake Amount</label>
+                  <label htmlFor="unstake-amount" className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Unstake Amount</label>
                   <button onClick={() => setUnstakeAmount(String(Math.floor(stakedAmount)))} className="text-[10px] font-medium" style={{ color: "#D4A843" }}>Max</button>
                 </div>
                 <input
+                  id="unstake-amount"
                   type="text"
                   inputMode="decimal"
                   value={unstakeAmount}
@@ -909,10 +911,11 @@ export default function WalletPage() {
         {/* Desktop table */}
         <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-sm">
+            <caption className="sr-only">Transaction history</caption>
             <thead>
               <tr className="border-b border-[var(--brix-border)]">
                 {["Date", "Type", "Amount", "From", "To", "Status"].map((h) => (
-                  <th key={h} className="pb-3 text-left text-xs font-medium whitespace-nowrap pr-4" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
+                  <th key={h} scope="col" className="pb-3 text-left text-xs font-medium whitespace-nowrap pr-4" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                 ))}
               </tr>
             </thead>

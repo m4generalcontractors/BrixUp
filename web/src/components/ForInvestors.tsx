@@ -99,7 +99,7 @@ export default function ForInvestors() {
   const dealsHref = "/marketplace";
 
   return (
-    <section id="for-investors" className="bg-dark py-20 sm:py-28">
+    <section id="for-investors" aria-labelledby="for-investors-heading" className="bg-dark py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Content */}
@@ -109,7 +109,7 @@ export default function ForInvestors() {
                 For Investors
               </span>
             </div>
-            <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl">
+            <h2 id="for-investors-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl">
               Invest in Real Estate.{" "}
               <span className="text-gradient-gold">Without the Headaches.</span>
             </h2>

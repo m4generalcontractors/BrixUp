@@ -8,7 +8,6 @@ const footerLinks = {
     { label: "Stake", href: "/wallet" },
   ],
   Company: [
-    { label: "About", href: "#team" },
     { label: "Team", href: "#team" },
   ],
   Legal: [
@@ -19,6 +18,7 @@ const footerLinks = {
   Connect: [
     { label: "Twitter / X", href: "https://x.com/BrixUpHQ" },
     { label: "Discord", href: "https://discord.gg/brixup" },
+    { label: "Telegram", href: "https://t.me/BrixUpHQ" },
   ],
 };
 

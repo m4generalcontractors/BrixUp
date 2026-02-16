@@ -202,7 +202,7 @@ export default function VerifyPage() {
           </div>
           <SumsubWidget
             onComplete={handleSumsubComplete}
-            onError={(err) => console.error("Sumsub error:", err)}
+            onError={(err: unknown) => console.error("Sumsub error:", err)}
           />
         </div>
       </div>

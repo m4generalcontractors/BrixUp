@@ -209,7 +209,8 @@ const InvestorDashboard = memo(function InvestorDashboard({ investments, transac
         {/* Desktop table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-[var(--brix-border)]">{["Property", "Location", "Invested", "Status", "Progress", "ROI", "Action"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
+            <caption className="sr-only">Active investment deals</caption>
+            <thead><tr className="border-b border-[var(--brix-border)]">{["Property", "Location", "Invested", "Status", "Progress", "ROI", "Action"].map((h) => (<th key={h} scope="col" className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
               {investments.map((inv) => {
                 const deal = inv.deals;

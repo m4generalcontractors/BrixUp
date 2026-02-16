@@ -48,11 +48,11 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="bg-charcoal py-20 sm:py-28">
+    <section id="faq" aria-labelledby="faq-heading" className="bg-charcoal py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl">
+          <h2 id="faq-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl">
             Frequently Asked <span className="text-gradient-gold">Questions</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">
@@ -64,6 +64,8 @@ export default function FAQ() {
         <div className="mt-12 space-y-4">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
+            const buttonId = `faq-button-${index}`;
+            const panelId = `faq-panel-${index}`;
             return (
               <div
                 key={faq.question}
@@ -72,9 +74,11 @@ export default function FAQ() {
                 }`}
               >
                 <button
+                  id={buttonId}
                   onClick={() => toggle(index)}
                   className="flex w-full items-center justify-between p-6 text-left"
                   aria-expanded={isOpen}
+                  aria-controls={panelId}
                 >
                   <span className="pr-4 text-base font-medium text-offwhite">
                     {faq.question}
@@ -100,6 +104,9 @@ export default function FAQ() {
                   </span>
                 </button>
                 <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
                   className={`overflow-hidden transition-all duration-300 ${
                     isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                   }`}

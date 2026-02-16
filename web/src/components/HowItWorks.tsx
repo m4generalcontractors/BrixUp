@@ -47,11 +47,11 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-charcoal py-20 sm:py-28">
+    <section id="how-it-works" aria-labelledby="how-it-works-heading" className="bg-charcoal py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
+          <h2 id="how-it-works-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             How <span className="text-gradient-gold">BrixUp</span> Works
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">

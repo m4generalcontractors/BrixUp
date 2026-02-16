@@ -6,11 +6,11 @@ const placeholderTeam = [
 
 export default function Team() {
   return (
-    <section id="team" className="bg-dark py-20 sm:py-28">
+    <section id="team" aria-labelledby="team-heading" className="bg-dark py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
+          <h2 id="team-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             Built by <span className="text-gradient-gold">Builders</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/70">

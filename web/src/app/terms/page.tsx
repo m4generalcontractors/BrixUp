@@ -172,7 +172,8 @@ export default function TermsOfServicePage() {
             </p>
             <p className="mt-2 text-white/50">
               BrixUp Technologies LLC<br />
-              Email: legal@brixup.io
+              Email: legal@brixup.io<br />
+              <span className="text-white/30 text-xs">(brixup.io is the official business email domain)</span>
             </p>
           </section>
         </div>

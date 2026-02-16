@@ -22,11 +22,11 @@ const metrics = [
 
 export default function Tokenomics() {
   return (
-    <section id="tokenomics" className="bg-dark py-20 sm:py-28">
+    <section id="tokenomics" aria-labelledby="tokenomics-heading" className="bg-dark py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
+          <h2 id="tokenomics-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             The <span className="text-gradient-gold">$BRXU</span> Token
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-offwhite/90">

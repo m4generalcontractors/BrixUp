@@ -33,7 +33,7 @@ const features = [
 
 export default function ForBuilders() {
   return (
-    <section id="for-builders" className="bg-charcoal py-20 sm:py-28">
+    <section id="for-builders" aria-labelledby="for-builders-heading" className="bg-charcoal py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
@@ -42,7 +42,7 @@ export default function ForBuilders() {
               For Builders
             </span>
           </div>
-          <h2 className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
+          <h2 id="for-builders-heading" className="font-[var(--font-display)] text-3xl font-bold text-offwhite sm:text-4xl lg:text-5xl">
             Your Skills. Your Equity.{" "}
             <span className="text-gradient-gold">Your Future.</span>
           </h2>
