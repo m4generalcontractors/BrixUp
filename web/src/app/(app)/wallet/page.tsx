@@ -414,9 +414,29 @@ export default function WalletPage() {
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </button>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-[var(--brix-border)] px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
-            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
-            <span className="font-mono text-xs text-white/60">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg border border-[var(--brix-border)] px-3 py-2" style={{ backgroundColor: "var(--brix-bg)" }}>
+              <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2ECC71" }} />
+              <span className="font-mono text-xs text-white/60">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+              <button
+                onClick={() => { if (address) navigator.clipboard.writeText(address); }}
+                className="ml-1 rounded p-0.5 hover:bg-white/10 transition-colors"
+                title="Copy address"
+              >
+                <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+            <button
+              onClick={() => disconnect()}
+              className="rounded-lg border border-red-500/30 px-2 py-2 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+              title="Disconnect wallet"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         )}
       </div>

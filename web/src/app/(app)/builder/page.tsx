@@ -263,7 +263,7 @@ export default function BuilderPage() {
               <thead>
                 <tr className="border-b border-[var(--brix-border)]">
                   {["Date", "Project", "Amount", "Status", ""].map((h) => (
-                    <th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
+                    <th key={h} scope="col" className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                   ))}
                 </tr>
               </thead>

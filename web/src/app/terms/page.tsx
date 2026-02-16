@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | BrixUp",
+  openGraph: { title: "Terms of Service | BrixUp", url: "/terms" },
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsOfServicePage() {
   return (

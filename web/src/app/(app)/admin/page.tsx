@@ -340,7 +340,7 @@ export default function AdminPortal() {
                 <thead>
                   <tr className="border-b border-[var(--brix-border)]">
                     {["Deal ID", "Property", "Status", "Funded", "Progress", "Actions"].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
+                      <th key={h} scope="col" className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -383,7 +383,7 @@ export default function AdminPortal() {
                 <thead>
                   <tr className="border-b border-[var(--brix-border)]">
                     {["Name", "Email", "Role", "Wallet", "KYC", "Joined"].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
+                      <th key={h} scope="col" className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>

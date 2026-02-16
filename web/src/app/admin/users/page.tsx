@@ -188,7 +188,7 @@ export default function UsersPage() {
             <thead>
               <tr className="border-b border-[var(--brix-border)]">
                 {["Name", "Email", "Role", "KYC", "Joined", "Actions"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
+                  <th key={h} scope="col" className="px-4 py-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>
                 ))}
               </tr>
             </thead>

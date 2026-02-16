@@ -386,7 +386,7 @@ export default function MarketplacePage() {
           </div>
 
           {/* Deal count */}
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <span className="text-sm text-white">
               <span className="font-semibold">{filteredDeals.length}</span>{" "}
               <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>deals found</span>

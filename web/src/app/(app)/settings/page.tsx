@@ -71,7 +71,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) {
       setName(profile.full_name || "");
-      setEmail(profile.email || "");
+      setEmail(profile.email || user?.email || "");
       setPhone(profile.phone || "");
       setEmailNotif(profile.email_notifications ?? true);
       setSmsNotif(profile.sms_notifications ?? true);
@@ -81,9 +81,12 @@ export default function SettingsPage() {
         setLang(profile.language);
       }
       setKycStatus(profile.kyc_status || "pending");
+    } else if (user?.email) {
+      // Fallback: populate email from auth user even if profile hasn't loaded yet
+      setEmail(user.email);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
+  }, [profile, user]);
 
   const handleSave = async () => {
     setSaving(true);

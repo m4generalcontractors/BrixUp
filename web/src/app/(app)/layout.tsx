@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/lib/language-context";
 import { useBalance } from "@/lib/wallet/useBalance";
+import GlobalSearch from "@/components/GlobalSearch";
 
 import type { UserRole } from "@/lib/supabase/types";
 
@@ -292,40 +293,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </button>
 
           {/* Search */}
-          <form
-            className="relative flex-1 max-w-md"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const input = (e.target as HTMLFormElement).querySelector("input");
-              if (input?.value.trim()) {
-                router.push(`/marketplace?q=${encodeURIComponent(input.value.trim())}`);
-              } else {
-                router.push("/marketplace");
-              }
-            }}
-          >
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-              style={{ color: "var(--brix-fg-muted)" }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <label htmlFor="dashboard-search" className="sr-only">Search deals</label>
-            <input
-              id="dashboard-search"
-              type="text"
-              placeholder={t("header.search")}
-              className="w-full rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
-              style={{
-                backgroundColor: "var(--brix-surface)",
-                color: "var(--brix-fg)",
-                border: "1px solid var(--brix-border)",
-              }}
-            />
-          </form>
+          <GlobalSearch placeholder={t("header.search")} />
 
           <div className="flex items-center gap-2 ml-auto">
             {/* Theme toggle */}

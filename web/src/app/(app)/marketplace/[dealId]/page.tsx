@@ -8,6 +8,7 @@ import { useBrxuApprove, useInvestInDeal, parseBrxu } from "@/lib/contracts/hook
 import { CONTRACTS_DEPLOYED, BRXU_TOKEN_ADDRESS } from "@/lib/contracts/config";
 import { validate, createAmountSchema, parseAmount, sanitizeAmountInput, validateAmount } from "@/lib/validation";
 import { useBalance } from "@/lib/wallet/useBalance";
+import { getDealById } from "@/lib/deals-data";
 
 interface Deal {
   address: string; city: string; state: string; zip: string; type: string;
@@ -30,14 +31,6 @@ const allDeals: Record<string, Deal> = {
   "deal-009": { address: "156 Ocean Blvd", city: "Jacksonville", state: "FL", zip: "32250", type: "Value-Add", capitalNeeded: 245000, askingPrice: 189000, rehabBudget: 55000, arv: 340000, funded: 61, fundedAmount: 149450, roi: 18, timeline: "5 months", beds: 3, baths: 2, sqft: 1500, yearBuilt: 1982, lotSize: "0.20 acres", investorCount: 20, minInvestment: 500, description: "Beach-area value-add near Jax Beach. Kitchen/bath, new roof, deck addition for coastal premium.", imageUrl: "https://images.unsplash.com/photo-1600566753086-00f18f6b6637?w=800&h=500&fit=crop", listedDate: "Jan 25, 2026", fundingDeadline: "Mar 25, 2026", estCompletion: "Jun 25, 2026" },
   "deal-010": { address: "2900 Lake Norman Dr", city: "Mooresville", state: "NC", zip: "28117", type: "Wholesale", capitalNeeded: 155000, askingPrice: 125000, rehabBudget: 30000, arv: 220000, funded: 94, fundedAmount: 145700, roi: 15, timeline: "3 months", beds: 2, baths: 1, sqft: 1100, yearBuilt: 1960, lotSize: "0.15 acres", investorCount: 28, minInvestment: 500, description: "Wholesale near Lake Norman. Light cosmetic work. Strong cash flow as rental or quick flip.", imageUrl: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=800&h=500&fit=crop", listedDate: "Dec 20, 2025", fundingDeadline: "Feb 20, 2026", estCompletion: "Mar 20, 2026" },
 };
-
-const drawSchedule = [
-  { milestone: "Foundation", status: "Completed", amount: 18000, date: "Jan 15, 2026" },
-  { milestone: "Framing", status: "Completed", amount: 22000, date: "Feb 10, 2026" },
-  { milestone: "MEP (Mechanical, Electrical, Plumbing)", status: "In Progress", amount: 20000, date: "Mar 5, 2026" },
-  { milestone: "Finishes", status: "Pending", amount: 17000, date: "Apr 1, 2026" },
-  { milestone: "Certificate of Occupancy", status: "Pending", amount: 8000, date: "Apr 20, 2026" },
-];
 
 const documents = [
   { name: "Inspection Report", type: "PDF", size: "2.4 MB", slug: "inspection-report" },
@@ -77,6 +70,13 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
   const { invest: contractInvest, isPending: isInvesting, isConfirming, isSuccess: investTxSuccess } = useInvestInDeal();
 
   const deal = allDeals[dealId];
+  // Pull draw schedule and team from the canonical deals-data source
+  const dealData = getDealById(dealId);
+  const drawSchedule = dealData?.drawSchedule || [];
+  const dealTeam = {
+    dealmaker: dealData?.dealmaker || { name: "Unknown", brixScore: 0 },
+    gc: dealData?.gc || null,
+  };
   const [currentFunded, setCurrentFunded] = useState(deal?.fundedAmount || 0);
   const [currentInvestors, setCurrentInvestors] = useState(deal?.investorCount || 0);
 
@@ -242,8 +242,8 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
           <div className="rounded-xl border border-[var(--brix-border)] p-5" style={{ backgroundColor: "var(--brix-surface)" }}>
             <h3 className="text-base font-semibold text-white mb-4">Deal Team</h3>
             <div className="space-y-4">
-              <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold" style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}>MR</div><div className="flex-1"><p className="text-sm font-medium text-white">Marcus Reynolds</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Dealmaker</p></div><div className="text-right"><p className="text-sm font-semibold" style={{ color: "#D4A843" }}>892</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Brix Score</p></div></div>
-              <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold" style={{ backgroundColor: "#E8632B", color: "#F8F6F0" }}>TJ</div><div className="flex-1"><p className="text-sm font-medium text-white">Tony Jackson</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>General Contractor</p></div><div className="text-right"><p className="text-sm font-semibold" style={{ color: "#D4A843" }}>847</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Brix Score</p></div></div>
+              <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold" style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}>{dealTeam.dealmaker.name.split(" ").map(n => n[0]).join("").slice(0, 2)}</div><div className="flex-1"><p className="text-sm font-medium text-white">{dealTeam.dealmaker.name}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Dealmaker</p></div><div className="text-right"><p className="text-sm font-semibold" style={{ color: "#D4A843" }}>{dealTeam.dealmaker.brixScore}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Brix Score</p></div></div>
+              {dealTeam.gc && <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold" style={{ backgroundColor: "#E8632B", color: "#F8F6F0" }}>{dealTeam.gc.name.split(" ").map(n => n[0]).join("").slice(0, 2)}</div><div className="flex-1"><p className="text-sm font-medium text-white">{dealTeam.gc.name}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>General Contractor</p></div><div className="text-right"><p className="text-sm font-semibold" style={{ color: "#D4A843" }}>{dealTeam.gc.brixScore}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>Brix Score</p></div></div>}
             </div>
           </div>
 

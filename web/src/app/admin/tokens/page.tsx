@@ -157,7 +157,7 @@ export default function TokenManagementPage() {
         {/* Desktop table */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-[var(--brix-border)]">{["Action", "Amount", "To", "Date", "By"].map((h) => (<th key={h} className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
+            <thead><tr className="border-b border-[var(--brix-border)]">{["Action", "Amount", "To", "Date", "By"].map((h) => (<th key={h} scope="col" className="pb-3 text-left text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>{h}</th>))}</tr></thead>
             <tbody className="divide-y divide-white/5">
               {recentActions.map((a, i) => (
                 <tr key={i}>

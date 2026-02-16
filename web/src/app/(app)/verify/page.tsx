@@ -334,7 +334,16 @@ export default function VerifyPage() {
               </div>
               <div>
                 <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>State *</label>
-                <input value={form.state} onChange={(e) => update("state", e.target.value)} className={inputClass} style={inputStyle} placeholder="NC" />
+                {form.country === "US" ? (
+                  <select value={form.state} onChange={(e) => update("state", e.target.value)} className={inputClass} style={inputStyle}>
+                    <option value="">Select state...</option>
+                    {["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","AS","GU","MP","PR","VI"].map((st) => (
+                      <option key={st} value={st}>{st}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input value={form.state} onChange={(e) => update("state", e.target.value)} className={inputClass} style={inputStyle} placeholder="Province / Region" />
+                )}
               </div>
               <div className="col-span-2 sm:col-span-1">
                 <label className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>ZIP *</label>
