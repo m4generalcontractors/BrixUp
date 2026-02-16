@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServiceRoleSupabase } from "@/lib/supabase/server";
 import crypto from "crypto";
 
 const SUMSUB_SECRET_KEY = process.env.SUMSUB_SECRET_KEY || "";
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing userId" }, { status: 400 });
   }
 
-  const supabase = await createServerSupabase();
+  const supabase = createServiceRoleSupabase();
 
   // Map Sumsub status to our KYC status
   let kycStatus: "verified" | "pending" | "rejected" = "pending";

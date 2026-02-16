@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServiceRoleSupabase } from "@/lib/supabase/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2026-01-28.clover",
-});
-
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
+
+// Lazy-init: Stripe throws at module level if secret key is missing (e.g. during build)
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: "2026-01-28.clover",
+    });
+  }
+  return _stripe;
+}
 
 /**
  * POST /api/stripe/webhook — Handle Stripe payment events
@@ -19,7 +26,7 @@ export async function POST(request: Request) {
 
   try {
     if (WEBHOOK_SECRET) {
-      event = stripe.webhooks.constructEvent(rawBody, sig, WEBHOOK_SECRET);
+      event = getStripe().webhooks.constructEvent(rawBody, sig, WEBHOOK_SECRET);
     } else {
       // Dev fallback: parse without signature verification
       event = JSON.parse(rawBody) as Stripe.Event;
@@ -35,7 +42,7 @@ export async function POST(request: Request) {
     const brxuAmount = parseFloat(session.metadata?.brxu_amount || "0");
 
     if (userId && brxuAmount > 0) {
-      const supabase = await createServerSupabase();
+      const supabase = createServiceRoleSupabase();
 
       // Record the purchase transaction
       await supabase.from("transactions").insert({

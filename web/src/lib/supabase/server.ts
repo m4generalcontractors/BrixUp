@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
 
@@ -24,5 +25,19 @@ export async function createServerSupabase() {
         }
       },
     },
+  });
+}
+
+/**
+ * Service-role client for webhook handlers and admin operations.
+ * Bypasses RLS — use only in trusted server contexts (webhooks with signature verification).
+ */
+export function createServiceRoleSupabase() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) {
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured");
+  }
+  return createClient<Database>(SUPABASE_URL, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
   });
 }

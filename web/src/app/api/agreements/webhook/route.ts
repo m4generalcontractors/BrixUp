@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServiceRoleSupabase } from "@/lib/supabase/server";
 
 /**
  * POST /api/agreements/webhook — BoldSign sends signature status updates here
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const supabase = await createServerSupabase();
+  const supabase = createServiceRoleSupabase();
 
   let status: string | null = null;
   switch (eventType) {
