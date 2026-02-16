@@ -152,17 +152,50 @@ export default function WalletPage() {
   const [buySuccess, setBuySuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Claim rewards rate limiting state
+  const [claimError, setClaimError] = useState<string | null>(null);
+  const [lastClaimTime, setLastClaimTime] = useState<number | null>(null);
+  const [claimCooldownRemaining, setClaimCooldownRemaining] = useState<string | null>(null);
+  const CLAIM_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+  // Countdown timer for claim cooldown
+  useEffect(() => {
+    if (!lastClaimTime) { setClaimCooldownRemaining(null); return; }
+    const tick = () => {
+      const elapsed = Date.now() - lastClaimTime;
+      const remaining = CLAIM_COOLDOWN_MS - elapsed;
+      if (remaining <= 0) { setClaimCooldownRemaining(null); return; }
+      const hours = Math.floor(remaining / 3600000);
+      const mins = Math.floor((remaining % 3600000) / 60000);
+      const secs = Math.floor((remaining % 60000) / 1000);
+      setClaimCooldownRemaining(`${hours}h ${mins}m ${secs}s`);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [lastClaimTime]);
+
   const fetchTransactions = useCallback(async () => {
+    let apiFailed = true;
     try {
       const res = await fetch("/api/transactions?limit=50");
       if (res.ok) {
         const data = await res.json();
-        // Only replace sample data if API returns more transactions
-        if (Array.isArray(data) && data.length >= sampleTransactions.length) {
+        if (Array.isArray(data)) {
           setTransactions(data);
+          apiFailed = false;
+          // Find last staking_reward claim for cooldown
+          const lastClaim = data.find((tx: Transaction) => tx.type === "staking_reward");
+          if (lastClaim?.created_at) {
+            const claimTs = new Date(lastClaim.created_at).getTime();
+            if (Date.now() - claimTs < CLAIM_COOLDOWN_MS) {
+              setLastClaimTime(claimTs);
+            }
+          }
         }
       }
-    } catch { /* Use sample data */ }
+    } catch { /* fall through */ }
+    if (apiFailed) setTransactions(sampleTransactions);
     setLoading(false);
   }, []);
 
@@ -253,17 +286,29 @@ export default function WalletPage() {
 
   const handleClaimRewards = async () => {
     if (pendingRewardsAmount <= 0) return;
+    // Enforce 24h cooldown
+    if (lastClaimTime && (Date.now() - lastClaimTime) < CLAIM_COOLDOWN_MS) {
+      setClaimError("Rewards can only be claimed once per 24 hours");
+      return;
+    }
+    setClaimError(null);
     setIsClaiming(true);
     try {
-      await fetch("/api/transactions", {
+      const res = await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "staking_reward", amount: pendingRewardsAmount, description: `Claimed ${pendingRewardsAmount.toLocaleString()} BRXU rewards` }),
       });
-      setClaimSuccess(true);
-      await fetchTransactions();
-      setTimeout(() => setClaimSuccess(false), 3000);
-    } catch { /* handled */ }
+      if (!res.ok) {
+        const data = await res.json();
+        setClaimError(data.error || "Claim failed");
+      } else {
+        setClaimSuccess(true);
+        setLastClaimTime(Date.now());
+        await fetchTransactions();
+        setTimeout(() => setClaimSuccess(false), 3000);
+      }
+    } catch { setClaimError("Claim failed. Please try again."); }
     setIsClaiming(false);
   };
 
@@ -829,9 +874,12 @@ export default function WalletPage() {
                 </div>
               </div>
               {pendingRewardsAmount > 0 && (
-                <button onClick={handleClaimRewards} disabled={isClaiming} className="mt-3 w-full rounded-lg py-2 text-xs font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>
-                  {isClaiming ? "Claiming..." : claimSuccess ? "Claimed!" : "Claim Rewards"}
-                </button>
+                <div className="mt-3 space-y-2">
+                  <button onClick={handleClaimRewards} disabled={isClaiming || !!claimCooldownRemaining} className="w-full rounded-lg py-2 text-xs font-bold transition-colors hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#2ECC71", color: "#0D0D1A" }}>
+                    {isClaiming ? "Claiming..." : claimSuccess ? "Claimed!" : claimCooldownRemaining ? `Next claim in ${claimCooldownRemaining}` : "Claim Rewards"}
+                  </button>
+                  {claimError && <p className="text-center text-xs text-red-400">{claimError}</p>}
+                </div>
               )}
             </div>
 

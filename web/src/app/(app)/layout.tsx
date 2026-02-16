@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -9,6 +9,16 @@ import { useLanguage } from "@/lib/language-context";
 import { useBalance } from "@/lib/wallet/useBalance";
 
 import type { UserRole } from "@/lib/supabase/types";
+
+interface SearchResult {
+  id: string;
+  address: string;
+  city: string;
+  state: string;
+  type: string;
+  roi: number;
+  capitalNeeded: number;
+}
 
 interface NavItem {
   labelKey: string;
@@ -115,6 +125,64 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Single source of truth — same hook used by wallet page and dashboard
   const balanceData = useBalance();
   const brixBalance = Math.round(balanceData.availableBalance);
+
+  // Global search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Debounced search
+  useEffect(() => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    if (!searchQuery.trim()) { setSearchResults([]); setShowSearchDropdown(false); return; }
+    searchTimerRef.current = setTimeout(async () => {
+      setSearchLoading(true);
+      try {
+        const res = await fetch("/api/deals");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const q = searchQuery.toLowerCase();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const matches = data.filter((d: any) =>
+              (d.address || "").toLowerCase().includes(q) ||
+              (d.city || "").toLowerCase().includes(q) ||
+              (d.state || "").toLowerCase().includes(q) ||
+              (d.zip || "").includes(q)
+            ).slice(0, 5).map((d: Record<string, unknown>) => ({
+              id: d.id as string,
+              address: d.address as string,
+              city: d.city as string,
+              state: d.state as string,
+              type: (d.propertyType || d.property_type || "Flip") as string,
+              roi: (d.projectedROI || d.projected_roi || 0) as number,
+              capitalNeeded: (d.totalCapitalNeeded || d.total_capital_needed || 0) as number,
+            }));
+            setSearchResults(matches);
+            setShowSearchDropdown(true);
+          }
+        }
+      } catch { /* silent */ }
+      setSearchLoading(false);
+    }, 300);
+    return () => { if (searchTimerRef.current) clearTimeout(searchTimerRef.current); };
+  }, [searchQuery]);
+
+  // Close search dropdown on click outside or Escape
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) setShowSearchDropdown(false);
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowSearchDropdown(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => { document.removeEventListener("mousedown", handleClick); document.removeEventListener("keydown", handleKey); };
+  }, []);
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -291,21 +359,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </svg>
           </button>
 
-          {/* Search */}
-          <form
-            className="relative flex-1 max-w-md"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const input = (e.target as HTMLFormElement).querySelector("input");
-              if (input?.value.trim()) {
-                router.push(`/marketplace?q=${encodeURIComponent(input.value.trim())}`);
-              } else {
-                router.push("/marketplace");
-              }
-            }}
-          >
+          {/* Search with dropdown */}
+          <div ref={searchRef} className="relative flex-1 max-w-md">
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10"
               style={{ color: "var(--brix-fg-muted)" }}
               fill="none"
               stroke="currentColor"
@@ -317,6 +374,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <input
               id="dashboard-search"
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => { if (searchResults.length > 0) setShowSearchDropdown(true); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchQuery.trim()) {
+                  e.preventDefault();
+                  setShowSearchDropdown(false);
+                  router.push(`/marketplace?q=${encodeURIComponent(searchQuery.trim())}`);
+                }
+              }}
               placeholder={t("header.search")}
               className="w-full rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-[#D4A843]"
               style={{
@@ -325,7 +392,48 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 border: "1px solid var(--brix-border)",
               }}
             />
-          </form>
+            {showSearchDropdown && (
+              <div className="absolute left-0 right-0 top-full mt-1 z-50 rounded-xl shadow-2xl overflow-hidden" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+                {searchLoading ? (
+                  <div className="px-4 py-4 text-center text-sm" style={{ color: "var(--brix-fg-muted)" }}>Searching...</div>
+                ) : searchResults.length === 0 ? (
+                  <div className="px-4 py-4 text-center text-sm" style={{ color: "var(--brix-fg-muted)" }}>No results found</div>
+                ) : (
+                  searchResults.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/marketplace/${r.id}`}
+                      onClick={() => { setShowSearchDropdown(false); setSearchQuery(""); }}
+                      className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5"
+                      style={{ borderBottom: "1px solid var(--brix-border)" }}
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold" style={{ backgroundColor: r.type === "Flip" ? "#E8632B20" : r.type === "New Build" ? "#2B4C7E20" : "#D4A84320", color: r.type === "Flip" ? "#E8632B" : r.type === "New Build" ? "#2B4C7E" : "#D4A843" }}>
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate" style={{ color: "var(--brix-fg)" }}>{r.address}</p>
+                        <p className="text-xs truncate" style={{ color: "var(--brix-fg-muted)" }}>{r.city}, {r.state} &middot; {r.type}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-xs font-semibold" style={{ color: "#2ECC71" }}>{r.roi}% ROI</p>
+                        <p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>${r.capitalNeeded.toLocaleString()}</p>
+                      </div>
+                    </Link>
+                  ))
+                )}
+                {searchResults.length > 0 && (
+                  <Link
+                    href={`/marketplace?q=${encodeURIComponent(searchQuery)}`}
+                    onClick={() => { setShowSearchDropdown(false); setSearchQuery(""); }}
+                    className="block px-4 py-2.5 text-center text-xs font-medium transition-colors hover:bg-white/5"
+                    style={{ color: "#D4A843" }}
+                  >
+                    View all results in Marketplace
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center gap-2 ml-auto">
             {/* Theme toggle */}

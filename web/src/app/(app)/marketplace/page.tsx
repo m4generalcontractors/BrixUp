@@ -18,239 +18,91 @@ const MapView = dynamic(() => import("@/components/marketplace/MapView"), {
   ),
 });
 
-/* ─── Sample deal data with geolocation ─── */
-const deals = [
-  {
-    id: "deal-001",
-    address: "1847 Oakwood Dr",
-    city: "Charlotte",
-    state: "NC",
-    zip: "28205",
-    county: "Mecklenburg",
-    type: "Flip",
-    capitalNeeded: 285000,
-    askingPrice: 195000,
-    arv: 360000,
-    funded: 67,
-    roi: 22,
-    timeline: "6 mo",
-    beds: 3,
-    baths: 2,
-    sqft: 1850,
-    status: "Open",
-    listedDate: "2026-02-10",
-    lat: 35.2271,
-    lng: -80.8131,
-    imageUrl: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-002",
-    address: "412 Magnolia Ln",
-    city: "Raleigh",
-    state: "NC",
-    zip: "27601",
-    county: "Wake",
-    type: "New Build",
-    capitalNeeded: 520000,
-    askingPrice: 120000,
-    arv: 680000,
-    funded: 43,
-    roi: 28,
-    timeline: "12 mo",
-    beds: 4,
-    baths: 3,
-    sqft: 2800,
-    status: "Open",
-    listedDate: "2026-02-08",
-    lat: 35.7796,
-    lng: -78.6382,
-    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-003",
-    address: "903 Pine Valley Rd",
-    city: "Greenville",
-    state: "SC",
-    zip: "29601",
-    county: "Greenville",
-    type: "Value-Add",
-    capitalNeeded: 175000,
-    askingPrice: 135000,
-    arv: 245000,
-    funded: 89,
-    roi: 16,
-    timeline: "4 mo",
-    beds: 2,
-    baths: 1,
-    sqft: 1200,
-    status: "Funding",
-    listedDate: "2026-01-28",
-    lat: 34.8526,
-    lng: -82.3940,
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-004",
-    address: "2215 Bayshore Blvd",
-    city: "Tampa",
-    state: "FL",
-    zip: "33611",
-    county: "Hillsborough",
-    type: "Flip",
-    capitalNeeded: 340000,
-    askingPrice: 245000,
-    arv: 475000,
-    funded: 52,
-    roi: 25,
-    timeline: "8 mo",
-    beds: 4,
-    baths: 2,
-    sqft: 2100,
-    status: "Open",
-    listedDate: "2026-02-12",
-    lat: 27.9506,
-    lng: -82.4572,
-    imageUrl: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-005",
-    address: "567 Elm Creek Way",
-    city: "Charlotte",
-    state: "NC",
-    zip: "28202",
-    county: "Mecklenburg",
-    type: "New Build",
-    capitalNeeded: 450000,
-    askingPrice: 95000,
-    arv: 620000,
-    funded: 31,
-    roi: 30,
-    timeline: "14 mo",
-    beds: 5,
-    baths: 4,
-    sqft: 3200,
-    status: "Open",
-    listedDate: "2026-02-14",
-    lat: 35.2401,
-    lng: -80.8540,
-    imageUrl: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-006",
-    address: "1100 Riverside Ave",
-    city: "Raleigh",
-    state: "NC",
-    zip: "27603",
-    county: "Wake",
-    type: "Value-Add",
-    capitalNeeded: 210000,
-    askingPrice: 165000,
-    arv: 310000,
-    funded: 75,
-    roi: 19,
-    timeline: "5 mo",
-    beds: 3,
-    baths: 2,
-    sqft: 1650,
-    status: "Funding",
-    listedDate: "2026-02-01",
-    lat: 35.7596,
-    lng: -78.6480,
-    imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-007",
-    address: "824 Palmetto St",
-    city: "Charleston",
-    state: "SC",
-    zip: "29401",
-    county: "Charleston",
-    type: "Flip",
-    capitalNeeded: 310000,
-    askingPrice: 210000,
-    arv: 420000,
-    funded: 58,
-    roi: 24,
-    timeline: "7 mo",
-    beds: 3,
-    baths: 2,
-    sqft: 1780,
-    status: "Open",
-    listedDate: "2026-02-11",
-    lat: 32.7765,
-    lng: -79.9311,
-    imageUrl: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-008",
-    address: "3301 Peachtree Rd",
-    city: "Atlanta",
-    state: "GA",
-    zip: "30326",
-    county: "Fulton",
-    type: "New Build",
-    capitalNeeded: 680000,
-    askingPrice: 180000,
-    arv: 920000,
-    funded: 22,
-    roi: 32,
-    timeline: "16 mo",
-    beds: 5,
-    baths: 4,
-    sqft: 3800,
-    status: "Open",
-    listedDate: "2026-02-13",
-    lat: 33.8444,
-    lng: -84.3627,
-    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-009",
-    address: "156 Ocean Blvd",
-    city: "Jacksonville",
-    state: "FL",
-    zip: "32250",
-    county: "Duval",
-    type: "Value-Add",
-    capitalNeeded: 245000,
-    askingPrice: 189000,
-    arv: 340000,
-    funded: 61,
-    roi: 18,
-    timeline: "5 mo",
-    beds: 3,
-    baths: 2,
-    sqft: 1500,
-    status: "Open",
-    listedDate: "2026-02-07",
-    lat: 30.2866,
-    lng: -81.3960,
-    imageUrl: "https://images.unsplash.com/photo-1600566753086-00f18f6b6637?w=600&h=400&fit=crop",
-  },
-  {
-    id: "deal-010",
-    address: "2900 Lake Norman Dr",
-    city: "Mooresville",
-    state: "NC",
-    zip: "28117",
-    county: "Iredell",
-    type: "Wholesale",
-    capitalNeeded: 155000,
-    askingPrice: 125000,
-    arv: 220000,
-    funded: 94,
-    roi: 15,
-    timeline: "3 mo",
-    beds: 2,
-    baths: 1,
-    sqft: 1100,
-    status: "Funding",
-    listedDate: "2026-01-20",
-    lat: 35.5849,
-    lng: -80.8101,
-    imageUrl: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&h=400&fit=crop",
-  },
-];
+/* ─── Approximate geocoding for map markers ─── */
+const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  "charlotte,nc": { lat: 35.2271, lng: -80.8431 },
+  "raleigh,nc": { lat: 35.7796, lng: -78.6382 },
+  "greenville,sc": { lat: 34.8526, lng: -82.3940 },
+  "tampa,fl": { lat: 27.9506, lng: -82.4572 },
+  "charleston,sc": { lat: 32.7765, lng: -79.9311 },
+  "atlanta,ga": { lat: 33.8444, lng: -84.3627 },
+  "jacksonville,fl": { lat: 30.2866, lng: -81.3960 },
+  "mooresville,nc": { lat: 35.5849, lng: -80.8101 },
+  "durham,nc": { lat: 35.9940, lng: -78.8986 },
+  "greensboro,nc": { lat: 36.0726, lng: -79.7920 },
+  "columbia,sc": { lat: 34.0007, lng: -81.0348 },
+  "miami,fl": { lat: 25.7617, lng: -80.1918 },
+  "orlando,fl": { lat: 28.5383, lng: -81.3792 },
+  "savannah,ga": { lat: 32.0809, lng: -81.0912 },
+};
+
+function getCityCoords(city: string, state: string): { lat: number; lng: number } {
+  const key = `${city},${state}`.toLowerCase().replace(/\s+/g, "");
+  if (CITY_COORDS[key]) return CITY_COORDS[key];
+  // Fallback: slight random offset from Charlotte
+  const hash = (city + state).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  return { lat: 34.5 + (hash % 30) / 10, lng: -81 + (hash % 20) / 10 };
+}
+
+/* ─── Normalize API response to frontend deal shape ─── */
+interface MarketplaceDeal {
+  id: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  county: string;
+  type: string;
+  capitalNeeded: number;
+  askingPrice: number;
+  arv: number;
+  funded: number;
+  roi: number;
+  timeline: string;
+  beds: number;
+  baths: number;
+  sqft: number;
+  status: string;
+  listedDate: string;
+  lat: number;
+  lng: number;
+  imageUrl: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeDeal(raw: any): MarketplaceDeal {
+  const totalCapital = raw.totalCapitalNeeded || raw.total_capital_needed || 0;
+  const fundedAmount = raw.fundedAmount || raw.funded_amount || 0;
+  const fundedPct = totalCapital > 0 ? Math.round((fundedAmount / totalCapital) * 100) : 0;
+  const city = raw.city || "";
+  const state = raw.state || "";
+  const coords = getCityCoords(city, state);
+  const photos = raw.photos || [];
+
+  return {
+    id: raw.id || "",
+    address: raw.address || "",
+    city,
+    state,
+    zip: raw.zip || "",
+    county: raw.county || "",
+    type: raw.propertyType || raw.property_type || "Flip",
+    capitalNeeded: totalCapital,
+    askingPrice: raw.askingPrice || raw.asking_price || 0,
+    arv: raw.arv || 0,
+    funded: fundedPct,
+    roi: raw.projectedROI || raw.projected_roi || 0,
+    timeline: raw.projectedTimeline || raw.projected_timeline || "",
+    beds: raw.beds || 0,
+    baths: raw.baths || 0,
+    sqft: raw.sqft || 0,
+    status: raw.status || "Open",
+    listedDate: raw.listedDate || raw.listed_date || new Date().toISOString(),
+    lat: coords.lat,
+    lng: coords.lng,
+    imageUrl: photos[0] || raw.imageUrl || raw.image_url || "",
+  };
+}
 
 type SortOption = "newest" | "roi" | "funded" | "price-low" | "price-high";
 type ViewMode = "split" | "map" | "grid";
@@ -258,12 +110,36 @@ type ViewMode = "split" | "map" | "grid";
 export default function MarketplacePage() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
+  const [deals, setDeals] = useState<MarketplaceDeal[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Read initial search query from URL
   useEffect(() => {
     const q = searchParams.get("q");
     if (q) setSearchQuery(q);
   }, [searchParams]);
+
+  // Fetch deals from API
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchDeals() {
+      try {
+        const res = await fetch("/api/deals");
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled && Array.isArray(data)) {
+            setDeals(data.map(normalizeDeal));
+          }
+        }
+      } catch {
+        // API unavailable — deals remain empty
+      }
+      if (!cancelled) setLoading(false);
+    }
+    fetchDeals();
+    return () => { cancelled = true; };
+  }, []);
+
   const [propertyType, setPropertyType] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
   const [bedsFilter, setBedsFilter] = useState("All");
@@ -334,7 +210,7 @@ export default function MarketplacePage() {
     });
 
     return result;
-  }, [searchQuery, propertyType, priceRange, bedsFilter, statusFilter, sortBy]);
+  }, [deals, searchQuery, propertyType, priceRange, bedsFilter, statusFilter, sortBy]);
 
   const activeDealId = selectedDealId || hoveredDealId;
 
@@ -347,6 +223,17 @@ export default function MarketplacePage() {
   const activeFilterCount = [propertyType, priceRange, bedsFilter, statusFilter].filter(
     (f) => f !== "All"
   ).length;
+
+  if (loading) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
+          <span className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>Loading deals...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden">

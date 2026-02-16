@@ -69,18 +69,18 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    if (profile) {
-      setName(profile.full_name || "");
-      setEmail(profile.email || "");
-      setPhone(profile.phone || "");
-      setEmailNotif(profile.email_notifications ?? true);
-      setSmsNotif(profile.sms_notifications ?? true);
-      setPushNotif(profile.push_notifications ?? false);
+    if (profile || user) {
+      setName(profile?.full_name || "");
+      setEmail(profile?.email || user?.email || "");
+      setPhone(profile?.phone || "");
+      setEmailNotif(profile?.email_notifications ?? true);
+      setSmsNotif(profile?.sms_notifications ?? true);
+      setPushNotif(profile?.push_notifications ?? false);
       // Sync language context from profile on load
-      if (profile.language && profile.language !== lang) {
+      if (profile?.language && profile.language !== lang) {
         setLang(profile.language);
       }
-      setKycStatus(profile.kyc_status || "pending");
+      setKycStatus(profile?.kyc_status || "pending");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
@@ -385,37 +385,29 @@ export default function SettingsPage() {
               <p className="text-sm" style={{ color: "var(--brix-fg-muted)" }}>{t("settings.noWallet")}</p>
               <p className="mt-0.5 text-xs" style={{ color: "var(--brix-fg-muted)", opacity: 0.7 }}>{t("settings.noWalletDesc")}</p>
             </div>
-            <button
-              onClick={() => connect({ connector: coinbaseWallet({ appName: "BrixUp" }) })}
-              disabled={isWalletConnecting}
-              className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
-            >
-              {isWalletConnecting ? t("settings.connecting") : t("settings.connectWallet")}
-            </button>
+            <div className="relative group">
+              <button
+                onClick={() => connect({ connector: coinbaseWallet({ appName: "BrixUp" }) })}
+                disabled={isWalletConnecting}
+                className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: "#2B4C7E", color: "#F8F6F0" }}
+              >
+                {isWalletConnecting ? t("settings.connecting") : t("settings.connectWallet")}
+              </button>
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-medium" style={{ backgroundColor: "#0D0D1A", color: "#D4A843", border: "1px solid var(--brix-border)" }}>Coming Soon</span>
+            </div>
           </div>
           )}
         </section>
 
-        {/* Language */}
-        <section className="rounded-xl p-5" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)" }}>
+        {/* Language — coming soon */}
+        <section className="rounded-xl p-5 relative overflow-hidden" style={{ backgroundColor: "var(--brix-surface)", border: "1px solid var(--brix-border)", opacity: 0.5 }}>
           <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--brix-fg)" }}>{t("settings.language")}</h2>
           <div className="flex gap-3">
-            {(["en", "es"] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => handleLangChange(l)}
-                className="flex-1 rounded-lg border py-3 text-sm font-medium transition-colors hover:opacity-80"
-                style={{
-                  borderColor: lang === l ? "#D4A843" : "var(--brix-border)",
-                  backgroundColor: lang === l ? "#D4A84320" : "transparent",
-                  color: lang === l ? "#D4A843" : "var(--brix-fg)",
-                }}
-              >
-                {l === "en" ? "English" : "Español"}
-              </button>
-            ))}
+            <button disabled className="flex-1 rounded-lg border py-3 text-sm font-medium cursor-not-allowed" style={{ borderColor: "#D4A843", backgroundColor: "#D4A84320", color: "#D4A843" }}>English</button>
+            <button disabled className="flex-1 rounded-lg border py-3 text-sm font-medium cursor-not-allowed" style={{ borderColor: "var(--brix-border)", color: "var(--brix-fg)" }}>Español</button>
           </div>
+          <p className="mt-2 text-xs text-center" style={{ color: "var(--brix-fg-muted)" }}>Multi-language support coming soon</p>
         </section>
 
         {/* Danger Zone */}

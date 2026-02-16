@@ -466,8 +466,8 @@ const DealmakerDashboard = memo(function DealmakerDashboard() {
 
 export default function DashboardPage() {
   const { profile } = useAuth();
-  const [investments, setInvestments] = useState<Investment[]>(sampleInvestments);
-  const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
+  const [investments, setInvestments] = useState<Investment[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   const userRole = profile?.user_role || "investor";
@@ -476,6 +476,7 @@ export default function DashboardPage() {
 
   const fetchData = useCallback(async () => {
     const controller = new AbortController();
+    let apiFailed = true;
     try {
       const [invRes, txRes] = await Promise.all([
         fetch("/api/investments", { signal: controller.signal }),
@@ -483,18 +484,15 @@ export default function DashboardPage() {
       ]);
       if (invRes.ok) {
         const invData = await invRes.json();
-        // Only replace sample data when API returns complete data with deals info
-        if (Array.isArray(invData) && invData.length >= sampleInvestments.length && invData[0]?.deals) {
+        if (Array.isArray(invData)) {
           setInvestments(invData);
+          apiFailed = false;
         }
       }
       if (txRes.ok) {
         const txData = await txRes.json();
-        // Only replace sample transactions when API returns at least as many
-        if (Array.isArray(txData) && txData.length >= sampleTransactions.length) {
+        if (Array.isArray(txData)) {
           // Deduplicate by composite key (description + date-only + amount).
-          // Entries that share the same description, day, and amount are treated
-          // as duplicates even when they have different database IDs.
           const seen = new Set<string>();
           const deduped = txData.filter((tx: Transaction) => {
             const day = tx.created_at?.slice(0, 10) || "";
@@ -504,9 +502,15 @@ export default function DashboardPage() {
             return true;
           });
           setTransactions(deduped.slice(0, 10));
+          apiFailed = false;
         }
       }
-    } catch { /* Use sample data on error */ }
+    } catch { /* fall through to fallback */ }
+    // Fallback to sample data only when APIs are completely unavailable
+    if (apiFailed) {
+      setInvestments(sampleInvestments);
+      setTransactions(sampleTransactions);
+    }
     setLoading(false);
   }, []);
 

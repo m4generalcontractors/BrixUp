@@ -85,6 +85,29 @@ export async function POST(request: Request) {
     );
   }
 
+  // Enforce 24-hour cooldown on staking_reward claims
+  if (type === "staking_reward") {
+    try {
+      const { data: lastClaim } = await supabase
+        .from("transactions")
+        .select("created_at")
+        .eq("user_id", user.id)
+        .eq("type", "staking_reward")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single() as { data: { created_at: string } | null };
+      if (lastClaim?.created_at) {
+        const elapsed = Date.now() - new Date(lastClaim.created_at).getTime();
+        if (elapsed < 24 * 60 * 60 * 1000) {
+          return NextResponse.json(
+            { error: "Rewards can only be claimed once per 24 hours" },
+            { status: 429 }
+          );
+        }
+      }
+    } catch { /* No previous claim found, proceed */ }
+  }
+
   // Sanitize string inputs
   const safeDescription = sanitizeString(description, 500);
   const safeToAddress = sanitizeString(to_address, 200) || null;
