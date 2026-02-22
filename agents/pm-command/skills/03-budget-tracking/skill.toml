@@ -1,0 +1,6 @@
+[skill]
+name = "Budget Tracking"
+version = "1.0"
+description = "Real-time construction budget tracking, change order management, and cost-to-complete forecasting across M4 projects"
+triggers = ["budget", "cost tracking", "change order", "cost to complete", "project cost", "over budget", "budget variance", "CTC"]
+tools = ["procore", "quickbooks", "google_sheets"]

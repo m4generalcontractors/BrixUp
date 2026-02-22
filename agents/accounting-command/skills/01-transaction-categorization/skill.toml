@@ -1,0 +1,6 @@
+[skill]
+name = "Transaction Categorization"
+version = "1.0"
+description = "Categorize financial transactions across all M4 entities with QuickBooks sync and multi-entity allocation"
+triggers = ["categorize transaction", "transaction", "categorization", "quickbooks sync", "classify expense", "code transaction", "account coding"]
+tools = ["quickbooks", "google_sheets", "stripe"]

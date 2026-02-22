@@ -1,0 +1,30 @@
+# =============================================================================
+# ZeroClaw Agent — Systemd Service Template
+# =============================================================================
+# Replace {SLUG} with the agent slug (e.g., ops-commander)
+# Install to: /etc/systemd/system/zeroclaw-{SLUG}.service
+
+[Unit]
+Description=M4 {SLUG} (ZeroClaw Agent)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=m4agent
+Group=m4agent
+WorkingDirectory=/opt/m4-agents/{SLUG}
+EnvironmentFile=/opt/m4-agents/.env
+ExecStart=/usr/local/bin/zeroclaw daemon
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=zeroclaw-{SLUG}
+
+# Resource limits
+MemoryMax=128M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

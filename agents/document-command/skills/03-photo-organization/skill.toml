@@ -1,0 +1,6 @@
+[skill]
+name = "Photo Organization"
+version = "1.0"
+description = "Organize construction progress photos by project, date, and phase for documentation and reporting"
+triggers = ["photos", "photo organization", "progress photos", "site photos", "photo documentation", "picture", "image organization"]
+tools = ["google_drive", "procore", "google_photos"]

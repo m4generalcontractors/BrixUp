@@ -1,0 +1,6 @@
+[skill]
+name = "Property Listing Management"
+version = "1.0"
+description = "Manage property listings across platforms"
+triggers = ["listing", "property", "MLS", "Zillow", "Realtor", "for sale"]
+tools = ["http_request", "memory_save", "file_write"]

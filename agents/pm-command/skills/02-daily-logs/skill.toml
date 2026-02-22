@@ -1,0 +1,6 @@
+[skill]
+name = "Daily Logs"
+version = "1.0"
+description = "Manage field daily logs including weather, crew counts, equipment, work completed, and issues for all active projects"
+triggers = ["daily log", "field report", "daily report", "crew count", "weather log", "field log", "superintendent log"]
+tools = ["procore", "google_drive", "google_sheets"]

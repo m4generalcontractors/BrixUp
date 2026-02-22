@@ -1,0 +1,6 @@
+[skill]
+name = "Drawing Management"
+version = "1.0"
+description = "Manage construction drawing version control, distribution to field teams, and revision tracking"
+triggers = ["drawings", "drawing management", "plans", "blueprints", "plan set", "revision", "ASI", "drawing distribution", "plan update"]
+tools = ["google_drive", "procore", "gmail"]

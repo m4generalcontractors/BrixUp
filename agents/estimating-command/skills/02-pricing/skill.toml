@@ -1,0 +1,6 @@
+[skill]
+name = "Pricing Database"
+version = "1.0"
+description = "Maintain and query regional material and labor pricing"
+triggers = ["price", "cost", "rate", "material cost", "labor rate"]
+tools = ["memory_search", "memory_save", "http_request"]

@@ -1,0 +1,6 @@
+[skill]
+name = "Operational Briefing"
+version = "1.0"
+description = "Generate daily, weekly, and on-demand operational briefs"
+triggers = ["brief", "briefing", "report", "summary", "status"]
+tools = ["http_request", "shell", "memory_search", "memory_save"]

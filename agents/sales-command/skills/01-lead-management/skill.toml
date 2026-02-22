@@ -1,0 +1,6 @@
+[skill]
+name = "Lead Management"
+version = "1.0"
+description = "Process incoming leads, score, route by entity, follow up"
+triggers = ["lead", "inquiry", "new contact", "prospect", "follow up"]
+tools = ["http_request", "memory_save", "memory_search"]

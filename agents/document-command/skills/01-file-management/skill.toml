@@ -1,0 +1,6 @@
+[skill]
+name = "File Management"
+version = "1.0"
+description = "Manage Google Drive folder structure and file organization by project across all M4 entities"
+triggers = ["file management", "folder structure", "google drive", "organize files", "file organization", "project folder", "document storage"]
+tools = ["google_drive", "google_docs", "google_sheets"]

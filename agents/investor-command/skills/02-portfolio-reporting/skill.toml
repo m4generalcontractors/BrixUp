@@ -1,0 +1,6 @@
+[skill]
+name = "Portfolio Reporting"
+version = "1.0"
+description = "Generate investor portfolio reports, calculate distributions, and track returns"
+triggers = ["report", "portfolio", "distribution", "returns", "statement", "performance"]
+tools = ["http_request", "memory_save", "memory_search", "file_write"]

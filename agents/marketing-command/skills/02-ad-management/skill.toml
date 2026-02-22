@@ -1,0 +1,6 @@
+[skill]
+name = "Ad Campaign Management"
+version = "1.0"
+description = "Manage Meta and Google ad campaigns for lead generation"
+triggers = ["ad", "campaign", "budget", "meta ads", "google ads", "boost"]
+tools = ["http_request", "memory_save", "memory_search"]

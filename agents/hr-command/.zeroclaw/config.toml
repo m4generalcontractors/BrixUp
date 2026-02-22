@@ -1,0 +1,45 @@
+api_key = "${ANTHROPIC_API_KEY}"
+default_provider = "anthropic"
+default_model = "claude-sonnet-4-20250514"
+default_temperature = 0.5
+
+[identity]
+format = "aieos"
+aieos_path = "../identity.json"
+
+[memory]
+backend = "postgres"
+auto_save = true
+
+[storage.provider.config]
+provider = "postgres"
+db_url = "${DATABASE_URL}"
+table = "agent_memory_hr_command"
+
+[gateway]
+port = 3010
+host = "0.0.0.0"
+require_pairing = true
+allow_public_bind = true
+
+[autonomy]
+level = "supervised"
+workspace_only = true
+allowed_commands = [
+  "curl", "jq", "cat", "ls",
+  "/opt/m4-agents/shared-tools/m4-db-query.sh",
+  "/opt/m4-agents/shared-tools/resend-email.sh",
+  "/opt/m4-agents/shared-tools/google-calendar.sh",
+  "/opt/m4-agents/shared-tools/m4-escalate.sh"
+]
+
+[heartbeat]
+enabled = true
+interval_minutes = 30
+
+[channels_config.slack]
+bot_token = "${SLACK_BOT_TOKEN}"
+app_token = "${SLACK_APP_TOKEN}"
+signing_secret = "${SLACK_SIGNING_SECRET}"
+default_channel = "#dept-hr"
+allowed_users = ["*"]

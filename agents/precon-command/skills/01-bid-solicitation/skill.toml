@@ -1,0 +1,6 @@
+[skill]
+name = "Bid Solicitation"
+version = "1.0"
+description = "Manage RFP creation and distribution to subcontractors, ensuring minimum 3 bids per trade for M4 entities"
+triggers = ["bid solicitation", "rfp", "request for proposal", "solicit bids", "invite subs", "bid package", "subcontractor bids"]
+tools = ["procore", "google_drive", "gmail", "google_sheets"]

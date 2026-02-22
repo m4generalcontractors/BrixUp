@@ -1,0 +1,6 @@
+[skill]
+name = "Financial Reports"
+version = "1.0"
+description = "Generate P&L, balance sheet, and cash flow reports by entity for M4 Development Holdings LLC"
+triggers = ["financial report", "P&L", "profit and loss", "balance sheet", "cash flow", "financial statement", "income statement", "entity financials"]
+tools = ["quickbooks", "google_sheets", "google_drive"]

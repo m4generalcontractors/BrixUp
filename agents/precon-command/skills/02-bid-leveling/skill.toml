@@ -1,0 +1,6 @@
+[skill]
+name = "Bid Leveling"
+version = "1.0"
+description = "Analyze and compare subcontractor bids to create apples-to-apples comparisons across all trade scopes"
+triggers = ["bid leveling", "bid comparison", "level bids", "compare bids", "bid analysis", "bid spread", "bid tabulation"]
+tools = ["google_sheets", "google_drive", "procore"]

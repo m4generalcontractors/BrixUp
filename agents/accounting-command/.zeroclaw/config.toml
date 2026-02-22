@@ -1,0 +1,55 @@
+api_key = "${ANTHROPIC_API_KEY}"
+default_provider = "anthropic"
+default_model = "claude-sonnet-4-20250514"
+default_temperature = 0.3
+
+[identity]
+format = "aieos"
+aieos_path = "../identity.json"
+
+[memory]
+backend = "postgres"
+auto_save = true
+
+[storage.provider.config]
+provider = "postgres"
+db_url = "${DATABASE_URL}"
+table = "agent_memory_accounting_command"
+
+[gateway]
+port = 3007
+host = "0.0.0.0"
+require_pairing = true
+allow_public_bind = true
+
+[autonomy]
+level = "supervised"
+workspace_only = true
+allowed_commands = [
+  "curl", "jq", "cat", "ls",
+  "/opt/m4-agents/shared-tools/quickbooks-sync.sh",
+  "/opt/m4-agents/shared-tools/stripe-invoice.sh",
+  "/opt/m4-agents/shared-tools/m4-db-query.sh",
+  "/opt/m4-agents/shared-tools/resend-email.sh",
+  "/opt/m4-agents/shared-tools/m4-escalate.sh"
+]
+
+[heartbeat]
+enabled = true
+interval_minutes = 30
+
+[channels_config.slack]
+bot_token = "${SLACK_BOT_TOKEN}"
+app_token = "${SLACK_APP_TOKEN}"
+signing_secret = "${SLACK_SIGNING_SECRET}"
+default_channel = "#dept-accounting"
+allowed_users = ["*"]
+
+[channels_config.email]
+imap_host = "imap.gmail.com"
+imap_user = "billing@m4builds.com"
+imap_password = "${EMAIL_PASSWORD}"
+smtp_host = "smtp.gmail.com"
+smtp_user = "billing@m4builds.com"
+smtp_password = "${EMAIL_PASSWORD}"
+allowed_senders = ["*"]

@@ -1,0 +1,6 @@
+[skill]
+name = "Permit Applications"
+version = "1.0"
+description = "Prepare and submit permit applications by jurisdiction for construction projects across NC, SC, FL, and AL"
+triggers = ["permit application", "building permit", "apply for permit", "permit submission", "grading permit", "zoning permit", "permit package"]
+tools = ["google_drive", "google_sheets", "gmail", "google_calendar"]

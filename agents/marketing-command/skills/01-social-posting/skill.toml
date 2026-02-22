@@ -1,0 +1,6 @@
+[skill]
+name = "Social Media Posting"
+version = "1.0"
+description = "Create and schedule social media content across all platforms"
+triggers = ["post", "social", "facebook", "instagram", "content", "publish"]
+tools = ["http_request", "memory_save", "memory_search"]

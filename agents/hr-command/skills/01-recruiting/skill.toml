@@ -1,0 +1,6 @@
+[skill]
+name = "Recruiting"
+version = "1.0"
+description = "Manage job posting, applicant screening, and interview scheduling for construction trades and office positions"
+triggers = ["recruiting", "hiring", "job posting", "applicant", "interview", "candidate", "job opening", "talent acquisition", "hire"]
+tools = ["google_sheets", "google_calendar", "gmail", "google_drive"]

@@ -1,0 +1,6 @@
+[skill]
+name = "Draw Requests"
+version = "1.0"
+description = "Process construction draw requests against completion percentage for lender and owner billing cycles"
+triggers = ["draw request", "draw", "pay application", "AIA billing", "progress billing", "lender draw", "construction loan draw"]
+tools = ["procore", "quickbooks", "google_sheets", "google_drive"]

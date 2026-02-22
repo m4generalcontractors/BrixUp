@@ -1,0 +1,6 @@
+[skill]
+name = "Quantity Takeoff"
+version = "1.0"
+description = "Process construction plans and produce material/labor takeoffs"
+triggers = ["takeoff", "estimate", "quantity", "material list", "bid prep"]
+tools = ["file_read", "file_write", "http_request", "shell", "memory_save"]

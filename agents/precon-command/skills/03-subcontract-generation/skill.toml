@@ -1,0 +1,6 @@
+[skill]
+name = "Subcontract Generation"
+version = "1.0"
+description = "Generate subcontract agreements from awarded bids using M4 standard templates and entity-specific terms"
+triggers = ["subcontract", "generate contract", "sub agreement", "award sub", "subcontract agreement", "contract generation"]
+tools = ["google_drive", "google_docs", "procore", "gmail"]

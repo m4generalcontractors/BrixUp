@@ -1,0 +1,6 @@
+[skill]
+name = "Compliance Tracking"
+version = "1.0"
+description = "Monitor license, insurance, and regulatory compliance for all M4 entities, subcontractors, and projects"
+triggers = ["compliance", "license tracking", "insurance tracking", "regulatory", "license renewal", "compliance monitoring", "OSHA", "safety compliance"]
+tools = ["google_sheets", "google_drive", "google_calendar", "gmail"]

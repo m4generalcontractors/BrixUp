@@ -1,0 +1,6 @@
+[skill]
+name = "Multi-Agent Orchestration"
+version = "1.0"
+description = "Route tasks to department agents, monitor health, resolve conflicts"
+triggers = ["route", "assign", "delegate", "dispatch", "coordinate"]
+tools = ["http_request", "shell", "memory_save"]

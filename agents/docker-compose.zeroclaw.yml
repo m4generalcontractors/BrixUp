@@ -1,0 +1,228 @@
+version: "3.9"
+
+x-zeroclaw-common: &zeroclaw-common
+  build:
+    context: .
+    dockerfile: Dockerfile.zeroclaw
+  restart: always
+  mem_limit: 64m
+  cpus: 0.5
+  volumes:
+    - ./shared-tools:/opt/shared-tools:ro
+    - zeroclaw-shared:/opt/shared
+  environment: &zeroclaw-env
+    ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    DATABASE_URL: ${DATABASE_URL}
+    SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+    SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
+    SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+  networks:
+    - m4-agents
+
+services:
+  # =========================================================================
+  #  OPS COMMANDER — Master Orchestrator
+  # =========================================================================
+  ops-commander:
+    <<: *zeroclaw-common
+    container_name: m4-ops-commander
+    volumes:
+      - ./ops-commander:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN}
+      WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID}
+      WHATSAPP_WEBHOOK_VERIFY_TOKEN: ${WHATSAPP_WEBHOOK_VERIFY_TOKEN}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+    ports:
+      - "3001:3000"
+
+  # =========================================================================
+  #  MARKETING COMMAND
+  # =========================================================================
+  marketing-command:
+    <<: *zeroclaw-common
+    container_name: m4-marketing-command
+    volumes:
+      - ./marketing-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      META_AD_ACCOUNT_ID: ${META_AD_ACCOUNT_ID}
+      META_PAGE_ACCESS_TOKEN: ${META_PAGE_ACCESS_TOKEN}
+    ports:
+      - "3002:3000"
+
+  # =========================================================================
+  #  SALES COMMAND
+  # =========================================================================
+  sales-command:
+    <<: *zeroclaw-common
+    container_name: m4-sales-command
+    volumes:
+      - ./sales-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      HUBSPOT_ACCESS_TOKEN: ${HUBSPOT_ACCESS_TOKEN}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
+      WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN}
+      WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID}
+      WHATSAPP_WEBHOOK_VERIFY_TOKEN: ${WHATSAPP_WEBHOOK_VERIFY_TOKEN}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    ports:
+      - "3003:3000"
+
+  # =========================================================================
+  #  ESTIMATING COMMAND
+  # =========================================================================
+  estimating-command:
+    <<: *zeroclaw-common
+    container_name: m4-estimating-command
+    volumes:
+      - ./estimating-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+    ports:
+      - "3004:3000"
+
+  # =========================================================================
+  #  PRECONSTRUCTION COMMAND
+  # =========================================================================
+  precon-command:
+    <<: *zeroclaw-common
+    container_name: m4-precon-command
+    volumes:
+      - ./precon-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+    ports:
+      - "3005:3000"
+
+  # =========================================================================
+  #  PROJECT MANAGEMENT COMMAND
+  # =========================================================================
+  pm-command:
+    <<: *zeroclaw-common
+    container_name: m4-pm-command
+    volumes:
+      - ./pm-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      PROCORE_ACCESS_TOKEN: ${PROCORE_ACCESS_TOKEN}
+      PROCORE_COMPANY_ID: ${PROCORE_COMPANY_ID}
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
+    ports:
+      - "3006:3000"
+
+  # =========================================================================
+  #  ACCOUNTING COMMAND
+  # =========================================================================
+  accounting-command:
+    <<: *zeroclaw-common
+    container_name: m4-accounting-command
+    volumes:
+      - ./accounting-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      QUICKBOOKS_ACCESS_TOKEN: ${QUICKBOOKS_ACCESS_TOKEN}
+      QUICKBOOKS_COMPANY_ID: ${QUICKBOOKS_COMPANY_ID}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+    ports:
+      - "3007:3000"
+
+  # =========================================================================
+  #  DOCUMENT COMMAND
+  # =========================================================================
+  document-command:
+    <<: *zeroclaw-common
+    container_name: m4-document-command
+    volumes:
+      - ./document-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+    ports:
+      - "3008:3000"
+
+  # =========================================================================
+  #  PERMIT COMMAND
+  # =========================================================================
+  permit-command:
+    <<: *zeroclaw-common
+    container_name: m4-permit-command
+    volumes:
+      - ./permit-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+    ports:
+      - "3009:3000"
+
+  # =========================================================================
+  #  HR COMMAND
+  # =========================================================================
+  hr-command:
+    <<: *zeroclaw-common
+    container_name: m4-hr-command
+    volumes:
+      - ./hr-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
+      GOOGLE_ACCESS_TOKEN: ${GOOGLE_ACCESS_TOKEN}
+    ports:
+      - "3010:3000"
+
+  # =========================================================================
+  #  INVESTOR COMMAND
+  # =========================================================================
+  investor-command:
+    <<: *zeroclaw-common
+    container_name: m4-investor-command
+    volumes:
+      - ./investor-command:/opt/agent
+      - ./shared-tools:/opt/shared-tools:ro
+      - zeroclaw-shared:/opt/shared
+    environment:
+      <<: *zeroclaw-env
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    ports:
+      - "3011:3000"
+
+networks:
+  m4-agents:
+    driver: bridge
+
+volumes:
+  zeroclaw-shared:

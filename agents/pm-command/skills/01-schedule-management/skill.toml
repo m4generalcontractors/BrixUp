@@ -1,0 +1,6 @@
+[skill]
+name = "Schedule Management"
+version = "1.0"
+description = "Manage project schedules, milestones, and critical path tracking via Procore for all M4 construction projects"
+triggers = ["schedule", "milestone", "critical path", "project schedule", "schedule update", "gantt", "schedule delay", "CPM"]
+tools = ["procore", "google_sheets", "google_calendar"]

@@ -2,6 +2,19 @@ export type UserRole = "investor" | "builder" | "dealmaker" | "admin" | "manager
 export type DealStatus = "Open" | "Funding" | "Funded" | "Active" | "Completed" | "Pending Review" | "Rejected";
 export type PropertyType = "Flip" | "New Build" | "Value-Add" | "Wholesale" | "Land";
 export type KycStatus = "pending" | "verified" | "rejected";
+export type AgentStatus = "online" | "offline" | "error" | "paused";
+export type AgentDepartment =
+  | "operations"
+  | "marketing"
+  | "sales"
+  | "estimating"
+  | "preconstruction"
+  | "pm"
+  | "accounting"
+  | "documents"
+  | "permits"
+  | "hr"
+  | "investor";
 
 export interface Database {
   public: {
@@ -145,6 +158,49 @@ export interface Database {
         };
         Insert: Omit<Database["public"]["Tables"]["notifications"]["Row"], "id" | "created_at">;
         Update: Partial<Database["public"]["Tables"]["notifications"]["Insert"]>;
+      };
+      agent_tasks: {
+        Row: {
+          id: string;
+          agent_slug: string;
+          department: AgentDepartment;
+          message: string;
+          priority: number;
+          status: "pending" | "in_progress" | "completed" | "failed";
+          source_agent: string | null;
+          result: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["agent_tasks"]["Row"], "id" | "created_at" | "updated_at">;
+        Update: Partial<Database["public"]["Tables"]["agent_tasks"]["Insert"]>;
+      };
+      agent_logs: {
+        Row: {
+          id: string;
+          agent_slug: string;
+          level: "info" | "warn" | "error" | "heartbeat";
+          message: string;
+          metadata: Record<string, unknown> | null;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["agent_logs"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["agent_logs"]["Insert"]>;
+      };
+      agent_metrics: {
+        Row: {
+          id: string;
+          agent_slug: string;
+          status: AgentStatus;
+          uptime_seconds: number;
+          memory_bytes: number;
+          tasks_completed: number;
+          tasks_failed: number;
+          last_heartbeat: string;
+          recorded_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["agent_metrics"]["Row"], "id" | "recorded_at">;
+        Update: Partial<Database["public"]["Tables"]["agent_metrics"]["Insert"]>;
       };
     };
     Views: Record<string, never>;

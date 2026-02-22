@@ -1,0 +1,6 @@
+[skill]
+name = "Proposal Generation"
+version = "1.0"
+description = "Generate formatted client proposals from estimate data"
+triggers = ["proposal", "generate proposal", "client estimate", "send estimate"]
+tools = ["file_read", "file_write", "http_request", "memory_search"]

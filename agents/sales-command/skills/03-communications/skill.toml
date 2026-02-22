@@ -1,0 +1,6 @@
+[skill]
+name = "Client Communications"
+version = "1.0"
+description = "Multi-channel client outreach via SMS, WhatsApp, and email"
+triggers = ["call", "text", "sms", "whatsapp", "email", "message", "contact"]
+tools = ["http_request", "memory_save"]

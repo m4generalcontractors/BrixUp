@@ -1,0 +1,6 @@
+[skill]
+name = "Inspection Scheduling"
+version = "1.0"
+description = "Schedule and track building inspections with local building departments across all project jurisdictions"
+triggers = ["inspection", "schedule inspection", "building inspection", "inspection request", "inspector", "inspection tracking", "code inspection"]
+tools = ["google_calendar", "google_sheets", "procore", "gmail"]

@@ -1,0 +1,6 @@
+[skill]
+name = "Capital Raising"
+version = "1.0"
+description = "Process investor interest, manage capital calls, and track fund commitments"
+triggers = ["invest", "capital", "fund", "commitment", "capital call", "raise"]
+tools = ["http_request", "memory_save", "memory_search", "shell"]

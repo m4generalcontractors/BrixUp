@@ -1,0 +1,6 @@
+[skill]
+name = "Crew Scheduling"
+version = "1.0"
+description = "Manage daily crew deployment scheduling across all active M4 construction projects"
+triggers = ["crew scheduling", "crew deployment", "crew assignment", "manpower", "labor scheduling", "crew allocation", "staff schedule", "workforce planning"]
+tools = ["google_sheets", "google_calendar", "procore", "gmail"]

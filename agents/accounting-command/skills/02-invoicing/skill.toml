@@ -1,0 +1,6 @@
+[skill]
+name = "Invoicing"
+version = "1.0"
+description = "Create and send invoices via Stripe and QuickBooks for all M4 entities"
+triggers = ["invoice", "invoicing", "send invoice", "create invoice", "billing", "bill client", "accounts receivable"]
+tools = ["quickbooks", "stripe", "gmail", "google_drive"]

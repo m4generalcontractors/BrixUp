@@ -1,0 +1,6 @@
+[skill]
+name = "Pipeline Tracking"
+version = "1.0"
+description = "Track sales pipeline stages, forecasting, and deal progression"
+triggers = ["pipeline", "deal", "opportunity", "forecast", "close"]
+tools = ["http_request", "memory_save", "memory_search"]

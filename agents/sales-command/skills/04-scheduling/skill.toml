@@ -1,0 +1,6 @@
+[skill]
+name = "Appointment Scheduling"
+version = "1.0"
+description = "Schedule meetings, site visits, and follow-up calls"
+triggers = ["schedule", "meeting", "appointment", "site visit", "calendar"]
+tools = ["http_request", "memory_save"]
