@@ -1,6 +1,6 @@
 [skill]
 name = "Portfolio Reporting"
 version = "1.0"
-description = "Generate investor portfolio reports, calculate distributions, and track returns"
-triggers = ["report", "portfolio", "distribution", "returns", "statement", "performance"]
-tools = ["http_request", "memory_save", "memory_search", "file_write"]
+description = "Generate investor portfolio reports, performance metrics, and distribution calculations for NexGen Capital Partners"
+triggers = ["portfolio report", "investor report", "distribution", "investor returns", "portfolio performance", "fund report", "LP report", "quarterly report"]
+tools = ["google_sheets", "google_drive", "quickbooks", "gmail"]
