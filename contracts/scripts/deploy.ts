@@ -109,29 +109,40 @@ async function main() {
   console.log("-".repeat(60));
 
   // ---- 1. Deploy BrixToken --------------------------------------------------
-  console.log("\n[1/3] Deploying BrixToken...");
-  const BrixToken = await ethers.getContractFactory("BrixToken");
-  const brixToken = await BrixToken.deploy();
-  await brixToken.waitForDeployment();
-  const brixTokenAddress = await brixToken.getAddress();
-  console.log(`  BrixToken deployed at : ${brixTokenAddress}`);
+  // Support resuming: if BRXU_TOKEN_ADDRESS is set, skip redeployment.
+  let brixTokenAddress = process.env.BRXU_TOKEN_ADDRESS || "";
 
-  // Wait for a few block confirmations before verifying (helps Basescan index)
-  if (networkName !== "hardhat" && networkName !== "localhost") {
-    console.log("  Waiting for 5 block confirmations...");
-    await brixToken.deploymentTransaction()?.wait(5);
+  if (brixTokenAddress && ethers.isAddress(brixTokenAddress)) {
+    brixTokenAddress = ethers.getAddress(brixTokenAddress);
+    console.log(`\n[1/3] BrixToken already deployed — reusing: ${brixTokenAddress}`);
+  } else {
+    console.log("\n[1/3] Deploying BrixToken...");
+    const BrixToken = await ethers.getContractFactory("BrixToken");
+    const brixToken = await BrixToken.deploy();
+    await brixToken.waitForDeployment();
+    brixTokenAddress = await brixToken.getAddress();
+    console.log(`  BrixToken deployed at : ${brixTokenAddress}`);
+
+    // Wait for a few block confirmations before verifying (helps Basescan index)
+    if (networkName !== "hardhat" && networkName !== "localhost") {
+      console.log("  Waiting for 5 block confirmations...");
+      await brixToken.deploymentTransaction()?.wait(5);
+    }
+
+    await verifyContract(brixTokenAddress, []);
   }
-
-  await verifyContract(brixTokenAddress, []);
 
   // ---- 2. Deploy BrixFactory ------------------------------------------------
   console.log("\n[2/3] Deploying BrixFactory...");
-  const platformWallet =
-    process.env.PLATFORM_WALLET || deployer.address;
+  const platformWallet = ethers.getAddress(
+    process.env.PLATFORM_WALLET || deployer.address
+  );
   const platformFeeBps = parseInt(process.env.PLATFORM_FEE_BPS || "500", 10);
+  const tokenAddr = ethers.getAddress(brixTokenAddress);
+
   const BrixFactory = await ethers.getContractFactory("BrixFactory");
   const brixFactory = await BrixFactory.deploy(
-    brixTokenAddress,
+    tokenAddr,
     platformWallet,
     platformFeeBps
   );
@@ -147,7 +158,7 @@ async function main() {
   }
 
   await verifyContract(brixFactoryAddress, [
-    brixTokenAddress,
+    tokenAddr,
     platformWallet,
     platformFeeBps,
   ]);
@@ -155,7 +166,7 @@ async function main() {
   // ---- 3. Deploy BrixStaking ------------------------------------------------
   console.log("\n[3/3] Deploying BrixStaking...");
   const BrixStaking = await ethers.getContractFactory("BrixStaking");
-  const brixStaking = await BrixStaking.deploy(brixTokenAddress);
+  const brixStaking = await BrixStaking.deploy(tokenAddr);
   await brixStaking.waitForDeployment();
   const brixStakingAddress = await brixStaking.getAddress();
   console.log(`  BrixStaking deployed at : ${brixStakingAddress}`);
@@ -165,7 +176,7 @@ async function main() {
     await brixStaking.deploymentTransaction()?.wait(5);
   }
 
-  await verifyContract(brixStakingAddress, [brixTokenAddress]);
+  await verifyContract(brixStakingAddress, [tokenAddr]);
 
   // ---- Save deployment addresses ---------------------------------------------
   const addresses = {
