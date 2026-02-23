@@ -17,15 +17,16 @@ export async function POST(request: Request) {
 
   let event: Stripe.Event;
 
+  if (!WEBHOOK_SECRET) {
+    return NextResponse.json(
+      { error: "Webhook secret not configured" },
+      { status: 500 }
+    );
+  }
+
   try {
-    if (WEBHOOK_SECRET) {
-      event = stripe.webhooks.constructEvent(rawBody, sig, WEBHOOK_SECRET);
-    } else {
-      // Dev fallback: parse without signature verification
-      event = JSON.parse(rawBody) as Stripe.Event;
-    }
-  } catch (err) {
-    console.error("Stripe webhook signature verification failed:", err);
+    event = stripe.webhooks.constructEvent(rawBody, sig, WEBHOOK_SECRET);
+  } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 

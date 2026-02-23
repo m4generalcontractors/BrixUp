@@ -11,7 +11,7 @@ import { base, baseSepolia } from "wagmi/chains";
 //  Chain
 // ---------------------------------------------------------------------------
 
-const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "84532", 10);
+const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "8453", 10);
 
 /** Active chain — Base Sepolia (testnet) or Base (mainnet). */
 export const activeChain = chainId === 8453 ? base : baseSepolia;

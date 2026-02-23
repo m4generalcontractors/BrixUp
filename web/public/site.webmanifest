@@ -1,6 +1,7 @@
 {
-  "name": "BrixUp",
+  "name": "BrixUp — Stack Brix. Build Wealth. Together.",
   "short_name": "BrixUp",
+  "start_url": "/",
   "icons": [
     {
       "src": "/favicon-16x16.png",

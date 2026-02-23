@@ -1,7 +1,7 @@
-const placeholderTeam = [
-  { role: "CTO", name: "Coming Soon" },
-  { role: "Head of Legal", name: "Coming Soon" },
-  { role: "Head of Growth", name: "Coming Soon" },
+const hiringRoles = [
+  { role: "CTO", label: "Now Hiring" },
+  { role: "Head of Legal", label: "Now Hiring" },
+  { role: "Head of Growth", label: "Now Hiring" },
 ];
 
 export default function Team() {
@@ -52,29 +52,30 @@ export default function Team() {
             </div>
           </div>
 
-          {/* Placeholder Cards */}
-          {placeholderTeam.map((member) => (
-            <div
-              key={member.role}
-              className="flex flex-col items-center justify-center rounded-2xl border border-offwhite/10 border-dashed bg-charcoal/10 p-8"
+          {/* Open Roles */}
+          {hiringRoles.map((role) => (
+            <a
+              key={role.role}
+              href="mailto:careers@brixups.com"
+              className="flex flex-col items-center justify-center rounded-2xl border border-gold/10 border-dashed bg-charcoal/10 p-8 transition-colors hover:border-gold/30 hover:bg-charcoal/20"
             >
-              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-offwhite/5">
-                <svg className="h-10 w-10 text-offwhite/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gold/5">
+                <svg className="h-10 w-10 text-gold/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
               </div>
-              <p className="mt-6 text-sm font-medium text-offwhite/60">
-                {member.name}
+              <p className="mt-6 text-sm font-semibold text-gold/70">
+                {role.label}
               </p>
-              <p className="mt-1 text-sm text-offwhite/50">{member.role}</p>
-            </div>
+              <p className="mt-1 text-sm text-offwhite/50">{role.role}</p>
+            </a>
           ))}
         </div>
 
         {/* Join CTA */}
         <div className="mt-12 text-center">
           <a
-            href="mailto:careers@brixup.io"
+            href="mailto:careers@brixups.com"
             className="inline-flex items-center gap-2 text-sm font-medium text-gold transition-colors hover:text-gold-light"
           >
             Join Our Team

@@ -41,8 +41,8 @@ export default function SumsubWidget({ onComplete, onError }: SumsubWidgetProps)
             theme: "dark",
           })
           .withOptions({ addViewportTag: false, adaptIframeHeight: true })
-          .on("idCheck.onStepCompleted", (payload: { idDocSetType?: string }) => {
-            console.log("KYC step completed:", payload);
+          .on("idCheck.onStepCompleted", (_payload: { idDocSetType?: string }) => {
+            // Step completed — no action needed until final status
           })
           .on("idCheck.onApplicantStatusChanged", (payload: { reviewStatus?: string }) => {
             if (payload.reviewStatus === "completed") {
@@ -50,7 +50,6 @@ export default function SumsubWidget({ onComplete, onError }: SumsubWidgetProps)
             }
           })
           .on("idCheck.onError", (err: { code: string; error: string; reason?: string }) => {
-            console.error("Sumsub error:", err);
             setError(err.error || err.code);
             onError?.(err.error || err.code);
           })

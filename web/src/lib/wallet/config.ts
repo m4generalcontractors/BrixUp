@@ -11,7 +11,7 @@ import { http, createConfig, createStorage } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
 import { coinbaseWallet } from "wagmi/connectors";
 
-const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "84532", 10);
+const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "8453", 10);
 
 const rpcUrl =
   process.env.NEXT_PUBLIC_RPC_URL ||

@@ -35,6 +35,9 @@ export function auditLog(entry: Omit<AuditEntry, "timestamp">) {
     timestamp: new Date().toISOString(),
   };
 
-  // In production, send to logging service / audit_logs table
-  console.log("[AUDIT]", JSON.stringify(log));
+  // Server-side only: log structured audit entries.
+  // In production, replace with Sentry/Datadog/audit_logs table.
+  if (typeof window === "undefined") {
+    process.stdout.write(`[AUDIT] ${JSON.stringify(log)}\n`);
+  }
 }

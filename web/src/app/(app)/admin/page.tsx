@@ -71,9 +71,9 @@ export default function AdminPortal() {
   const { profile } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"overview" | "deals" | "users" | "contracts" | "documents" | "settings">("overview");
-  const [deals, setDeals] = useState<Deal[]>(sampleDeals);
-  const [users, setUsers] = useState<UserRow[]>(sampleUsers);
-  const [documents, setDocuments] = useState<Document[]>(sampleDocuments);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Admin-only actions

@@ -294,25 +294,17 @@ export default function DealDetailPage({ params }: { params: Promise<{ dealId: s
               <button
                 key={doc.name}
                 aria-label={`Download ${doc.name}`}
-                onClick={() => {
-                  const content = `BrixUp Deal Document\n\n${doc.name}\nDeal: ${deal.address}, ${deal.city}, ${deal.state}\nType: ${doc.type}\nGenerated: ${new Date().toLocaleDateString()}\n\nThis document is a placeholder. Full documents will be available when the deal is finalized.`;
-                  const blob = new Blob([content], { type: "text/plain" });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `${doc.slug}-${dealId}.txt`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
-                className="flex w-full items-center justify-between rounded-lg border border-white/5 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer text-left"
+                disabled
+                title="Documents will be available once the deal is finalized and agreements are signed."
+                className="flex w-full items-center justify-between rounded-lg border border-white/5 px-4 py-3 opacity-50 cursor-not-allowed text-left"
               >
                 <div className="flex items-center gap-3">
                   <svg className="w-5 h-5" style={{ color: "#E8632B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                   <div><p className="text-sm font-medium text-white">{doc.name}</p><p className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{doc.type} - {doc.size}</p></div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium" style={{ color: "#D4A843" }}>Download</span>
-                  <svg className="w-4 h-4" style={{ color: "#D4A843" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  <span className="text-xs font-medium" style={{ color: "var(--brix-fg-muted)" }}>Pending</span>
+                  <svg className="w-4 h-4" style={{ color: "var(--brix-fg-muted)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
               </button>
             ))}</div>
