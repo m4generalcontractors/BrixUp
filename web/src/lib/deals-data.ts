@@ -45,13 +45,18 @@ export interface Deal {
   dealmaker: { name: string; brixScore: number };
   gc: { name: string; brixScore: number } | null;
 
+  // Geolocation (for map display)
+  lat?: number;
+  lng?: number;
+  county?: string;
+
   // Metadata
   listedDate: string;
   fundingDeadline: string;
   estCompletion: string;
   investorCount: number;
   minInvestment: number;
-  photos: string[]; // placeholder URLs
+  photos: string[];
 
   // Pro Forma
   proForma: {
@@ -119,7 +124,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Jul 2026",
     investorCount: 8,
     minInvestment: 500,
-    photos: [],
+    lat: 35.2271,
+    lng: -80.8131,
+    county: "Mecklenburg",
+    photos: ["https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 165000,
       closingCosts: 8250,
@@ -178,7 +186,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Mar 2027",
     investorCount: 5,
     minInvestment: 1000,
-    photos: [],
+    lat: 35.7796,
+    lng: -78.6382,
+    county: "Wake",
+    photos: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 95000,
       closingCosts: 4750,
@@ -237,7 +248,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "May 2026",
     investorCount: 12,
     minInvestment: 500,
-    photos: [],
+    lat: 34.8526,
+    lng: -82.3940,
+    county: "Greenville",
+    photos: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 125000,
       closingCosts: 6250,
@@ -293,7 +307,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Oct 2026",
     investorCount: 6,
     minInvestment: 500,
-    photos: [],
+    lat: 27.9506,
+    lng: -82.4572,
+    county: "Hillsborough",
+    photos: ["https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 225000,
       closingCosts: 11250,
@@ -352,7 +369,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Apr 2027",
     investorCount: 3,
     minInvestment: 2000,
-    photos: [],
+    lat: 35.2401,
+    lng: -80.8540,
+    county: "Mecklenburg",
+    photos: ["https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 80000,
       closingCosts: 4000,
@@ -411,7 +431,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Jun 2026",
     investorCount: 9,
     minInvestment: 500,
-    photos: [],
+    lat: 35.7596,
+    lng: -78.6480,
+    county: "Wake",
+    photos: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 155000,
       closingCosts: 7750,
@@ -467,7 +490,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Feb 2026",
     investorCount: 11,
     minInvestment: 500,
-    photos: [],
+    lat: 35.2271,
+    lng: -80.8431,
+    county: "Mecklenburg",
+    photos: ["https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 140000,
       closingCosts: 7000,
@@ -519,7 +545,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Jun 2027",
     investorCount: 0,
     minInvestment: 2500,
-    photos: [],
+    lat: 35.0073,
+    lng: -80.9451,
+    county: "York",
+    photos: ["https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 120000,
       closingCosts: 6000,
@@ -579,7 +608,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Aug 2026",
     investorCount: 0,
     minInvestment: 500,
-    photos: [],
+    lat: 34.2104,
+    lng: -77.8868,
+    county: "New Hanover",
+    photos: ["https://images.unsplash.com/photo-1600566753086-00f18f6b6637?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 185000,
       closingCosts: 9250,
@@ -635,7 +667,10 @@ export const sampleDeals: Deal[] = [
     estCompletion: "Dec 2026",
     investorCount: 0,
     minInvestment: 5000,
-    photos: [],
+    lat: 35.2271,
+    lng: -80.8231,
+    county: "Mecklenburg",
+    photos: ["https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&h=400&fit=crop"],
     proForma: {
       purchasePrice: 380000,
       closingCosts: 19000,

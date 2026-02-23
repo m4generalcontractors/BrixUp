@@ -3,22 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import type { Map as LeafletMap, TileLayer } from "leaflet";
-
-interface MapDeal {
-  id: string;
-  lat: number;
-  lng: number;
-  address: string;
-  city: string;
-  state: string;
-  type: string;
-  capitalNeeded: number;
-  funded: number;
-  roi: number;
-}
+import type { Deal } from "@/lib/deals-data";
 
 interface MapViewProps {
-  deals: MapDeal[];
+  deals: Deal[];
   onDealSelect?: (dealId: string) => void;
   selectedDealId?: string | null;
 }
@@ -90,6 +78,11 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
   // Store callbacks in refs to avoid re-creating the map on every render
   const onDealSelectRef = useRef(onDealSelect);
   onDealSelectRef.current = onDealSelect;
+
+  // Filter to only deals with valid coordinates
+  const mappableDeals = deals.filter(
+    (d) => typeof d.lat === "number" && typeof d.lng === "number"
+  );
 
   // Initialize map once
   useEffect(() => {
@@ -198,16 +191,16 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
         },
       });
 
-      deals.forEach((deal) => {
+      mappableDeals.forEach((deal) => {
         const isSelected = deal.id === selectedDealId;
         const icon = L.divIcon({
-          html: createMarkerIcon(deal.type, isSelected),
+          html: createMarkerIcon(deal.propertyType, isSelected),
           className: "custom-marker-icon",
           iconSize: L.point(isSelected ? 40 : 32, isSelected ? 48 : 40),
           iconAnchor: L.point(isSelected ? 20 : 16, isSelected ? 48 : 40),
         });
 
-        const marker = L.marker([deal.lat, deal.lng], { icon });
+        const marker = L.marker([deal.lat!, deal.lng!], { icon });
 
         marker.bindPopup(
           `<div style="
@@ -221,10 +214,10 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
             <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${deal.address}</div>
             <div style="color: #4A4A5A; font-size: 12px; margin-bottom: 8px;">${deal.city}, ${deal.state}</div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-              <span style="background: ${TYPE_COLORS[deal.type] || "#D4A843"}; color: white; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600;">${deal.type}</span>
-              <span style="color: #2ECC71; font-weight: 600; font-size: 12px;">${deal.roi}% ROI</span>
+              <span style="background: ${TYPE_COLORS[deal.propertyType] || "#D4A843"}; color: white; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600;">${deal.propertyType}</span>
+              <span style="color: #2ECC71; font-weight: 600; font-size: 12px;">${deal.projectedROI}% ROI</span>
             </div>
-            <div style="color: #D4A843; font-weight: 700; font-size: 14px;">$${deal.capitalNeeded.toLocaleString()}</div>
+            <div style="color: #D4A843; font-weight: 700; font-size: 14px;">$${deal.totalCapitalNeeded.toLocaleString()}</div>
           </div>`,
           { className: "dark-popup", closeButton: false }
         );
@@ -239,12 +232,12 @@ export default function MapView({ deals, onDealSelect, selectedDealId }: MapView
       map.addLayer(markers);
       markersRef.current = markers;
 
-      if (deals.length > 0) {
-        const bounds = L.latLngBounds(deals.map((d) => [d.lat, d.lng]));
+      if (mappableDeals.length > 0) {
+        const bounds = L.latLngBounds(mappableDeals.map((d) => [d.lat!, d.lng!]));
         map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
       }
     });
-  }, [deals, selectedDealId, ready]);
+  }, [mappableDeals, selectedDealId, ready]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="relative h-full w-full">

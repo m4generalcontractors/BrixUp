@@ -2,28 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-interface Deal {
-  id: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  county: string;
-  type: string;
-  capitalNeeded: number;
-  arv: number;
-  askingPrice: number;
-  funded: number;
-  roi: number;
-  timeline: string;
-  beds: number;
-  baths: number;
-  sqft: number;
-  status: string;
-  imageUrl?: string;
-  listedDate: string;
-}
+import type { Deal } from "@/lib/deals-data";
 
 interface DealCardProps {
   deal: Deal;
@@ -48,8 +27,12 @@ function isNewlyListed(dateStr: string) {
 
 export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
   const [liked, setLiked] = useState(false);
-  const badge = TYPE_COLORS[deal.type] || { bg: "#D4A843", text: "#0D0D1A" };
+  const badge = TYPE_COLORS[deal.propertyType] || { bg: "#D4A843", text: "#0D0D1A" };
   const isNew = isNewlyListed(deal.listedDate);
+  const fundedPct = deal.totalCapitalNeeded > 0
+    ? Math.round((deal.fundedAmount / deal.totalCapitalNeeded) * 100)
+    : 0;
+  const imageUrl = deal.photos?.[0];
 
   return (
     <Link
@@ -65,9 +48,9 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
     >
       {/* Property Image */}
       <div className="relative h-44 overflow-hidden">
-        {deal.imageUrl ? (
+        {imageUrl ? (
           <img
-            src={deal.imageUrl}
+            src={imageUrl}
             alt={deal.address}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -104,6 +87,15 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
                 Just Listed
               </span>
             )}
+            {/* GC Needed badge */}
+            {!deal.gc && (
+              <span
+                className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+                style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}
+              >
+                GC Needed
+              </span>
+            )}
           </div>
           {/* Favorite button */}
           <button
@@ -138,7 +130,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
             className="rounded-md px-2 py-0.5 text-xs font-bold"
             style={{ backgroundColor: "#2ECC71dd", color: "#FFFFFF" }}
           >
-            {deal.roi}% ROI
+            {deal.projectedROI}% ROI
           </span>
         </div>
 
@@ -148,7 +140,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
             className="rounded-md px-2 py-0.5 text-xs font-semibold"
             style={{ backgroundColor: badge.bg, color: badge.text }}
           >
-            {deal.type}
+            {deal.propertyType}
           </span>
         </div>
 
@@ -156,7 +148,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
         <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: "#0D0D1A66" }}>
           <div
             className="h-full transition-all"
-            style={{ width: `${deal.funded}%`, backgroundColor: "#D4A843" }}
+            style={{ width: `${fundedPct}%`, backgroundColor: "#D4A843" }}
           />
         </div>
       </div>
@@ -177,7 +169,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
         <div>
           <p className="text-sm font-medium text-white/90 truncate">{deal.address}</p>
           <p className="text-xs truncate" style={{ color: "var(--brix-fg-muted)" }}>
-            {deal.county} County &middot; {deal.city}, {deal.state} {deal.zip}
+            {deal.county ? `${deal.county} County \u00B7 ` : ""}{deal.city}, {deal.state} {deal.zip}
           </p>
         </div>
 
@@ -205,7 +197,7 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
             <svg className="w-3.5 h-3.5" style={{ color: "var(--brix-fg-muted)" }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.timeline}</span>
+            <span className="text-xs" style={{ color: "var(--brix-fg-muted)" }}>{deal.projectedTimeline}</span>
           </div>
         </div>
 
@@ -214,11 +206,11 @@ export default function DealCard({ deal, isSelected, onHover }: DealCardProps) {
           <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "var(--brix-bg)" }}>
             <div
               className="h-full rounded-full"
-              style={{ width: `${deal.funded}%`, backgroundColor: "#D4A843" }}
+              style={{ width: `${fundedPct}%`, backgroundColor: "#D4A843" }}
             />
           </div>
           <span className="text-xs font-semibold" style={{ color: "#D4A843" }}>
-            {deal.funded}%
+            {fundedPct}%
           </span>
         </div>
       </div>
