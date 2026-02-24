@@ -43,7 +43,7 @@ async function main() {
   }
 
   const [sender] = await ethers.getSigners();
-  const token = await ethers.getContractAt("BrixToken", tokenAddress);
+  const token = await ethers.getContractAt("contracts/BrixToken.sol:BrixToken", tokenAddress);
 
   const decimals = await token.decimals();
   const parsedAmount = ethers.parseUnits(amount, decimals);
