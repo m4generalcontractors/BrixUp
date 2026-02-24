@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -36,7 +36,7 @@ const adminNav = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { profile, signOut, loading } = useAuth();
+  const { profile, signOut, loading, refreshProfile } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Allow the admin login page to render without the sidebar chrome
@@ -47,7 +47,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const userRole = profile?.user_role;
   const isAdmin = userRole === "admin" || userRole === "manager";
 
-  if (loading) {
+  // Auto-bootstrap: if authenticated but not admin, try the bootstrap endpoint
+  // once (only succeeds for whitelisted emails when no admin exists yet)
+  const bootstrapAttempted = useRef(false);
+  const [bootstrapping, setBootstrapping] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !isAdmin && profile && !bootstrapAttempted.current) {
+      bootstrapAttempted.current = true;
+      setBootstrapping(true);
+      fetch("/api/admin/setup", { method: "POST" })
+        .then(async (res) => {
+          if (res.ok) {
+            await refreshProfile();
+          }
+        })
+        .catch(() => {})
+        .finally(() => setBootstrapping(false));
+    }
+  }, [loading, isAdmin, profile, refreshProfile]);
+
+  if (loading || bootstrapping) {
     return (
       <div className="flex h-screen items-center justify-center" style={{ backgroundColor: "var(--brix-bg)" }}>
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[#D4A843]" />
@@ -67,10 +87,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
           <p className="text-sm mb-4" style={{ color: "var(--brix-fg-muted)" }}>You need admin or manager privileges to access this area.</p>
           <div className="flex flex-col items-center gap-3">
-            <Link href="/admin/login" className="rounded-lg px-6 py-2.5 text-sm font-semibold" style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}>
-              Admin Login
-            </Link>
-            <Link href="/dashboard" className="text-sm font-medium" style={{ color: "#D4A843" }}>
+            <Link href="/dashboard" className="rounded-lg px-6 py-2.5 text-sm font-semibold" style={{ backgroundColor: "#E8632B", color: "#FFFFFF" }}>
               Back to Dashboard
             </Link>
           </div>
