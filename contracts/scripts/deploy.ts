@@ -117,7 +117,7 @@ async function main() {
     console.log(`\n[1/3] BrixToken already deployed — reusing: ${brixTokenAddress}`);
   } else {
     console.log("\n[1/3] Deploying BrixToken...");
-    const BrixToken = await ethers.getContractFactory("BrixToken");
+    const BrixToken = await ethers.getContractFactory("contracts/BrixToken.sol:BrixToken");
     const brixToken = await BrixToken.deploy();
     await brixToken.waitForDeployment();
     brixTokenAddress = await brixToken.getAddress();
