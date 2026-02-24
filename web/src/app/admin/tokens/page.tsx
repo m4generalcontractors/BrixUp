@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { BRXU_TOKEN_ADDRESS, BRXU_FACTORY_ADDRESS, BRXU_STAKING_ADDRESS } from "@/lib/contracts/config";
 
 const CONTRACT_ADDRESSES = {
-  brixToken: "0x636E2f0cA4eFaAB67fd3FB67B31dfc677a494850",
-  brixFactory: "0x214F5A820494C8a2AEAE796038C5e33E12eBf6C6",
-  brixStaking: "0x4909eaC2484E9A121e8E917155D343f61Eec6714",
+  brixToken: BRXU_TOKEN_ADDRESS || "",
+  brixFactory: BRXU_FACTORY_ADDRESS || "",
+  brixStaking: BRXU_STAKING_ADDRESS || "",
 };
 
 export default function TokenManagementPage() {

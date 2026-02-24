@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { BRXU_TOKEN_ADDRESS } from "@/lib/contracts/config";
 
 interface Agreement {
   id: string;
@@ -249,7 +250,7 @@ export default function AgreementsPage() {
                   {agreement.type === "saft" && (
                     <>
                       <p className="text-white font-semibold">Simple Agreement for Future Tokens (SAFT)</p>
-                      <p>Token: $BRXU on Base L2 (ERC-20). Contract: 0x636E2f0cA4eFaAB67fd3FB67B31dfc677a494850</p>
+                      <p>Token: $BRXU on Base L2 (ERC-20). Contract: {BRXU_TOKEN_ADDRESS || "Not configured"}</p>
                       <p>Each BRXU token represents a fractional interest in the underlying real estate deal SPV.</p>
                       <p>Tokens are non-transferable for 12 months from issuance (lock-up period).</p>
                       <p className="text-white/30">... [Full document available for download]</p>
