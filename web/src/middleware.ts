@@ -8,8 +8,30 @@ export async function middleware(request: NextRequest) {
 
   // Block access to protected routes if Supabase is not configured
   if (!supabaseUrl || !supabaseKey || supabaseUrl === "https://your-project.supabase.co") {
-    // Always allow /admin/login (it handles its own auth)
+    // Gate-protect /admin/login even when Supabase is not configured
     if (request.nextUrl.pathname === "/admin/login") {
+      const gateSecret = process.env.ADMIN_GATE_SECRET;
+      const gateParam = request.nextUrl.searchParams.get("gate");
+      const gateCookie = request.cookies.get("admin_gate")?.value;
+      const gateValid =
+        !gateSecret ||
+        gateParam === gateSecret ||
+        gateCookie === gateSecret;
+      if (!gateValid) {
+        return new NextResponse("Not Found", { status: 404 });
+      }
+      if (gateParam && gateSecret && gateParam === gateSecret) {
+        const url = request.nextUrl.clone();
+        url.searchParams.delete("gate");
+        const response = NextResponse.redirect(url);
+        response.cookies.set("admin_gate", gateSecret, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+          path: "/admin",
+        });
+        return response;
+      }
       return NextResponse.next();
     }
     const protectedPrefixes = ["/dashboard", "/marketplace", "/builder", "/dealfinder", "/wallet", "/settings", "/verify", "/agreements", "/admin"];
@@ -70,9 +92,37 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith(path + "/")
   );
 
-  // Allow /admin/login without authentication
+  // Allow /admin/login only with valid gate token or session cookie
   if (request.nextUrl.pathname === "/admin/login") {
-    // If already logged in as admin, redirect to /admin
+    const gateSecret = process.env.ADMIN_GATE_SECRET;
+    const gateParam = request.nextUrl.searchParams.get("gate");
+    const gateCookie = request.cookies.get("admin_gate")?.value;
+
+    // Validate gate: must have correct query param or existing session cookie
+    const gateValid =
+      (gateSecret && gateParam === gateSecret) ||
+      (gateSecret && gateCookie === gateSecret);
+
+    if (gateSecret && !gateValid) {
+      // Return generic 404 — don't reveal the admin login exists
+      return new NextResponse("Not Found", { status: 404 });
+    }
+
+    // If gate param provided, set session cookie and redirect to clean URL
+    if (gateParam && gateSecret && gateParam === gateSecret) {
+      const url = request.nextUrl.clone();
+      url.searchParams.delete("gate");
+      const response = NextResponse.redirect(url);
+      response.cookies.set("admin_gate", gateSecret, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/admin",
+      });
+      return response;
+    }
+
+    // If already logged in as admin, redirect to /admin/tokens
     if (user) {
       try {
         const { data: profile } = await supabase
