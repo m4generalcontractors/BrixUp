@@ -90,15 +90,9 @@ async function main() {
     console.log(`Loaded addresses from ${latestPath}`);
   } else {
     // Fall back to env vars / hardcoded addresses from latest mainnet deploy
-    brixTokenAddr =
-      process.env.BRXU_TOKEN_ADDRESS ||
-      "0xFdcb52F990360a098E72B91C5ffBCd6FE2d801e1";
-    brixFactoryAddr =
-      process.env.BRIX_FACTORY_ADDRESS ||
-      "0x3d03C10A4D2e0d3e8e31F31cC76097e00Cd5466d";
-    brixStakingAddr =
-      process.env.BRIX_STAKING_ADDRESS ||
-      "0xadbC294081Da7423f707d00DAffEdE334D6d18c3";
+    brixTokenAddr = process.env.BRXU_TOKEN_ADDRESS || "";
+    brixFactoryAddr = process.env.BRIX_FACTORY_ADDRESS || "";
+    brixStakingAddr = process.env.BRIX_STAKING_ADDRESS || "";
     console.log(
       "No deployment JSON found — using env vars / hardcoded addresses."
     );
@@ -124,14 +118,7 @@ async function main() {
   let failed = 0;
 
   // 1. Verify BrixToken (no constructor args)
-  // BrixToken was deployed with ticker "BRIX" (pre-rename). Use legacy source
-  // that matches the deployed bytecode for verification.
-  const tokenOk = await verifyContract(
-    "BrixToken",
-    brixTokenAddr,
-    [],
-    "contracts/legacy/BrixTokenV1.sol:BrixToken"
-  );
+  const tokenOk = await verifyContract("BrixToken", brixTokenAddr, []);
   tokenOk ? success++ : failed++;
 
   // 2. Verify BrixFactory (brixToken, platformWallet, platformFeeBps)
