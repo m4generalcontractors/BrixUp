@@ -47,6 +47,19 @@ function AdminLoginForm() {
           return;
         }
       }
+
+      // Not yet admin — attempt first-admin bootstrap (only succeeds for
+      // whitelisted emails when no admin exists yet)
+      try {
+        const bootstrapRes = await fetch("/api/admin/setup", { method: "POST" });
+        if (bootstrapRes.ok) {
+          router.push("/admin/tokens");
+          return;
+        }
+      } catch {
+        // Bootstrap failed — fall through to access denied
+      }
+
       // Not an admin — sign them out and show error
       await signOut();
       setError("Access denied. This login is restricted to administrators.");
