@@ -9,7 +9,8 @@ const BASE_SEPOLIA_RPC =
   process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org";
 const BASE_MAINNET_RPC =
   process.env.BASE_MAINNET_RPC_URL || "https://mainnet.base.org";
-const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY || "";
+// Etherscan V2 unified API — one key works for all chains (etherscan.io/myapikey)
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || process.env.BASESCAN_API_KEY || "";
 
 // Only use the private key if it looks like a valid 32-byte hex string
 const isValidKey = /^(0x)?[0-9a-fA-F]{64}$/.test(PRIVATE_KEY);
@@ -48,7 +49,10 @@ const config: HardhatUserConfig = {
   },
 
   etherscan: {
-    apiKey: BASESCAN_API_KEY,
+    apiKey: {
+      base: ETHERSCAN_API_KEY,
+      baseSepolia: ETHERSCAN_API_KEY,
+    },
     customChains: [
       {
         network: "baseSepolia",
