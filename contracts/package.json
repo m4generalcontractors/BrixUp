@@ -12,6 +12,7 @@
     "deploy:brxu:testnet": "npx hardhat run scripts/deploy-brxu.ts --network baseSepolia",
     "deploy:brxu:mainnet": "npx hardhat run scripts/deploy-brxu.ts --network base",
     "verify": "npx hardhat run scripts/verify-contracts.ts --network base",
+    "verify:mainnet": "npx hardhat run scripts/verify-contracts.ts --network base",
     "verify:testnet": "npx hardhat run scripts/verify-contracts.ts --network baseSepolia",
     "verify:brxu": "npx hardhat run scripts/verify-brxu.ts --network base",
     "setup:liquidity": "npx hardhat run scripts/setup-liquidity.ts --network base",
