@@ -19,6 +19,8 @@
     "setup:wallet": "npx tsx scripts/setup-wallet.ts",
     "sync:env": "npx tsx scripts/sync-env.ts",
     "sync:env:testnet": "npx tsx scripts/sync-env.ts baseSepolia",
+    "transfer": "npx hardhat run scripts/transfer.ts --network base",
+    "transfer:testnet": "npx hardhat run scripts/transfer.ts --network baseSepolia",
     "go:mainnet": "npm run deploy:mainnet && npm run sync:env"
   },
   "devDependencies": {
