@@ -157,7 +157,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
-  if (loading) {
+  // Client-side auth guard — redirect unauthenticated users to login
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [loading, user, router]);
+
+  if (loading || !user) {
     return (
       <div
         className="flex h-screen items-center justify-center"
