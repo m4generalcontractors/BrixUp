@@ -16,6 +16,7 @@ import {
   parseBrxu,
 } from "@/lib/contracts";
 import { validate, amountSchema, createAmountSchema, createAddressSchema, parseAmount, validateAmount, sanitizeAmountInput } from "@/lib/validation";
+import { QRCodeSVG } from "qrcode.react";
 
 // ---------------------------------------------------------------------------
 //  Types & sample data (fallback when contracts not deployed)
@@ -645,36 +646,25 @@ export default function WalletPage() {
             {/* QR Code */}
             <div className="flex justify-center">
               <div className="rounded-xl bg-white p-4">
-                <svg viewBox="0 0 200 200" className="h-40 w-40">
-                  {/* QR code visual representation */}
-                  <rect width="200" height="200" fill="white" />
-                  {/* Corner squares */}
-                  <rect x="10" y="10" width="50" height="50" fill="black" />
-                  <rect x="15" y="15" width="40" height="40" fill="white" />
-                  <rect x="20" y="20" width="30" height="30" fill="black" />
-                  <rect x="140" y="10" width="50" height="50" fill="black" />
-                  <rect x="145" y="15" width="40" height="40" fill="white" />
-                  <rect x="150" y="20" width="30" height="30" fill="black" />
-                  <rect x="10" y="140" width="50" height="50" fill="black" />
-                  <rect x="15" y="145" width="40" height="40" fill="white" />
-                  <rect x="20" y="150" width="30" height="30" fill="black" />
-                  {/* Data pattern - pseudo-random based on address */}
-                  {[70,80,90,100,110,120].map((y) =>
-                    [70,80,90,100,110,120,130,140,150,160].map((x) => {
-                      const hash = ((x * 7 + y * 13) % 17);
-                      return hash > 8 ? <rect key={`${x}-${y}`} x={x} y={y} width="8" height="8" fill="black" /> : null;
-                    })
-                  )}
-                  {[10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180].map((x) =>
-                    [70,80,90,100,110,120].map((y) => {
-                      const hash = ((x * 11 + y * 3) % 13);
-                      return hash > 6 ? <rect key={`b-${x}-${y}`} x={x} y={y} width="8" height="8" fill="black" /> : null;
-                    })
-                  )}
-                  {/* Center logo area */}
-                  <rect x="80" y="80" width="40" height="40" rx="4" fill="#D4A843" />
-                  <text x="100" y="106" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">B</text>
-                </svg>
+                {isConnected && address ? (
+                  <QRCodeSVG
+                    value={address}
+                    size={160}
+                    level="M"
+                    bgColor="#FFFFFF"
+                    fgColor="#000000"
+                    imageSettings={{
+                      src: "",
+                      height: 0,
+                      width: 0,
+                      excavate: false,
+                    }}
+                  />
+                ) : (
+                  <div className="flex h-40 w-40 items-center justify-center text-center text-xs text-black/40">
+                    Connect wallet to<br />generate QR code
+                  </div>
+                )}
               </div>
             </div>
 
@@ -686,13 +676,12 @@ export default function WalletPage() {
                   className="flex-1 rounded-lg px-4 py-3 font-mono text-sm text-white/80 overflow-hidden text-ellipsis whitespace-nowrap"
                   style={{ backgroundColor: "var(--brix-bg)" }}
                 >
-                  {isConnected && address ? address : user?.id ? `0x${user.id.replace(/-/g, "").slice(0, 40)}` : "Connect wallet to receive"}
+                  {isConnected && address ? address : "Connect wallet to receive"}
                 </div>
                 <button
                   onClick={() => {
-                    const addr = isConnected && address ? address : user?.id ? `0x${user.id.replace(/-/g, "").slice(0, 40)}` : "";
-                    if (addr) {
-                      navigator.clipboard.writeText(addr);
+                    if (isConnected && address) {
+                      navigator.clipboard.writeText(address);
                     }
                   }}
                   className="shrink-0 rounded-lg border px-3 py-3 text-sm font-medium transition-colors hover:bg-white/5"
