@@ -33,11 +33,16 @@ interface DeploymentData {
 async function verifyContract(
   name: string,
   address: string,
-  constructorArguments: unknown[]
+  constructorArguments: unknown[],
+  contract?: string
 ): Promise<boolean> {
   console.log(`\nVerifying ${name} at ${address}...`);
   try {
-    await run("verify:verify", { address, constructorArguments });
+    const args: Record<string, unknown> = { address, constructorArguments };
+    if (contract) {
+      args.contract = contract;
+    }
+    await run("verify:verify", args);
     console.log(`  ${name} verified successfully.`);
     return true;
   } catch (error: unknown) {
@@ -119,7 +124,14 @@ async function main() {
   let failed = 0;
 
   // 1. Verify BrixToken (no constructor args)
-  const tokenOk = await verifyContract("BrixToken", brixTokenAddr, []);
+  // BrixToken was deployed with ticker "BRIX" (pre-rename). Use legacy source
+  // that matches the deployed bytecode for verification.
+  const tokenOk = await verifyContract(
+    "BrixToken",
+    brixTokenAddr,
+    [],
+    "contracts/legacy/BrixTokenV1.sol:BrixToken"
+  );
   tokenOk ? success++ : failed++;
 
   // 2. Verify BrixFactory (brixToken, platformWallet, platformFeeBps)
