@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const SITE_URL = "https://www.brixups.com";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
       </head>
       <body className="bg-[var(--brix-bg)] text-[var(--brix-fg)] antialiased">
         <Providers>{children}</Providers>
+        <SpeedInsights />
       </body>
     </html>
   );
