@@ -724,6 +724,7 @@ const dictionary: Record<string, { en: string; es: string }> = {
   "nav.dealFinder": { en: "Deal Finder", es: "Buscador" },
   "nav.wallet": { en: "Wallet", es: "Billetera" },
   "nav.agreements": { en: "Agreements", es: "Acuerdos" },
+  "nav.aiComparison": { en: "AI Comparison", es: "Comparar IAs" },
   "nav.settings": { en: "Settings", es: "Ajustes" },
   "nav.admin": { en: "Admin", es: "Admin" },
   "header.search": { en: "Search deals, builders, locations...", es: "Buscar proyectos, constructores, ubicaciones..." },
